@@ -1,0 +1,116 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <groupId>com.bosch.iothubdev</groupId>
+   <artifactId>iot-hub-developer-ui-parent</artifactId>
+   <name>Bosch IoT Hub Developer UI - Parent POM</name>
+
+   <version>${revision}</version>
+   <packaging>pom</packaging>
+
+   <properties>
+      <revision>0-SNAPSHOT</revision>
+      <skipTests>false</skipTests>
+      <skipITs>${skipTests}</skipITs>
+      <skipUTs>${skipTests}</skipUTs>
+      
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+      <main.builddir>${project.basedir}/../target</main.builddir>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
+   </properties>
+
+   <organization>
+      <name>Bosch Software Innovations GmbH</name>
+      <url>http://www.bosch-si.com/</url>
+   </organization>
+
+   <build>
+      <resources>
+         <resource>
+            <directory>idea/resources</directory>
+         </resource>
+      </resources>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+         </plugin>
+      </plugins>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-site-plugin</artifactId>
+               <version>3.6</version>
+               <configuration>
+                  <skip>true</skip>
+                  <skipDeploy>true</skipDeploy>
+               </configuration>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <version>3.6.1</version>
+               <configuration>
+                  <source>${maven.compiler.source}</source>
+                  <target>${maven.compiler.target}</target>
+                  <encoding>${project.build.sourceEncoding}</encoding>
+                  <compilerArgument>-proc:none</compilerArgument>
+               </configuration>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-failsafe-plugin</artifactId>
+               <version>2.19</version>
+               <configuration>
+                  <skipTests>${skipTests}</skipTests>
+                  <skipITs>${skipITs}</skipITs>
+               </configuration>
+               <executions>
+                  <execution>
+                     <goals>
+                        <goal>integration-test</goal>
+                        <goal>verify</goal>
+                     </goals>
+                  </execution>
+               </executions>
+            </plugin>
+         </plugins>
+      </pluginManagement>
+   </build>
+
+   <profiles>
+      <profile>
+          <id>build-release</id>
+          <build>
+              <plugins>
+                  <plugin>
+                      <artifactId>maven-scm-plugin</artifactId>
+                      <version>1.9.4</version>
+                      <executions>
+                          <execution>
+                              <id>tag-release</id>
+                              <goals>
+                                  <goal>tag</goal>
+                              </goals>
+                              <phase>deploy</phase>
+                          </execution>
+                      </executions>
+                      <configuration>
+                          <tag>${revision}</tag>
+                      </configuration>
+                  </plugin>
+              </plugins>
+          </build>
+      </profile>
+   </profiles>
+
+   <modules>
+      <module>developer-ui-backend</module>
+      <module>developer-ui-frontend</module>
+   </modules>
+
+</project>

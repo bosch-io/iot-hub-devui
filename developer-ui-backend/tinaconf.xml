@@ -1,0 +1,60 @@
+<config>
+    <sourceValidation failOnMissingSources="true"/>
+    <licenseValidation failOnForbiddenLicenses="true" failOnMissingLicenseInformation="true">
+        <forbidden>
+            <license>
+                <name>AGPL-1.0</name>
+            </license>
+            <license>
+                <name>AGPL-3.0</name>
+            </license>
+            <license>
+                <name>GPL-1.0</name>
+            </license>
+            <license>
+                <name>GPL-1.0+</name>
+            </license>
+            <license>
+                <name>GPL-2.0</name>
+            </license>
+            <license>
+                <name>GPL-2.0+</name>
+            </license>
+            <license>
+                <name>GPL-3.0</name>
+            </license>
+            <license>
+                <name>GPL-3.0+</name>
+            </license>
+        </forbidden>
+    </licenseValidation>
+
+    <setFinalLicenses>
+        <setFinalLicense>
+            <artifactSelector>
+                <artifactIdentifier>
+                    <mavenCoordinates>
+                        <groupId>org.eclipse.hono</groupId>
+                    </mavenCoordinates>
+                </artifactIdentifier>
+            </artifactSelector>
+            <license>
+                <name>EPL-1.0</name>
+            </license>
+        </setFinalLicense>
+        <setFinalLicense>
+            <artifactSelector>
+                <artifactIdentifier>
+                    <mavenCoordinates>
+                        <groupId>io.vertx</groupId>
+                        <artifactId>vertx-core</artifactId>
+                        <version>3.5.1</version>
+                    </mavenCoordinates>
+                </artifactIdentifier>
+            </artifactSelector>
+            <license>
+                <name>Apache-2.0</name>
+            </license>
+        </setFinalLicense>
+    </setFinalLicenses>
+</config>

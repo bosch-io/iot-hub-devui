@@ -1,0 +1,22 @@
+version: "2"
+
+services:
+  developerui:
+    image: iothubdev/iot-hub-developer-ui-backend:latest
+    ports:
+      - "4040:4040"
+    environment:
+    - SPRING_PROFILES_ACTIVE=production
+    - DEVUI_TENANT=____________TODO_ENTER_TENANT_NAME____________
+    - DEVUI_BIND_ADDRESS=0.0.0.0
+    - DEVUI_PORT=4040
+    - DEVUI_HTMLROOT=/hubdev/ui
+    - DEVUI_APIROOT=/hubdev
+    - HUB_CLIENT_HOST=messaging.bosch-iot-hub.com
+    - HUB_CLIENT_PORT=5671
+    - HUB_CLIENT_TLS_ENABLED=true
+    - HUB.CLIENT.USERNAME=____________TODO_ENTER_USER_NAME____________
+    - HUB_CLIENT_PASSWORD=____________TODO_ENTER_PASSWORD____________
+    - HUB_DEVICEREGISTRY_DEVICEREGISTRY_URL=https://device-registry.bosch-iot-hub.com
+    - HUB_DEVICEREGISTRY_USERNAME=____________TODO_ENTER_USER_NAME____________
+    - HUB_DEVICEREGISTRY_PASSWORD=____________TODO_ENTER_PASSWORD____________

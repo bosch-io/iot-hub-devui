@@ -1,0 +1,32 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd">
+    <id>release-zip</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <files>
+        <file>
+            <source>${project.build.directory}/iot-hub-developer-ui-backend-${revision}.jar</source>
+            <destName>iot-hub-developer-ui.jar</destName>
+            <outputDirectory>.</outputDirectory>
+        </file>
+        <file>
+            <source>${project.build.directory}/frontend/webroot/LICENSE.TXT</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
+        <file>
+            <source>${project.build.directory}/frontend/webroot/DISCLOSURE.TXT</source>
+            <destName>DISCLOSURE_UI.TXT</destName>
+            <outputDirectory>.</outputDirectory>
+        </file>
+        <file>
+            <source>${project.build.directory}/tina-maven-plugin//DISCLOSURE_BACKEND.PDF</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
+        <file>
+            <source>${project.basedir}/src/main/resources/application.properties</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
+    </files>
+</assembly>

@@ -1,0 +1,56 @@
+@import "_globalVars.scss";
+@import "_mixins.scss";
+
+#feed {
+  tab-size: 4;
+  position: relative;
+  width: 100%;
+  height: $feed-height;
+  font-family: monospace;
+  font-size: 1.3em;
+  border: 0.2rem solid #2a2a2a;
+  background: #343434;
+  color: #c0c0c0;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  outline: none;
+  border-radius: 2px;
+  resize: none;
+  @include customScrollbar(8px, rgba(255, 255, 255, 0.1), 10px, transparent);
+  transition: color 0.5s;
+
+  &.disconnected {
+    color: rgba(192, 192, 192, 0.2) !important;
+  }
+}
+
+#feedContainer {
+  display: flex;
+  justify-content: center;
+  flex-flow: column nowrap;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+#feedContainerInner {
+  position: relative;
+}
+
+#statusLed {
+  background: transparent;
+  z-index: 1;
+  border-radius: 50%;
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  right: 2rem;
+  top: 2rem;
+  border: 2px solid #2a2a2a;
+  transition: 0.7s linear all;
+}
+
+.blink {
+  background: $accent_red !important;
+  box-shadow: 0 0 3px 3px rgba($accent_red, 0.2);
+  transition: none !important;
+}

@@ -1,0 +1,246 @@
+@import "_globalVars.scss";
+
+$radio-fill-color: $accent_blue !default;
+$radio-empty-color: #8f8f8f !default;
+$radio-border: 2px solid $radio-fill-color !default;
+$input-disabled-color: #d1d1d1 !default;
+$input-background: #fff !default;
+$input-disabled-solid-color: $input-disabled-color !default;
+
+#settings-dropdown-menu {
+  width: 20rem;
+  height: 12rem;
+  right: calc(100% - 7.7rem);
+  top: 130%;
+  z-index: 3;
+  transform: translateY(-1rem);
+  pointer-events: none;
+
+  & > div {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  &:before {
+    content: "";
+    z-index: 3;
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin-left: -0.5em;
+    top: 1px;
+    right: -0.4rem;
+    box-sizing: border-box;
+    border: 0.75rem solid;
+    border-color: transparent;
+    transform-origin: 0 0;
+    transform: rotate(135deg);
+    box-shadow: -1px 1px 1px 0 rgba(0, 0, 0, 0.12);
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  ul {
+    position: absolute;
+    width: 100%;
+    transform: translateX(0);
+    transition: transform 0.3s;
+    pointer-events: inherit;
+  }
+
+  .settings-text-form {
+    position: relative;
+    padding: 1em;
+    color: #aaa;
+    font-size: 0.85em;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+    pointer-events: none;
+
+    #settings-form-label {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+
+      svg {
+        height: 0.9em;
+        width: 0.9em;
+        outline: none;
+        cursor: pointer;
+        -webkit-backface-visibility: hidden;
+        -ms-transform: scale(1) translateZ(0); /* IE 9 */
+        -webkit-transform: scale(1) translateZ(0); /* Chrome, Safari, Opera */
+        transform: scale(1) translateZ(0);
+        transition: transform 0.2s cubic-bezier(0.2, 0.6, 0.3, 1.1);
+        &:hover {
+          transform: scale(1.5);
+        }
+      }
+    }
+
+    #hint {
+      transform-origin: 50% 0;
+      overflow: hidden;
+      border-left: 2px solid $accent_green;
+      padding-left: 0.4em;
+      line-height: 1.1em;
+      margin-top: 0.3em;
+    }
+  }
+
+  input[type="text"] {
+    z-index: 1;
+    border-width: 0 0 2px 0;
+    margin-top: 0.3em;
+    padding-top: 0.4em;
+    font-size: 1.4em;
+    font-family: "Roboto", "RobotoDraft", "Helvetica Neue, Helvetica, Arial",
+      sans-serif;
+    width: 80%;
+
+    &:focus {
+      outline: none;
+      ~ .bar {
+        &:before,
+        &:after {
+          width: 50%;
+        }
+      }
+    }
+
+    &::placeholder {
+      font-weight: 100;
+      color: #c0c0c0;
+    }
+  }
+
+  button[type="submit"] {
+    cursor: pointer;
+    border: 0;
+    border-radius: 50%;
+    height: 2em;
+    width: 2em;
+    padding: 0;
+    text-align: center;
+    outline: none;
+    font-family: "Roboto", "RobotoDraft", "Helvetica Neue, Helvetica, Arial",
+      sans-serif;
+    background: none;
+    float: right;
+    color: $accent_blue;
+    margin: 1em 0;
+    box-shadow: 0 0 0 0 rgba(90, 153, 212, 0.5);
+    transition: background-color 0.2s ease-out;
+    position: absolute;
+    right: 1em;
+
+    &:hover {
+      background: #eee;
+      color: $accent_blue;
+    }
+    &:active {
+      background: $accent_blue;
+      color: #fff;
+    }
+    &:focus:not(:active) {
+      background: none;
+      animation: pulseBlue 3s;
+      animation-timing-function: cubic-bezier(0, 0.73, 0.39, 1);
+      color: $accent_blue;
+    }
+  }
+}
+
+.bar {
+  position: relative;
+  display: block;
+  &:before,
+  &:after {
+    content: "";
+    height: 2px;
+    width: 0;
+    bottom: 0;
+    position: absolute;
+    background: $accent_blue;
+    transition: all 0.15s ease;
+    z-index: 2;
+  }
+  &:before {
+    left: 50%;
+  }
+  &:after {
+    right: 50%;
+  }
+}
+
+#settings-wrapper {
+  position: relative;
+
+  .settings-button {
+    cursor: pointer;
+    width: 1.9rem;
+    opacity: 0.8;
+    transition: transform 0.4s;
+    transform: rotate(0deg);
+    outline: none;
+  }
+
+  #settings-button-wrapper svg {
+    fill: #757575;
+  }
+
+  #settings-button-wrapper,
+  #console-flush-button {
+    display: inline-block;
+  }
+
+  #console-flush-button {
+    fill: #757575;
+    margin-right: 0.5rem;
+    padding-right: 1.5em;
+    border-right: 1px solid #ddd;
+    transition: fill 0.15s;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: auto;
+    }
+  }
+
+  li {
+    padding-left: 1.2em !important;
+    transition: background 0.2s ease-out;
+
+    svg {
+      padding-right: 1.3em !important;
+    }
+  }
+}
+
+.settings-rotated {
+  transform: rotate(360deg) !important;
+}
+
+#settings-dropdown-menu.dropdown-menu-active {
+  transform: translateY(0);
+  pointer-events: inherit !important;
+
+  &:before {
+    border-color: transparent transparent #fff #fff;
+  }
+}
+
+#settings-dropdown-menu.inEditingMode {
+  ul {
+    transform: translateX(100%) !important;
+    pointer-events: none !important;
+  }
+  .settings-text-form {
+    transform: translateX(0) !important;
+    pointer-events: inherit !important;
+  }
+}
+
+.pretty .state label {
+  font-weight: inherit !important;
+}

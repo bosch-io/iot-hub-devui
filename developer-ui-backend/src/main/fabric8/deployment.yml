@@ -1,0 +1,23 @@
+spec:
+  template:
+    spec:
+      volumes:
+      - name: developerui
+        persistentVolumeClaim:
+          claimName: developerui
+      - name: conf
+        secret:
+          secretName: ${project.artifactId}-conf
+      containers:
+      - volumeMounts:
+        - name: developerui
+          mountPath: /home/hono/developer-ui
+        - name: conf
+          mountPath: /run/secrets
+        env:
+        - name: SPRING_CONFIG_LOCATION
+          value: file:///run/secrets/
+        - name: SPRING_PROFILES_ACTIVE
+          value: dev
+        - name: LOGGING_CONFIG
+          value: classpath:logback-spring.xml

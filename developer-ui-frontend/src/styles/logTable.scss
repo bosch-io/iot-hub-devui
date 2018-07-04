@@ -1,0 +1,251 @@
+@import "_globalVars.scss";
+
+$column_one_width: 16.66667%;
+$column_two_width: 16.66667%;
+$column_three_width: 16.66667%;
+$column_four_width: 16.66667%;
+$column_five_width: 33.33332%;
+
+#feedTableContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  background-color: $table_bg;
+}
+
+.expandButton {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  top: calc(50% - 2rem);
+  left: 0;
+  color: #fff;
+  font-size: 2em;
+  line-height: 3.6rem;
+  vertical-align: middle;
+  cursor: pointer;
+  transform: translateX(-51%);
+  transition: opacity 0.2s, transform 0.2s;
+
+  &:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: -50%;
+    border-radius: 50%;
+    top: 0;
+    background: $accent_color;
+  }
+
+  span {
+    position: absolute;
+    left: 7%;
+    display: inline-block;
+    transform-origin: 68% 55%;
+    transform: rotate(0deg);
+  }
+}
+
+.expandButtonWrapper {
+  overflow: hidden;
+  pointer-events: visible;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4rem;
+  height: 100%;
+  z-index: 1;
+
+  &:hover {
+    & > * {
+      transform: translateX(0) !important;
+    }
+  }
+}
+
+.expandButton {
+  *.devices-panel-closed {
+    transform: rotate(180deg);
+  }
+}
+
+#filtering-section {
+  height: $filtering_section_height;
+  display: flex;
+  flex-wrap: nowrap;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  border-radius: 2px;
+  overflow: hidden;
+  background-image: $background-gradient-dark;
+}
+
+#filterable-table {
+  position: relative;
+  flex: 8;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+}
+
+#feedTable {
+  display: table;
+  position: relative;
+  table-layout: fixed;
+  width: 100%;
+  padding: 0 1em 1em 1em;
+  height: 100%;
+
+  th,
+  td {
+    padding: 1px;
+    text-align: left;
+
+    input[type="image"] {
+      height: 1em;
+      vertical-align: baseline;
+      outline: none;
+    }
+  }
+
+  thead {
+    border-bottom: 1px solid #ccc;
+    float: left;
+    text-align: left;
+    color: $table_header_font_color;
+    width: 100%;
+    height: 10%;
+    min-height: 3rem;
+
+    span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      margin-left: 0.3em;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0.32em 0.32em 0 0.32em;
+      border-color: #cfcfcf transparent transparent transparent;
+
+      &::after {
+        content: "";
+        cursor: pointer;
+        left: -0.32em;
+        bottom: 0.45em;
+        position: absolute;
+        border-style: solid;
+        border-width: 0 0.32em 0.32em 0.32em;
+        border-color: transparent transparent #cfcfcf transparent;
+      }
+
+      &.ascSortActive {
+        &::after {
+          border-bottom-color: $accent_blue !important;
+        }
+      }
+
+      &.descSortActive {
+        border-top-color: $accent_blue !important;
+      }
+    }
+
+    tr {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+  }
+
+  tbody {
+    float: left;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 80%;
+    tr:nth-child(even) {
+      background: $table_bg_accent;
+    }
+  }
+
+  tr {
+    width: 100%;
+    padding: 0.4em 0;
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.withEllipsis {
+        color: $accent_blue !important;
+        text-decoration: underline !important;
+        cursor: pointer !important;
+      }
+    }
+  }
+
+  td:nth-child(1),
+  th:nth-child(1) {
+    width: $column_one_width;
+  }
+  td:nth-child(2),
+  th:nth-child(2) {
+    width: $column_two_width;
+  }
+  td:nth-child(3),
+  th:nth-child(3) {
+    width: $column_three_width;
+  }
+  td:nth-child(4),
+  th:nth-child(4) {
+    width: $column_four_width;
+  }
+  td:nth-child(5),
+  th:nth-child(5) {
+    width: $column_five_width;
+  }
+
+  tfoot {
+    position: absolute;
+    padding: 0 1em;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    box-sizing: border-box;
+    text-align: right;
+    color: $table_footer_font_color;
+    float: right;
+    font-size: 0.8em;
+
+    td {
+      display: inline-block;
+      text-align: right;
+      padding: 0 0.5em;
+      width: 12.5rem !important;
+      &:last-child {
+        padding-right: 0 !important;
+        width: 43rem !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      &:first-child {
+        padding-left: 0 !important;
+        text-align: left;
+      }
+    }
+
+    svg {
+      fill: $table_footer_font_color;
+      height: 1.3em;
+      padding-left: 1em;
+      vertical-align: middle;
+    }
+  }
+}

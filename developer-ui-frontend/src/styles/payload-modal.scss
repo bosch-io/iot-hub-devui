@@ -1,0 +1,116 @@
+@import "_globalVars.scss";
+
+.payload-modal {
+  z-index: 3;
+  position: fixed;
+  top: 7vh;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(245, 245, 245, 0.75);
+}
+
+.payload-modal-inner {
+  position: relative;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border: 1px solid rgb(204, 204, 204);
+  border-top: 0;
+  padding: 0;
+  width: 50%;
+  max-height: $filtering_section_height;
+  background: rgb(255, 255, 255);
+  overflow-x: visible;
+  border-radius: 4px;
+  outline: none;
+  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
+    0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
+    0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+
+  #modal-header {
+    color: $accent_red;
+    border-left: $accent_red 0.4rem solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    margin-left: -0.1em;
+    margin-right: -0.1em;
+    padding: 0 2rem;
+  }
+  h2 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin: 0;
+  }
+
+  p {
+    color: #ccc;
+  }
+
+  button {
+    border: none;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+  }
+}
+
+#payload-code-block {
+  position: relative;
+  pre {
+    margin: 0;
+    tab-size: 4;
+    box-sizing: border-box;
+    padding: 1.5em 12.1rem 3em 3em;
+    font-weight: 500;
+    background: $accent_color_light;
+    color: #fff;
+    font-family: "Roboto Mono", monospace;
+    max-height: calc(#{$filtering_section_height} - 6rem);
+    overflow: auto;
+  }
+  button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 2rem;
+    margin-right: 3rem;
+    background: transparent;
+    z-index: 1;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 2rem;
+    color: $accent_green;
+    border: 2px solid $accent_green;
+    font-weight: 400;
+    font-size: 1.1em;
+    padding: 0.3em 1.1em;
+    outline: none;
+    transition: color 0.3s, background 0.3s;
+
+    &:hover {
+      color: #fff;
+      background: $accent_green;
+    }
+  }
+}
+
+.ReactModalPortal > * {
+  // When the modal is closed, overlay div has no css class
+  // This selector should be overridden by the `&--after-open` class below
+  opacity: 0;
+}
+.ReactModal__Overlay {
+  transition: opacity 150ms ease-in-out;
+  background: rgba(255, 255, 255, 0.75);
+  &--after-open {
+    opacity: 1;
+  }
+  &--before-close {
+    opacity: 0;
+  }
+}

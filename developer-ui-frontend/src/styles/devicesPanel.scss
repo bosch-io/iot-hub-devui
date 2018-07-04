@@ -1,0 +1,429 @@
+@import "_globalVars.scss";
+
+#devices-panel-container {
+  z-index: 2;
+  flex: 2;
+  border: 1px solid $accent_color;
+  border-radius: 2px;
+  transition: flex-grow 0.4s, transform 0.4s;
+  transform: scaleX(1);
+  transform-origin: left;
+  overflow: hidden;
+  height: calc(100% - 2px);
+  min-width: 25rem;
+}
+
+#devices-panel-container.devices-panel-closed {
+  flex-grow: 0 !important;
+  transform: scaleX(0);
+}
+
+#devices-panel-header {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: rgba(45, 62, 80, 0.5);
+  color: #fff;
+  padding: 0 1em;
+  overflow: hidden;
+
+  #fixed-header-content {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 6rem;
+    width: 100%;
+
+    #arrow-button {
+      cursor: pointer;
+      vertical-align: middle;
+      height: 1.4em;
+      padding-right: 0.5em;
+    }
+
+    h3 {
+      margin: 0;
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    #add-button {
+      position: relative;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 2.5rem;
+      height: 2.5rem;
+      outline: 0;
+      padding: 0;
+      svg {
+        height: 80%;
+        width: 80%;
+        path {
+          transition: fill 0.3s;
+          fill: rgba(255, 255, 255, 0.4);
+        }
+      }
+      &:hover {
+        svg path {
+          fill: #fff;
+        }
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        background: none;
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      }
+      &:focus:not(:active) {
+        &:after {
+          animation: pulseWhite 0.8s;
+          animation-timing-function: cubic-bezier(0, 0.73, 0.39, 1);
+        }
+      }
+    }
+
+    #disconnected-icon {
+      fill: rgba(0, 0, 0, 0.3);
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+}
+
+#devices-panel-body {
+  background-color: rgba(58, 73, 89, 0.33);
+  height: calc(#{$filtering_section_height} - 6rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &.registryView {
+    height: calc(#{$filtering_section_height} - 10rem);
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .device-description {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 75%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .circle-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    margin-right: 1em;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .additional-reg-icon {
+    border: 2px dashed $accent_green;
+
+    svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 75%;
+      height: 75%;
+      transform: translate(-50%, -50%);
+
+      path {
+        fill: $accent_green;
+      }
+    }
+  }
+
+  .registered-device-icon {
+    background: $icon_gradient_disconnected;
+    transition: 0.4s cubic-bezier(0.2, 0.6, 0.3, 1.1);
+    transform: rotate(0deg) scale(1);
+
+    &::after {
+      content: "";
+      border-radius: 50%;
+      width: 4rem;
+      height: 4rem;
+      background-image: url("../images/deviceIconLight.svg");
+      -webkit-backface-visibility: hidden;
+      -ms-transform: translateZ(0); /* IE 9 */
+      -webkit-transform: translateZ(0); /* Chrome, Safari, Opera */
+      transform: translateZ(0);
+      background-size: 2rem 2rem;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.7;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: calc(50% - 0.1rem);
+      left: 25%;
+      width: 50%;
+      height: 0;
+      background: #fff;
+    }
+
+    &:hover {
+      transform: rotate(360deg) scale(1.1) !important;
+    }
+
+    &:hover::before {
+      height: 0.3rem;
+    }
+
+    &:hover::after {
+      background-size: 0 0;
+    }
+
+    &.fetching {
+      &:after {
+        opacity: 0.3;
+        background-image: none;
+      }
+      &:hover {
+        transform: rotate(0) scale(1) !important; // No hover animation
+        & > * {
+          opacity: 0;
+        }
+        &:before {
+          content: "";
+          transition: opacity 0.4s;
+          width: 75%;
+          height: 75%;
+          transform: translate(-50%, -50%);
+          top: 50%;
+          left: 50%;
+          background-image: url("../images/cancelIconLight.svg");
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  li {
+    border-bottom: 1px solid $accent_color;
+    padding: 0.5em 1em;
+    height: 5rem;
+
+    input[type="checkbox"] {
+      display: none;
+      & ~ span {
+        .registered-device-icon {
+          background-image: none !important; // Clear the gradients
+          background-color: rgba(255, 255, 255, 0.4) !important;
+
+          &:after {
+            background-image: url("../images/deviceIconLight.svg") !important;
+          }
+
+          &:hover {
+            transform: scale(1.1) !important;
+            &:after {
+              background-size: 2rem 2rem !important;
+            }
+          }
+
+          &:before {
+            content: "";
+            background: none !important;
+            position: absolute;
+            height: 0;
+            width: 0;
+            left: 20.66%;
+            top: 51%;
+            opacity: 0;
+            border-top: 0.3rem solid $accent_green;
+            border-right: 0.3rem solid $accent_green;
+            transform-origin: left top;
+            transform: scaleX(-1) rotate(135deg);
+            transition: opacity 0.2s ease-out, width 0.3s linear,
+              height 0.3s linear 0.3s;
+          }
+        }
+      }
+
+      &:checked {
+        & ~ span {
+          .registered-device-icon {
+            box-shadow: inset 0 0 0.2rem #68d0d1;
+            background: none;
+            background-color: rgba(0, 0, 0, 0.5) !important;
+            &:before {
+              opacity: 1;
+              width: 19.33%;
+              height: 45%;
+              z-index: 1;
+            }
+            &:after {
+              background-image: url("../images/deviceIcon.svg") !important;
+            }
+          }
+        }
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 5rem; // Space for Confirm Button
+    }
+
+    &:hover {
+      & .registered-device-icon.device-active {
+        transform: rotate(0deg) scale(1.1);
+        box-shadow: 0px 0px 9px 2px rgba(0, 0, 0, 0.1),
+          0 3px 6px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    span {
+      display: flex !important;
+      flex-flow: row nowrap;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    h3,
+    p {
+      margin: 0;
+      width: 100%;
+    }
+
+    h3 {
+      font-size: 1.3em;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.8em;
+    }
+  }
+}
+
+.device-active {
+  background: $icon_gradient_connected !important;
+  &:after {
+    background-image: url("../images/deviceIcon.svg") !important;
+  }
+  &:before {
+    background: $accent_color_light !important;
+  }
+}
+
+#collapsable-searchbar {
+  width: 100%;
+  transform: translateX(200%);
+  opacity: 0;
+  height: 0;
+  transition: all 0.3s;
+
+  & > div {
+    height: 100%;
+  }
+}
+
+.searchbar-collapsed {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  height: 2.5rem !important;
+  padding-bottom: 1.5rem;
+}
+
+#additional-subs-form {
+  width: 100%;
+  height: 100%;
+
+  input[type="text"] {
+    border-radius: 1.25rem;
+    box-sizing: border-box;
+    transition: all 0.2s ease-out;
+    width: 100%;
+    height: 100%;
+    padding-left: 24px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0);
+    color: #555;
+    outline: none;
+    background-image: url("../images/searchicon.svg");
+    background-size: 1rem 1rem;
+    background-position: 8px 7px;
+    background-repeat: no-repeat;
+
+    &:focus {
+      background-color: rgba(245, 245, 245, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #ccc;
+      font-weight: 600;
+
+      &::-webkit-input-placeholder {
+        color: transparent;
+        font-weight: 400;
+      }
+    }
+
+    & ~ .__react_component_tooltip {
+      position: absolute !important;
+      left: 0 !important;
+      background-color: #151e26;
+      opacity: 1 !important;
+
+      &:after {
+        left: 25px !important;
+        border-top-color: #151e26;
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+
+  #subscription-confirm-btn {
+    position: fixed;
+    background: rgba(31, 43, 56, 0.9);
+    font-family: "Roboto", "RobotoDraft", "Helvetica Neue, Helvetica, Arial",
+      sans-serif;
+    bottom: 1rem;
+    width: calc(100% - 2rem);
+    height: 4rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: none;
+    margin: 0 1rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s;
+
+    &:hover {
+      background: rgba(31, 43, 56, 1);
+      color: #fff;
+    }
+  }
+}

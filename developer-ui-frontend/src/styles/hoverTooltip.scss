@@ -1,0 +1,18 @@
+.hover-tooltip {
+  line-height: 1.4rem !important;
+  font-size: 1rem !important;
+  background-color: rgba(66, 66, 66, 0.76) !important;
+  border-radius: 2px !important;
+  transition: opacity 150ms ease-in-out !important;
+  opacity: 0 !important;
+  transform-origin: center top !important;
+  padding: 4px 8px !important;
+  visibility: visible !important; // Use opacity transition instead
+
+  &.show {
+    opacity: 0.9 !important;
+  }
+  &::after {
+    border-bottom-width: 0px !important;
+  }
+}

@@ -1,0 +1,53 @@
+@import "_mixins.scss";
+
+#info-card {
+  @include formConfigCard(75vw, 75vh);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: url("../images/backgrounds/backgroundHeader.jpg");
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+
+  #info-card-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 75%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+
+    #hub-logo {
+      font-size: 4em;
+      font-weight: 100;
+
+      object {
+        height: 8rem;
+        vertical-align: middle;
+        width: 8rem;
+        margin-right: 0.3em;
+      }
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+    }
+
+    p {
+      text-transform: uppercase;
+      color: rgba(0, 0, 0, 0.3);
+    }
+  }
+}

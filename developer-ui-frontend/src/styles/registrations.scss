@@ -1,0 +1,542 @@
+@import "_globalVars.scss";
+@import "_mixins.scss";
+/*
+  This scss is structured in three parts: 
+  1. general styles for the registrations card (#registrations-form-container)
+  2. styles for the main panel collapsed (#registrations-main-content:not(.expanded))
+  3. styles for the main panel expanded (#registrations-main-content.expanded) 
+*/
+
+// 1) General Styles
+
+#registrations-form-container {
+  @include formConfigCard(75vw, 75vh);
+  transform-origin: center;
+  outline: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  box-sizing: border-box;
+
+  .live-feed-headline {
+    color: rgba(255, 255, 255, 0.66);
+    width: 100%;
+    height: 10rem;
+    margin: 0;
+    background-image: $background-gradient-dark;
+    line-height: 10rem;
+  }
+
+  #form-content {
+    display: flex;
+    height: calc(100% - 10rem);
+    background-color: #f5f5f5;
+
+    #registrations-side-content {
+      position: relative;
+      background-color: #fff;
+      height: 100%;
+      border-right: 1px solid #ccc;
+      transition: width 0.2s;
+
+      form {
+        height: 100%;
+
+        #searchbar-form {
+          input[type="text"] {
+            transition: box-shadow 0.3s ease-out;
+            &:hover:not(:focus) {
+              box-shadow: inset 1px 0px 0px 1px rgba(45, 62, 80, 0.16);
+            }
+          }
+        }
+      }
+
+      #reg-listing-wrapper {
+        position: relative;
+        margin: 2rem 3.75%;
+        height: calc(100% - 4rem - 6rem);
+        width: 92.5%;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
+          0 1px 2px 0 rgba(0, 0, 0, 0.24);
+
+        li {
+          list-style: none;
+          height: 3.5rem;
+          display: flex;
+          align-items: center;
+          padding: 0.7rem 1.4rem;
+          justify-content: space-between;
+
+          span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        ul:nth-child(2) {
+          li {
+            cursor: pointer;
+          }
+          li:hover {
+            background: rgba(57, 98, 132, 0.3) !important;
+          }
+          .reg-item:nth-child(even) {
+            background: #f5f5f5;
+          }
+        }
+
+        #reg-listing-fxd-header {
+          display: flex;
+          margin: 0;
+          height: 3.5rem;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5em 1em;
+          color: #9e9e9e;
+          vertical-align: middle;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        #reg-listing-content {
+          @include customScrollbar(8px, rgba(0, 0, 0, 0.4), 10px, transparent);
+          height: calc(100% - 4.9rem);
+          padding: 0;
+          overflow-y: auto;
+          margin: 0;
+        }
+      }
+
+      .expandButtonWrapper.right {
+        right: 0;
+        left: auto !important;
+        .expandButton.right {
+          right: 0;
+          transform: translateX(+51%);
+          left: auto !important;
+
+          span {
+            right: 7%;
+            left: auto !important;
+            transform-origin: 32% 55% !important;
+          }
+
+          &:before {
+            right: -50%;
+            left: auto !important;
+          }
+        }
+      }
+    }
+    #registrations-main-content {
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      position: relative;
+      display: flex;
+      flex-flow: column nowrap;
+      transition: flex-grow 0.2s, flex-shrink 0.2s, transform 0.2s;
+      background-color: $accent_color;
+      height: 100%;
+      box-sizing: border-box;
+      width: 6rem;
+
+      #main-panel-headline-wrapper {
+        padding: 3rem 3rem 0 3rem;
+        #main-panel-headline {
+          display: flex;
+          position: relative;
+          justify-content: space-between;
+          align-items: center;
+          height: 5rem;
+          margin-bottom: 0.9rem;
+
+          #action-buttons > svg {
+            height: 2rem;
+            width: 2rem;
+            transition: opacity 0.2s;
+
+            &:not(.disabled) {
+              cursor: pointer;
+            }
+            &.disabled {
+              opacity: 0.5;
+            }
+
+            &:last-child {
+              margin-left: 1rem;
+            }
+
+            path {
+              fill: #757575;
+            }
+          }
+
+          #device-icon {
+            height: 3rem;
+            width: 3rem;
+            position: absolute;
+            left: -1.5rem;
+            cursor: pointer;
+
+            path {
+              fill: #fff;
+            }
+          }
+
+          h2 {
+            margin: 0 1rem 0 5rem;
+            font-size: 2.2em;
+            font-weight: 500;
+            color: $accent_color;
+          }
+
+          .spinner {
+            width: 2rem;
+            height: 2rem;
+
+            & > * {
+              background-color: rgba($accent_color, 0.19);
+            }
+          }
+
+          span {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+
+            & > * {
+              display: inline-block;
+            }
+          }
+        } // #main-panel-headline
+      }
+    } // #registrations-main-content
+  } // #form-content
+} // #registrations-form-container
+
+// 2) Styles for Main Panel collapsed
+
+#registrations-form-container:not(.expanded) {
+  #registrations-side-content {
+    flex: 1;
+    width: 100%;
+    border-right: 0 !important;
+  }
+  #registrations-main-content {
+    transform: translateX(calc(100% - 6rem));
+    flex: 0;
+    // Hide every element of the main content except the #main-panel-headline (animated with Velocity.js)
+    #tabs,
+    #accordion-wrapper {
+      display: none;
+    }
+  }
+}
+
+// 3) Styles for Main Panel expanded
+
+#registrations-form-container.expanded {
+  #registrations-side-content {
+    width: 25%;
+  }
+  #registrations-main-content {
+    transform: translateX(0%);
+    flex: 3 1 75%;
+    background: transparent !important;
+
+    #main-panel-headline-wrapper {
+      background-color: #fff;
+      border-bottom: 1px solid #dfdfdf;
+    }
+
+    #tabs {
+      display: block;
+      margin: 0;
+      padding: 0;
+      color: #9e9e9e;
+      text-transform: uppercase;
+
+      li {
+        cursor: pointer;
+        z-index: 1;
+        list-style: none;
+        padding: 1rem;
+        display: inline-block;
+        font-weight: 500;
+        position: relative;
+        transition: color 80ms ease-in;
+
+        &:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          width: 100%;
+          height: 0%;
+          bottom: 0;
+          left: 0;
+          transition: height 80ms ease-in, background-color 80ms ease-in;
+        }
+      }
+
+      li.active {
+        color: #f1f1f1;
+        &:before {
+          height: 100%;
+          background-color: $accent_color;
+        }
+      }
+    }
+
+    #device-icon {
+      left: 0 !important;
+      cursor: auto !important;
+
+      path {
+        fill: $accent_color !important;
+      }
+    }
+
+    #accordion-wrapper {
+      margin: 3rem;
+      background-color: transparent;
+      flex: 1;
+      display: flex;
+      overflow-y: auto;
+      #tab-content-wrapper:not(.reg-mode) {
+        display: flex;
+        min-height: min-content;
+      }
+      #tab-content-wrapper.reg-mode {
+        display: block;
+        min-height: unset;
+      }
+      #tab-content-wrapper {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+
+        #credential-accordion {
+          display: flex;
+          max-height: 100%;
+          width: 100%;
+          flex-direction: column;
+          overflow: hidden;
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+
+          & > span {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
+              0 1px 2px 0 rgba(0, 0, 0, 0.24);
+          }
+
+          .accordion-tab {
+            .accordion-tab-header {
+              position: relative;
+              z-index: 1;
+              display: flex;
+              justify-content: space-between;
+              height: 4rem;
+              align-content: center;
+              background: #fff;
+              border: 1px solid #ccc;
+              font-weight: 500;
+              padding: 0 1rem;
+              color: #757575;
+              transition: box-shadow 0.4s ease-out;
+
+              .click-proxy {
+                cursor: pointer;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: 1;
+              }
+
+              &.opened {
+                box-shadow: inset 0px -5px 5px 0px rgba(28, 33, 35, 0.14);
+              }
+              #settings-wrapper {
+                height: 1.5rem;
+                #settings-dropdown-menu {
+                  right: calc(100% - 5rem) !important;
+                  top: 169% !important;
+
+                  &:before {
+                    right: 0.7rem !important;
+                  }
+
+                  li.disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed;
+                  }
+                }
+              }
+
+              &.add-tab {
+                justify-content: center !important;
+
+                &:not(.adding-mode) {
+                  cursor: pointer;
+                }
+
+                form {
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  position: relative;
+
+                  .close-arrow-btn {
+                    cursor: pointer;
+                  }
+                  #authId-searchbar {
+                    margin-right: 1rem;
+                    input[type="text"] {
+                      border-width: 0 0 1px 0;
+                      border-color: #ccc;
+                      color: #757575;
+                      width: 28rem;
+                      @include focusAnimatedTextField();
+
+                      &::placeholder {
+                        font-weight: 100;
+                        color: #ddd;
+                      }
+                    }
+                  }
+
+                  a {
+                    cursor: pointer;
+                    transition: opacity 0.2s ease-out;
+                    color: $accent_blue;
+                    opacity: 0.5;
+                    font-weight: 300;
+                    margin-right: 1rem;
+
+                    &:hover {
+                      opacity: 1;
+                    }
+                  }
+                }
+
+                #add-form-content {
+                  transition: transform 0.3s cubic-bezier(0.08, 0.71, 0.29, 1);
+                  transform-origin: left;
+                }
+                .add-icon {
+                  cursor: pointer;
+                  outline: none;
+                  transition: all 0.2s ease-out;
+                  background: transparent;
+                  border: none;
+                  svg {
+                    height: 2rem;
+                    width: 2rem;
+                    path {
+                      fill: $accent_color;
+                    }
+                  }
+
+                  &:hover:not(.adding-mode) {
+                    opacity: 1 !important;
+                  }
+                  &:disabled:not(.adding-mode) path {
+                    fill: #757575;
+                  }
+                  &:disabled.adding-mode {
+                    cursor: not-allowed;
+                    opacity: 0.5;
+                    path {
+                      fill: #757575;
+                    }
+                  }
+                }
+              }
+              span {
+                display: inline-flex;
+                align-items: center;
+                white-space: nowrap;
+                overflow: hidden;
+
+                .credential-icon {
+                  display: inline-block;
+                  height: 2rem;
+                  width: 2rem;
+                  margin-right: 1rem;
+                  overflow: visible;
+                  path {
+                    fill: $accent_color;
+                  }
+                }
+                .header-icon-right {
+                  cursor: pointer;
+                  z-index: 2;
+                  transition: transform 0.3s;
+                  width: 1.5rem;
+                  height: 1.5rem;
+                  margin-left: 1rem;
+                  path {
+                    fill: #757575;
+                  }
+                  &.callout {
+                    -webkit-animation-name: tada;
+                    animation-name: tada;
+                    -webkit-animation-duration: 2s;
+                    animation-duration: 2s;
+                    -webkit-animation-fill-mode: both;
+                    animation-fill-mode: both;
+                    animation-iteration-count: infinite;
+
+                    path {
+                      fill: $accent_blue;
+                    }
+                  }
+                }
+                .caret-rotated {
+                  transform: rotateZ(180deg);
+                }
+              }
+            } // .accordion-tab.accordion-tab-header
+            .animation-wrapper {
+              overflow: hidden;
+            }
+            #info-console {
+              display: block;
+              position: relative;
+              overflow-x: auto;
+              @include customScrollbar(
+                8px,
+                rgba(255, 255, 255, 0.1),
+                10px,
+                transparent
+              );
+
+              &::-webkit-scrollbar {
+                height: 8px;
+              }
+              &.opened {
+                max-height: 100% !important;
+                overflow: auto;
+              }
+              .fetching-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(255, 255, 255, 0.19);
+              }
+            }
+          } // .accordion-tab
+        }
+      } // #tab-content-wrapper
+    } // #accordion-wrapper
+  }
+} // #registrations-main-content.expanded

@@ -1,0 +1,22 @@
+spring:
+    profiles:
+        active: production
+devui:
+      tenant: ____________TODO_ENTER_TENANT____________
+      port: 8080
+      bindAddress: 127.0.0.1
+      htmlRoot: /hubdev/ui
+      apiRoot: /hubdev
+
+hub:
+    client:
+        host: messaging.bosch-iot-hub.com
+        port: 5671
+        tlsEnabled: true
+        username: ____________TODO_ENTER_USERNAME____________
+        password: ____________TODO_ENTER_PASSWORD____________
+
+    deviceregistry:
+        url: https://device-registry.bosch-iot-hub.com
+        username: ____________TODO_ENTER_PASSWORD____________
+        password: ____________TODO_ENTER_PASSWORD____________

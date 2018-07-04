@@ -1,0 +1,79 @@
+@import "_globalVars.scss";
+
+#flyout-btn-fixed-container {
+  z-index: 2;
+  position: fixed;
+  top: calc(10rem + 12.9rem - 25px);
+  right: 0;
+  width: 50px;
+  height: 50px;
+  margin: 0 calc(6rem - 25px) 3rem 0;
+  outline: none;
+
+  #flyout-btn-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    transition: box-shadow 0.3s ease-out;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+    animation: none;
+
+    &:hover,
+    &.opened {
+      box-shadow: 0 4px 7px rgba(0, 0, 0, 0.11), 0 4px 7px rgba(0, 0, 0, 0.18);
+    }
+
+    .flyout-btn-main-button {
+      transition: background-color 0.3s ease-out;
+      position: absolute;
+      border-radius: 50%;
+      background-color: $accent_green;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0px 0px 2px 1px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        background-color: lighten($accent_green, 10%);
+      }
+      svg path {
+        fill: #fff;
+      }
+    }
+
+    &.callout {
+      animation: pulse-callout 2s infinite;
+    }
+
+    .flyout-btn-child-button {
+      cursor: pointer;
+      transition: background-color 0.2s ease-out;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 100%;
+      background-color: white;
+      box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px;
+      &:hover:not(.disabled) {
+        background-color: #f5faff;
+      }
+      svg {
+        &.disabled {
+          path {
+            fill: rgba(136, 152, 165, 0.3);
+          }
+        }
+        height: 60%;
+        width: 60%;
+        path {
+          fill: #8898a5;
+        }
+      }
+    }
+  }
+}
