@@ -5,7 +5,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
 import { connect } from "react-redux";
-import { selectAllCredentialsApiFormat } from "reducers/selectors";
+import {
+  selectAllCredentialsApiFormat,
+  selectUninitializedCredentials
+} from "reducers/selectors";
 import { initializeEmptyCredential } from "actions/CredentialActions";
 import { addCustomNotification } from "actions/globalActions";
 import CredentialEditor from "./container/CredentialEditor";
@@ -15,14 +18,60 @@ import AddSecretModal from "./container/AddSecretModal";
 class CredentialsInfoContentWrapped extends Component {
   constructor(props) {
     super(props);
+    let initialOpenedId = null;
+    if (props.uninitializedCreds.size > 0) {
+      initialOpenedId = props.uninitializedCreds.getIn([-1, "auth-id"]);
+    } else if (props.credentials.size > 0) {
+      initialOpenedId = props.credentials.getIn([0, "auth-id"]);
+    }
     this.state = {
       addSecretModalIsOpen: false,
-      addSecretModalAuthId: null // Auth id of the Credential to which the secret is added
+      addSecretModalAuthId: null, // Auth id of the Credential to which the secret is added
+      idIsOpened: initialOpenedId
     };
     this.triggerErrorMessage = this.triggerErrorMessage.bind(this);
     this.changeAddSecretModalIsOpen = this.changeAddSecretModalIsOpen.bind(
       this
     );
+    this.toggleIsOpened = this.toggleIsOpened.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Open the first credential if:
+    // - the selectedDevice has changed or
+    // - the uninitialized credential got initialized or
+    // - credentials got loaded the first time
+    if (
+      (this.props.selectedDevice !== nextProps.selectedDevice ||
+        this.props.uninitializedCreds.size > 0 ||
+        (this.props.credentials.size === 0 &&
+          nextProps.credentials.size > 0)) &&
+      nextProps.uninitializedCreds.size === 0
+    ) {
+      this.setState({
+        idIsOpened: nextProps.credentials.getIn([0, "auth-id"])
+      });
+    }
+    // If there is a new uninitialized credential, open it
+    else if (
+      nextProps.uninitializedCreds.size > 0 &&
+      nextProps.uninitializedCreds.size !== this.props.uninitializedCreds.size
+    ) {
+      // Open the last uninitialized credential
+      this.setState({
+        idIsOpened: nextProps.uninitializedCreds.getIn([-1, "auth-id"])
+      });
+    }
+  }
+
+  toggleIsOpened(authId) {
+    if (this.state.idIsOpened === authId) {
+      this.setState({ idIsOpened: null });
+    } else {
+      this.setState({
+        idIsOpened: authId
+      });
+    }
   }
 
   changeAddSecretModalIsOpen(isOpen, authId) {
@@ -32,19 +81,17 @@ class CredentialsInfoContentWrapped extends Component {
     this.setState({ addSecretModalIsOpen: isOpen });
   }
 
-  changeTabIsOpened(authId, isOpened) {
-    const accordionTabsOpened = { ...this.state.accordionTabsOpened };
-    accordionTabsOpened[authId] = isOpened;
-    this.setState({ accordionTabsOpened });
-  }
-
   triggerErrorMessage(message) {
     this.props.addCustomNotification(message, "error");
   }
 
   render() {
     const { credentials, selectedDevice } = this.props;
-    const { addSecretModalIsOpen, addSecretModalAuthId } = this.state;
+    const {
+      addSecretModalIsOpen,
+      addSecretModalAuthId,
+      idIsOpened
+    } = this.state;
     return (
       <div id="credential-accordion">
         <span>
@@ -54,10 +101,11 @@ class CredentialsInfoContentWrapped extends Component {
               <CredentialEditor
                 credential={credential}
                 key={currentAuthId}
-                isFirst={index === 0}
+                isOpened={credential.get("auth-id") === idIsOpened}
                 triggerErrorMessage={this.triggerErrorMessage}
                 selectedDevice={selectedDevice}
                 changeAddSecretModalIsOpen={this.changeAddSecretModalIsOpen}
+                toggleIsOpened={this.toggleIsOpened}
               />
             );
           })}
@@ -81,13 +129,12 @@ class CredentialsInfoContentWrapped extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    credentials: ownProps.selectedDevice
-      ? selectAllCredentialsApiFormat(state, ownProps.selectedDevice)
-      : null
-  };
-};
+const mapStateToProps = (state, ownProps) => ({
+  credentials: ownProps.selectedDevice
+    ? selectAllCredentialsApiFormat(state, ownProps.selectedDevice)
+    : null,
+  uninitializedCreds: selectUninitializedCredentials(state)
+});
 
 const CredentialsInfoContent = connect(
   mapStateToProps,
@@ -99,6 +146,7 @@ const CredentialsInfoContent = connect(
 
 CredentialsInfoContentWrapped.propTypes = {
   credentials: ImmutablePropTypes.list,
+  uninitializedCreds: ImmutablePropTypes.list,
   initializeEmptyCredential: PropTypes.func.isRequired,
   addCustomNotification: PropTypes.func.isRequired,
   selectedDevice: PropTypes.string

@@ -8,6 +8,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { selectNumberOfAllDevices } from "reducers/selectors";
+import BigCard from "components/common/BigCard";
 import MainContent from "./MainContent/MainContent";
 import SideContent from "./SideContent/SideContent";
 import AddRegistrationButton from "./AddRegistrationButton";
@@ -17,11 +18,9 @@ export class Registrations extends React.Component {
     super(props);
     this.state = {
       mainPanelExpanded: false,
-      selectedDevice: null,
       ...props.initialState
     };
     this.setMainPanel = this.setMainPanel.bind(this);
-    this.setSelectedDevice = this.setSelectedDevice.bind(this);
   }
 
   componentDidMount() {
@@ -32,44 +31,37 @@ export class Registrations extends React.Component {
     this.setState({ mainPanelExpanded: newState });
   }
 
-  setSelectedDevice(id) {
-    this.setState({ selectedDevice: id });
-  }
-
   render() {
-    const { mainPanelExpanded, selectedDevice } = this.state;
+    const { mainPanelExpanded } = this.state;
     const { numberOfDevices } = this.props;
     return (
-      <div
+      <BigCard
+        title="Manage Device Registrations"
         id="registrations-form-container"
         className={mainPanelExpanded ? "expanded" : null}>
-        <h1 className="live-feed-headline">Manage Device Registrations</h1>
         <div id="form-content">
           <SideContent
             mainPanelExpanded={mainPanelExpanded}
             setMainPanel={this.setMainPanel}
-            setSelectedDevice={this.setSelectedDevice}
           />
           <MainContent
-            selectedDevice={selectedDevice}
             mainPanelExpanded={mainPanelExpanded}
-            setSelectedDevice={this.setSelectedDevice}
             setMainPanel={this.setMainPanel}
           />
           <AddRegistrationButton hasCallout={numberOfDevices === 0} />
         </div>
-      </div>
+      </BigCard>
     );
   }
 }
-
-Registrations = connect(state => ({
-  numberOfDevices: selectNumberOfAllDevices(state)
-}))(Registrations);
 
 Registrations.propTypes = {
   initialState: PropTypes.object,
   numberOfDevices: PropTypes.number.isRequired
 };
+
+Registrations = connect(state => ({
+  numberOfDevices: selectNumberOfAllDevices(state)
+}))(Registrations);
 
 export default Registrations;

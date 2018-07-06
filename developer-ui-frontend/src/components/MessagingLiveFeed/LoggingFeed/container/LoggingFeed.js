@@ -11,6 +11,7 @@ import TextAreaWithLed from "../presentation/TextAreaWithLed";
 import {
   selectNumberOfFeedLines,
   selectAllLogs,
+  selectNumberOfAllLogs,
   selectScrollAnimationActive,
   selectHubConnected
 } from "reducers/selectors";
@@ -18,10 +19,16 @@ import {
 const mapStateToProps = state => {
   const numberOfFeedLines = selectNumberOfFeedLines(state);
   const feedLines = selectAllLogs(state).slice(numberOfFeedLines * -1);
+  const numberOfAllLogs = selectNumberOfAllLogs(state);
   const scrollAnimationActive = selectScrollAnimationActive(state);
   const showLoadingSpinner = !selectHubConnected(state);
 
-  return { feedLines, scrollAnimationActive, showLoadingSpinner };
+  return {
+    feedLines,
+    scrollAnimationActive,
+    showLoadingSpinner,
+    numberOfAllLogs
+  };
 };
 
 // TextAreas are read-only -> no mapDispatchToProps Method needed!

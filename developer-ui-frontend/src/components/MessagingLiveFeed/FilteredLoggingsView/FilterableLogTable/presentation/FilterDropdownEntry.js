@@ -55,7 +55,7 @@ const FilterDropdownEntry = props => {
   return (
     <li onClick={handleClick}>
       {getDropdownIcon(props.categoryName)}
-      {props.categoryName}
+      <p>{props.categoryName}</p>
     </li>
   );
 };

@@ -182,9 +182,10 @@ let DevicesPanelContainer = reduxForm({
   destroyOnUnmount: false // TODO: Not ideal - currently necessary due to delayed DESTROY actions after fast page transitions
 })(DevicesPanelWrapped);
 
-DevicesPanelContainer = connect(mapStateToProps, mapDispatchToProps)(
-  toJS(DevicesPanelContainer)
-);
+DevicesPanelContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(toJS(DevicesPanelContainer));
 
 DevicesPanelWrapped.propTypes = {
   /**

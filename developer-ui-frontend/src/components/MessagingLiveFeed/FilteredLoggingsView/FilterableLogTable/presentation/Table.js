@@ -87,7 +87,7 @@ export default class Table extends React.Component {
               {this.props.eventBusConnected && this.props.hubConnected ? (
                 <ConnectedIcon />
               ) : (
-                <DisconnectedIcon />
+                <DisconnectedIcon className="disconnected" />
               )}
             </td>
           </tr>

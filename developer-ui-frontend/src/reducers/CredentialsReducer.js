@@ -105,7 +105,7 @@ const credentialsReducer = (state = initialState, action = {}) => {
           .updateIn(
             ["byId", action.authId],
             cred =>
-              cred.get("needsSecret") ? cred.delete("needsSecret") : cred
+              cred.get("firstInitTime") ? cred.delete("firstInitTime") : cred
           );
         return newState;
       });
@@ -115,7 +115,7 @@ const credentialsReducer = (state = initialState, action = {}) => {
           .update("allIds", ids => ids.push(action.authId))
           .setIn(
             ["byId", action.authId],
-            fromJS({ ...action.newCredential, needsSecret: true })
+            fromJS({ ...action.newCredential, firstInitTime: new Date().getTime() })
           )
       );
     case NEW_SECRET:

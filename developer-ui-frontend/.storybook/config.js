@@ -2,6 +2,7 @@ import React from "react";
 import { configure, addDecorator, setAddon } from "@storybook/react";
 import { setOptions } from "@storybook/addon-options";
 import infoAddon, { setDefaults } from "@storybook/addon-info";
+import { ThemeProvider } from "styled-components";
 
 // Global decorator for styling and centering
 const style = {
@@ -20,15 +21,25 @@ const innerStyle = {
   margin: "auto"
 };
 const StyledDecorator = storyFn => (
-  <div style={style}>
-    <div style={innerStyle}>{storyFn()}</div>
-  </div>
+  <ThemeProvider
+    theme={require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!../src/styles/_globalVars.scss')}>
+    <div style={style}>
+      <div style={innerStyle}>{storyFn()}</div>
+    </div>
+  </ThemeProvider>
 );
 addDecorator(StyledDecorator);
 
 // addon-info
 setDefaults({
-  header: true
+  header: true,
+  styles: stylesheet => ({
+    ...stylesheet,
+    propTableHead: {
+      ...stylesheet.source,
+      fontSize: "22.5px"
+    }
+  })
 });
 setAddon(infoAddon);
 

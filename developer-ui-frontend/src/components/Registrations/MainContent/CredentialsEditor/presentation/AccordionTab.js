@@ -35,9 +35,9 @@ export default class AccordionTab extends Component {
       isFetching
     } = this.props;
     const tooltipIdAddSecret = "add-secret-tt";
-    // Remove needsSecret property if there is one
-    const displayedCredential = credential.get("needsSecret")
-      ? credential.delete("needsSecret")
+    // Remove firstInitTime property if there is one
+    const displayedCredential = credential.get("firstInitTime")
+      ? credential.delete("firstInitTime")
       : credential;
     return (
       <div className="accordion-tab">
@@ -50,7 +50,7 @@ export default class AccordionTab extends Component {
           <span style={{ zIndex: 2, overflow: "visible" }}>
             {isOpened && (
               <React.Fragment>
-                {credential.get("needsSecret") && (
+                {credential.get("firstInitTime") && (
                   <AddSecretIcon
                     onClick={() =>
                       changeAddSecretModalIsOpen(

@@ -19,6 +19,7 @@ import {
 } from "validation/filterFormValidation";
 
 import FilterDropdown from "../presentation/FilterDropdown";
+import { SearchbarM } from "components/common/textInputs";
 
 import { Field, reduxForm, formValueSelector } from "redux-form/immutable";
 
@@ -35,12 +36,12 @@ class FilterForm extends React.Component {
   }
 
   showTooltipForSomeTime(time) {
-    ReactTooltip.show(this.searchbarRef.getRenderedComponent());
+    ReactTooltip.show(this.searchbarRef);
     setTimeout(
       () =>
         this.setState(
           { tooltipText: "", errorIndicator: 0 },
-          ReactTooltip.hide(this.searchbarRef.getRenderedComponent())
+          ReactTooltip.hide(this.searchbarRef)
         ),
       time
     );
@@ -88,8 +89,9 @@ class FilterForm extends React.Component {
         errorText += "\n";
       }
       errorText += errors.selectedDropdownItem;
-      this.setState({ tooltipText: errorText, errorIndicator: 2 }, () =>
-        this.showTooltipForSomeTime(2500)
+      this.setState(
+        { tooltipText: errorText, errorIndicator: 2 },
+        () => this.searchbarRef && this.showTooltipForSomeTime(2500)
       );
     }
   }
@@ -97,49 +99,39 @@ class FilterForm extends React.Component {
   render() {
     // handleSubmit is provided through the reduxForm decorator HOC, selectedDropdownItem through the formValueSelector API
     const { handleSubmit, selectedDropdownItem } = this.props;
-    let errorIndicatorClass;
-    switch (this.state.errorIndicator) {
-      case 1:
-        errorIndicatorClass = "bar warning";
-        break;
-      case 2:
-        errorIndicatorClass = "bar error";
-        break;
-      default:
-        errorIndicatorClass = "bar";
-    }
+    const hasWarning = this.state.errorIndicator === 1;
+    const hasError = this.state.errorIndicator === 2;
     return (
       <form onSubmit={handleSubmit(this.submit)} noValidate>
-        <div id="searchbar-form">
-          <Field
-            data-tip
-            data-for="tooltip"
-            name="filterSearch"
-            component="input"
-            autoComplete="off"
-            type="text"
-            placeholder={
-              selectedDropdownItem
-                ? "Search for " + selectedDropdownItem + "  ... "
-                : "Search ..."
-            }
-            ref={input => {
-              this.searchbarRef = input;
-            }}
-            withRef
-          />
-          <i className={errorIndicatorClass} />
-          <ReactTooltip
-            id="tooltip"
-            place="bottom"
-            type="dark"
-            effect="solid"
-            event="none">
-            <span style={{ whiteSpace: "pre-line" }}>
-              {this.state.tooltipText}
-            </span>
-          </ReactTooltip>
-        </div>
+        <SearchbarM
+          asField
+          data-tip
+          data-for="tooltip"
+          id="searchbar-form"
+          name="filterSearch"
+          autoComplete="off"
+          warning={hasWarning}
+          error={hasError}
+          type="text"
+          placeholder={
+            selectedDropdownItem
+              ? "Search for " + selectedDropdownItem + "  ... "
+              : "Search ..."
+          }
+          inputRef={input => {
+            this.searchbarRef = input;
+          }}
+        />
+        <ReactTooltip
+          id="tooltip"
+          place="bottom"
+          type="dark"
+          effect="solid"
+          event="none">
+          <span style={{ whiteSpace: "pre-line" }}>
+            {this.state.tooltipText}
+          </span>
+        </ReactTooltip>
         <FilterDropdown
           selectDropdownRef={this.state.selectDropdownRef}
           selectedDropdownItem={selectedDropdownItem}

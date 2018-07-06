@@ -30,17 +30,19 @@ class DevicesPanelHeader extends Component {
         delay={expanded ? 200 : 0}>
         <div id="devices-panel-header">
           <div id="fixed-header-content">
-            <h3>
+            <span>
               <ArrowRight
                 id="arrow-button"
                 onClick={toggleDevicesPanel}
                 data-tip
                 data-for={tooltipIdCollapsePanel}
               />
-              {deviceAddingModeActive
-                ? "Subscription Configurations"
-                : "Subscribed Devices"}
-            </h3>
+              <h6>
+                {deviceAddingModeActive
+                  ? "Subscription Configurations"
+                  : "Subscribed Devices"}
+              </h6>
+            </span>
             {!deviceAddingModeActive && (
               <button
                 id="add-button"

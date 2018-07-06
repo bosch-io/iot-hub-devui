@@ -1,12 +1,15 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import "styles/additionalSecretsModal.scss";
 import React from "react";
-import Modal from "react-modal";
 import PropTypes from "prop-types";
 import { reduxForm, Field } from "redux-form/immutable";
-import SubmitCaret from "images/submitCaret.svg";
+import {
+  ConfigurationModal,
+  ConfigurationModalHeader,
+  ConfigurationModalFooter,
+  ConfigurationModalBody
+} from "components/common/dialogModals";
 import DeleteSecretLogo from "images/deletePwSecretIcon.svg";
 import { connect } from "react-redux";
 import { deleteSecret } from "actions/CredentialActions";
@@ -31,25 +34,17 @@ class DeleteSecretModalWrapped extends React.Component {
 
   render() {
     const { isOpen, authId, changeIsOpen, handleSubmit, secrets } = this.props;
+    const subjectTitle = "Delete a Secret from ";
     return (
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={() => changeIsOpen(false)}
-        overlayClassName="confirmation-modal"
-        className="confirmation-modal-inner shadow-z-2"
-        contentLabel="Confirmation Modal"
-        ariaHideApp={false}>
-        <form
-          onSubmit={handleSubmit(this.submit.bind(this))}
-          className="configuration-modal">
-          <div className="configuration-modal-header">
-            <h2>
-              <DeleteSecretLogo className="configuration-modal-logo" />
-              Delete a Secret from <span>{authId}</span>
-            </h2>
-          </div>
-          <div className="configuration-modal-content">
-            <div>
+      <form onSubmit={handleSubmit(this.submit.bind(this))}>
+        <ConfigurationModal modalShown={isOpen} changeIsOpen={changeIsOpen}>
+          <ConfigurationModalHeader
+            subject={subjectTitle}
+            subTitle={authId}
+            icon={<DeleteSecretLogo />}
+          />
+          <ConfigurationModalBody className="configuration-modal-content">
+            <div className="dropdown-input">
               <label htmlFor="secretSelect">Secret Id</label>
               <Field name="secretSelect" component="select">
                 <option disabled>Select a Secret...</option>
@@ -60,17 +55,14 @@ class DeleteSecretModalWrapped extends React.Component {
                 ))}
               </Field>
             </div>
-          </div>
-          <div className="confirmation-btns">
-            <button onClick={() => changeIsOpen(false)} id="cancel-btn">
-              Cancel
-            </button>
-            <button type="submit" id="submit-btn">
-              Submit <SubmitCaret />
-            </button>
-          </div>
-        </form>
-      </Modal>
+          </ConfigurationModalBody>
+          <ConfigurationModalFooter
+            submitType="submit"
+            toggleModal={() => changeIsOpen(!isOpen)}
+            confirm={handleSubmit(this.submit.bind(this))}
+          />
+        </ConfigurationModal>
+      </form>
     );
   }
 }
@@ -87,9 +79,12 @@ const mapStateToProps = (state, ownProps) => {
     secrets
   };
 };
-DeleteSecretModal = connect(mapStateToProps, {
-  deleteSecret
-})(toJS(DeleteSecretModal));
+DeleteSecretModal = connect(
+  mapStateToProps,
+  {
+    deleteSecret
+  }
+)(toJS(DeleteSecretModal));
 
 DeleteSecretModalWrapped.propTypes = {
   authId: PropTypes.string,

@@ -13,6 +13,9 @@ export const selectIsFetchingByDeviceId = (state, deviceId) =>
     .getIn(["fetchInProgress", "registrations", "byId"])
     .some(id => id === deviceId);
 
+export const selectFetchingDevices = state =>
+  state.getIn(["fetchInProgress", "registrations", "byId"]);
+
 export const selectIsFetchingByAuthId = (state, authId) =>
   state
     .getIn(["fetchInProgress", "credentials", "byId"])

@@ -28,6 +28,7 @@ store.subscribe(
         const partialState = state
           .set("connection", undefined) // Don't persist connection state
           .set("logs", undefined) // Don't persist the logs
+          .set("logMemoryCalculation", undefined) // Don't persist calculations for dynamic log buffer
           .set("filters", undefined) // Don't persist ui state
           .set("form", undefined)
           .set("credentials", undefined) // Don't persist the credentials

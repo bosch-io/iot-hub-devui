@@ -3,18 +3,21 @@
  */
 import "styles/subscriptionsConfigForm.scss";
 // React
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 // Redux
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form/immutable";
+import { reduxForm, formValueSelector } from "redux-form/immutable";
+import { selectAllDevices } from "reducers/selectors";
+import { toJS } from "components/helpers/to-js";
 import { addingNewSub } from "actions/SubscriptionActions";
 import { withRouter } from "react-router-dom";
+// Styled Components
+import BigCard from "components/common/BigCard";
 // Child Components
 import RegistrySearchbar from "./presentation/RegistrySearchbar";
-import DeviceSelectionListContainer from "./container/DeviceSelectionListContainer";
-// SVG Imports
-import SubmitIcon from "images/submitCaret.svg";
+import DeviceSelectionList from "./presentation/DeviceSelectionList";
+import { RoundOutlineButton } from "components/common/buttons";
 
 /**
  * This Component takes a different approach than the RegisteredDevicesListing (DevicesPanel).
@@ -24,41 +27,44 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDevices: [],
+      deviceData: props.registeredDevices.map(device => ({
+        deviceId: device,
+        selected: false
+      })),
       validationText: "",
       tooltipShown: false,
       done: false,
       ...props.initialState
     };
-    this.addSelectedDevice = this.addSelectedDevice.bind(this);
-    this.removeDeviceFromSelection = this.removeDeviceFromSelection.bind(this);
     this.submit = this.submit.bind(this);
     this.clearValidationText = this.clearValidationText.bind(this);
     this.setValidationText = this.setValidationText.bind(this);
+    this.getSelectedEntries = this.getSelectedEntries.bind(this);
+    this.changeSelected = this.changeSelected.bind(this);
   }
 
   componentDidMount() {
     setTimeout(() => document.body.classList.add("withBgPattern"), 500); // wait some time to prevent laggy background transition
   }
-
-  addSelectedDevice(device) {
-    this.setState(prevState => ({
-      selectedDevices: [...prevState.selectedDevices, device].sort(
-        (a, b) => a.deviceId - b.deviceId
-      )
-    }));
-  }
-
-  removeDeviceFromSelection(deviceId) {
-    this.setState({
-      selectedDevices: this.state.selectedDevices.filter(
-        device => device.deviceId !== deviceId
-      )
-    });
-  }
-
   clearValidationText() {
     this.setState({ validationText: "", tooltipShown: false });
+  }
+
+  changeSelected(id) {
+    const deviceIndex = this.state.deviceData.findIndex(
+      device => device.deviceId === id
+    );
+    this.setState(state => {
+      const changedEntry = Object.assign({}, state.deviceData[deviceIndex]);
+      changedEntry.selected = !changedEntry.selected;
+      return {
+        deviceData: [
+          ...state.deviceData.slice(0, deviceIndex),
+          changedEntry,
+          ...state.deviceData.slice(deviceIndex + 1, state.deviceData.length)
+        ]
+      };
+    });
   }
 
   setValidationText(text) {
@@ -67,11 +73,18 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
     );
   }
 
+  getSelectedEntries() {
+    return this.state.deviceData
+      .filter(device => device.selected)
+      .map(device => device.deviceId);
+  }
+
   // Gets called inside the handleSubmit function of the decorated form, which passes it the current Field values
   submit(values) {
     // Both errors and warnings must hold the values under the property of the specific <Field/> name
     const errors = {};
-    if (this.state.selectedDevices.length === 0) {
+    const selectedDevices = this.getSelectedEntries();
+    if (selectedDevices.length === 0) {
       errors.registrySearch = "You have to subscribe to at least one device.";
       this.setState({
         validationText: "You have to subscribe to at least one device.",
@@ -84,8 +97,8 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
       this.setState({ done: true }, () =>
         setTimeout(
           () =>
-            this.state.selectedDevices.forEach(device =>
-              this.props.addConfiguredSubscribed(device.deviceId)
+            selectedDevices.forEach(deviceId =>
+              this.props.addConfiguredSubscribed(deviceId)
             ),
           1900
         )
@@ -94,15 +107,21 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, registrySearch } = this.props;
+    const { deviceData } = this.state;
+    const numberOfSubscribedDevices = this.state.deviceData.filter(
+      device => device.selected
+    ).length;
     return (
-      <div
+      <BigCard
+        title={
+          <Fragment>
+            Hub Messaging <span>Live</span>
+            <span>Feed</span>
+          </Fragment>
+        }
         id="subConfigForm-container"
         className={this.state.done ? "done" : ""}>
-        <h1 className="live-feed-headline">
-          Hub Messaging <span>Live</span>
-          <span>Feed</span>
-        </h1>
         <form className="subConfigForm" onSubmit={handleSubmit(this.submit)}>
           <div id="registry-search-wrapper">
             <RegistrySearchbar
@@ -111,19 +130,22 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
               tooltipShown={this.state.tooltipShown}
               setValidationText={this.setValidationText}
             />
-            <DeviceSelectionListContainer
-              selectedDevices={this.state.selectedDevices}
-              addSelectedDevice={this.addSelectedDevice}
-              removeDeviceFromSelection={this.removeDeviceFromSelection}
+            <DeviceSelectionList
+              searchText={registrySearch}
+              deviceData={deviceData}
+              showCallToAction={deviceData.length === 0}
+              changeSelected={this.changeSelected}
             />
           </div>
-          <button
+          <RoundOutlineButton
+            primary
+            submitAnimation
             type="submit"
-            disabled={this.state.selectedDevices.length === 0}>
-            <SubmitIcon /> Start
-          </button>
+            disabled={numberOfSubscribedDevices === 0}>
+            Start
+          </RoundOutlineButton>
         </form>
-      </div>
+      </BigCard>
     );
   }
 }
@@ -132,16 +154,33 @@ const mapDispatchToProps = dispatch => ({
   addConfiguredSubscribed: device => dispatch(addingNewSub(device))
 });
 
+const selector = formValueSelector("initialSubscriptionsForm");
+
+const mapStateToProps = state => {
+  const registrySearch = selector(state, "registrySearch");
+  const registeredDevices = selectAllDevices(state).map(device =>
+    device.get("deviceId")
+  );
+  return {
+    registeredDevices,
+    registrySearch
+  };
+};
+
 let InitialSubscriptionsSelectionContainer = reduxForm({
   form: "initialSubscriptionsForm"
 })(InitialSubscriptionsSelectionWrapped);
 InitialSubscriptionsSelectionContainer = withRouter(
-  connect(null, mapDispatchToProps)(InitialSubscriptionsSelectionContainer)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(toJS(InitialSubscriptionsSelectionContainer))
 );
 
 InitialSubscriptionsSelectionWrapped.propTypes = {
   handleSubmit: PropTypes.func,
   registrySearch: PropTypes.string,
+  registeredDevices: PropTypes.array.isRequired,
   addConfiguredSubscribed: PropTypes.func,
   history: PropTypes.object.isRequired,
   initialState: PropTypes.object

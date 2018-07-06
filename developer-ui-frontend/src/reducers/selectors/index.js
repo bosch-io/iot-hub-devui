@@ -75,6 +75,8 @@ export const selectSecretsByCredentialId = (state, id) =>
   fromCredentials.selectSecretsByCredentialId(state.get("credentials"), id);
 export const selectNumberOfSecretsByCredentialId = (state, id) =>
   selectSecretsByCredentialId(state, id).size;
+export const selectUninitializedCredentials = state =>
+  fromCredentials.selectUninitializedCredentials(state.get("credentials"));
 
 export const selectIsFetchingAny = state =>
   fromConnection.selectIsFetchingAny(state.get("connection"));
@@ -82,6 +84,8 @@ export const selectIsFetchingByDeviceId = (state, deviceId) =>
   fromConnection.selectIsFetchingByDeviceId(state.get("connection"), deviceId);
 export const selectIsFetchingByAuthId = (state, authId) =>
   fromConnection.selectIsFetchingByAuthId(state.get("connection"), authId);
+export const selectFetchingDevices = state =>
+  fromConnection.selectFetchingDevices(state.get("connection"));
 
 export const selectScrollAnimationActive = state =>
   state.getIn(["settings", "scrollAnimationActive"]);

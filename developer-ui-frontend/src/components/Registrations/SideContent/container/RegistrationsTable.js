@@ -3,54 +3,56 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {
-  Field,
-  FieldArray,
-  reduxForm,
-  formValueSelector
-} from "redux-form/immutable";
-import RegistrationsTableEntry from "../presentation/RegistrationsTableEntry";
+import { reduxForm, formValueSelector } from "redux-form/immutable";
+import ChecklistSelect, {
+  ChecklistSelectHeader,
+  ChecklistOptionEntries
+} from "components/common/ChecklistSelect";
 import { connect } from "react-redux";
 import { changeEnabled } from "actions/RegistrationActions";
 import { selectAllDevices } from "reducers/selectors";
-import { fromJS } from "immutable";
 import { toJS } from "components/helpers/to-js";
+import { SearchbarM } from "components/common/textInputs";
 
 class RegistrationsTableWrapped extends Component {
+  constructor(props) {
+    super(props);
+    this.handleItemClick = this.handleItemClick.bind(this);
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+  }
+
+  handleItemClick() {
+    this.props.setMainPanel(true);
+  }
+
+  handleCheckboxClick(deviceId, enabled) {
+    console.log("Clicked!!");
+    this.props.changeEnabled(deviceId, !enabled);
+  }
+
   render() {
-    const {
-      devices,
-      registrySearchValue,
-      setMainPanel,
-      setSelectedDevice
-    } = this.props;
+    const { deviceData, registrySearchValue } = this.props;
     return (
-      <form>
-        <div id="searchbar-form">
-          <Field
-            name="registrySearchText"
-            component="input"
-            type="text"
-            placeholder="Search for registered Devices..."
-            autoComplete="off"
+      <form onSubmit={e => e.preventDefault()}>
+        <SearchbarM
+          name="registrySearchText"
+          type="text"
+          placeholder="Search for registered Devices..."
+          autoComplete="off"
+          asField
+        />
+        <ChecklistSelect asField name="selectedDevice" className="reg-listing">
+          <ChecklistSelectHeader textTitle="ID" checkedTitle="enabled" />
+          <ChecklistOptionEntries
+            data={deviceData.map(entry => ({
+              text: entry.deviceId,
+              checked: entry.enabled
+            }))}
+            filterText={registrySearchValue}
+            onClick={this.handleItemClick}
+            onCheckboxClick={this.handleCheckboxClick}
           />
-          <i className="bar" />
-        </div>
-        <div id="reg-listing-wrapper">
-          <ul id="reg-listing-fxd-header">
-            <li>ID</li>
-            <li>enabled</li>
-          </ul>
-          <FieldArray
-            name="registrations"
-            component={RegistrationsTableEntry}
-            devices={devices}
-            registrySearchValue={registrySearchValue}
-            setMainPanel={setMainPanel}
-            setSelectedDevice={setSelectedDevice}
-            changeEnabled={this.props.changeEnabled}
-          />
-        </div>
+        </ChecklistSelect>
       </form>
     );
   }
@@ -58,24 +60,18 @@ class RegistrationsTableWrapped extends Component {
 
 const mapStateToProps = state => {
   const selector = formValueSelector("registrationsTabListing");
+  const devices = selectAllDevices(state);
   return {
-    initialValues: {
-      registrySearchText: "",
-      registrations: selectAllDevices(state).map(device =>
-        fromJS({
-          deviceId: device.get("deviceId"),
-          enabled: device.getIn(["registrationInfo", "enabled"])
-        })
-      )
-    },
     registrySearchValue: selector(state, "registrySearchText"),
-    devices: selectAllDevices(state)
+    deviceData: devices.map(device => ({
+      deviceId: device.get("deviceId"),
+      enabled: device.getIn(["registrationInfo", "enabled"])
+    }))
   };
 };
 
 let RegistrationsTableContainer = reduxForm({
-  form: "registrationsTabListing",
-  enableReinitialize: true
+  form: "registrationsTabListing"
 })(RegistrationsTableWrapped);
 
 RegistrationsTableContainer = connect(
@@ -84,12 +80,12 @@ RegistrationsTableContainer = connect(
 )(toJS(RegistrationsTableContainer));
 
 RegistrationsTableWrapped.propTypes = {
-  devices: PropTypes.array,
-  registrySearchValue: PropTypes.string,
-  initialValues: PropTypes.object,
+  deviceData: PropTypes.arrayOf(
+    PropTypes.shape({ deviceId: PropTypes.string, enabled: PropTypes.bool })
+  ),
   setMainPanel: PropTypes.func.isRequired,
-  setSelectedDevice: PropTypes.func.isRequired,
-  changeEnabled: PropTypes.func.isRequired
+  changeEnabled: PropTypes.func.isRequired,
+  registrySearchValue: PropTypes.string
 };
 
 const RegistrationsTable = RegistrationsTableContainer;

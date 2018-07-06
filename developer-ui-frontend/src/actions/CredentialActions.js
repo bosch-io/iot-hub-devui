@@ -250,7 +250,7 @@ export function deleteCredential(deviceId, authId) {
       "credentials",
       "byId",
       authId,
-      "needsSecret"
+      "firstInitTime"
     ]);
     if (isUninitializedCred) {
       return dispatch(credentialDeleted(deviceId, authId));

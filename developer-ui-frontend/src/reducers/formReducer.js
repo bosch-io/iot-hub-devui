@@ -5,9 +5,9 @@ import { reducer as formReducer } from "redux-form/immutable";
 import {
   NEW_FILTER,
   SUBMIT_SETTINGS,
-  NEW_CREDENTIAL,
   NEW_SECRET,
-  SECRET_DELETED
+  SECRET_DELETED,
+  INIT_EMPTY_CREDENTIAL
 } from "actions/actionTypes";
 
 export default formReducer.plugin({
@@ -29,7 +29,7 @@ export default formReducer.plugin({
   },
   addCredentials: (state, action) => {
     switch (action.type) {
-      case NEW_CREDENTIAL:
+      case INIT_EMPTY_CREDENTIAL:
         return state ? state.deleteIn(["values", "authId"]) : state;
       default:
         return state;

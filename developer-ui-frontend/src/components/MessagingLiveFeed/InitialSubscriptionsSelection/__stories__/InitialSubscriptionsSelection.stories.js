@@ -4,10 +4,14 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import { withInfo } from "@storybook/addon-info";
+import StoryWrapper from "components/helpers/StoryWrapper";
 import Provider from "components/helpers/Provider";
 import "styles/stories.scss";
 
-import { exampleStateNotConnected } from "__mocks__/storeMocks/stateMocks";
+import {
+  exampleStateNotConnected,
+  exampleStateNoRegistrations
+} from "__mocks__/storeMocks/stateMocks";
 import { BrowserRouter as Router } from "react-router-dom";
 import InitialSubscriptionsSelection, {
   InitialSubscriptionsSelectionWrapped
@@ -31,16 +35,31 @@ storiesOf("MessagingLiveFeed/InitialSubscriptionsSelection", module)
       <Provider initialStoreState={exampleStateNotConnected} story={story()} />
     );
   })
-  .add(
-    "Regular View",
-    withInfo({
-      text: docText,
-      propTables: allPropTables
-    })(() => (
-      <Router>
-        <div className="cardStory">
-          <InitialSubscriptionsSelection />
-        </div>
-      </Router>
-    ))
-  );
+  .add("Regular View", story => (
+    <StoryWrapper storePreset={exampleStateNotConnected} docText={docText}>
+      {withInfo({
+        text: docText,
+        propTables: allPropTables
+      })(() => (
+        <Router>
+          <div className="cardStory">
+            <InitialSubscriptionsSelection />
+          </div>
+        </Router>
+      ))(story)}
+    </StoryWrapper>
+  ))
+  .add("No Registrations", story => (
+    <StoryWrapper storePreset={exampleStateNoRegistrations} docText={docText}>
+      {withInfo({
+        text: docText,
+        propTables: allPropTables
+      })(() => (
+        <Router>
+          <div className="cardStory">
+            <InitialSubscriptionsSelection />
+          </div>
+        </Router>
+      ))(story)}
+    </StoryWrapper>
+  ));

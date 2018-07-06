@@ -90,7 +90,10 @@ class SettingsDropdownMenu extends React.Component {
       // Create a new settings Object
       const newSetting = {
         setting: camelCase(values.get("selectedSettingsItem")),
-        value: values.get("settingsTextInput")
+        value:
+          values.get("selectedSettingsItem") === "Number of Feed Lines"
+            ? parseInt(values.get("settingsTextInput"), 10)
+            : values.get("settingsTextInput")
       };
       // Dispatch the updateSetting action
       this.props.updateSetting(newSetting);

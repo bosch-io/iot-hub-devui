@@ -14,37 +14,59 @@ The following table gives an overview about the in this project used design asse
 
 | Resource        | Description |License   |Origin    |
 | --------------- |-------------|----------|----------|
-| images/addIcon.svg | Add Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/arrow-right.svg | Arrow Forward | [Apache License 2.0][1] | [Material.io][2]|
-| images/cancelIcon.svg | Cancel Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/cancelIconLight.svg | Cancel Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/clearConsole.svg | Delete Sweep | [Apache License 2.0][1] | [Material.io][2]|
-| images/deleteIcon.svg | Delete Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/disconnectedIcon.svg | Signal WiFi off | [Apache License 2.0][1] | [Material.io][2]|
-| images/errorIndicator.svg | Error | [Apache License 2.0][1] | [Material.io][2]|
-| images/editIcon.svg | Edit Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/editIconLight.svg | Edit Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/errorIconOutline.svg | Error Outline | [Apache License 2.0][1] | [Material.io][2]|
-| images/eventIcon.svg | Error Outline | [Apache License 2.0][1] | [Material.io][2]|
-| images/settingsIcon.svg | Settings | [Apache License 2.0][1] | [Material.io][2]|
-| images/submitCaret.svg | Keyboard Arrow Right | [Apache License 2.0][1] | [Material.io][2]|
-| images/successIcon.svg | Check | [Apache License 2.0][1] | [Material.io][2]|
-| images/doneIcon.png | Check | [Apache License 2.0][1] | [Material.io][2]|
-| images/unknownCategory.svg | Help Outline | [Apache License 2.0][1] | [Material.io][2]|
-| images/warning.svg | Warning Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/hintIcon.svg | Help Icon | [Apache License 2.0][1] | [Material.io][2]|
-| images/filtericon.svg | Filter | [Creative Commons 4][3] | [Font Awesome][4]|
-| images/bufferSizeIcon.svg |Buffer Size Icon | [Creative Commons 4][3] | [Font Awesome][4]|
-| images/curlyBraceIcon.svg | Modified Icon | [Creative Commons 4][3] | [Font Awesome][4]|
-| images/defaultIcon.svg | File Icon | [Creative Commons 4][3] | [Font Awesome][4]|
-| images/xmlIcon.svg | Meta Icon | [Creative Commons 4][3] | [Font Awesome][4]|
-| images/searchIcon.svg | Search Icon | [Creative Commons 4][3] | [Font Awesome][4]|
-| images/listLengthIcon.svg | List Icon | [Creative Commons 4][3] | [Font Awesome][4]|
-| images/deviceIcon.svg | Device Icon |[Bosch SI Example Code License][5] | Own Creation
-| images/deviceIconLight.svg | Device Icon | [Bosch SI Example Code License][5]| Own Creation
-| images/telemetryIcon.svg | Telemetry Icon | [Bosch SI Example Code License][5]| Own Creation
-| images/documentation/* | User Documentation | [Bosch SI Example Code License][5]| Own Creation
-| images/backgrounds/backgroundHeader | Background Header | [Unsplash License][6] | [Robert Haverly][7]
+| /developer-ui-frontend/src/images/addIcon.svg | Add Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/arrow-right.svg | Arrow Forward | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/cancelIcon.svg | Cancel Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/cancelIconLight.svg | Cancel Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/clearConsoleIcon.svg | Delete Sweep | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/deleteIcon.svg | Delete Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/disconnectedIcon.svg | Signal WiFi off | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/errorIndicator.svg | Error | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/editIcon.svg | Edit Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/editIconLight.svg | Edit Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/errorIconOutline.svg | Error Outline | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/pngIcons/errorIconOutline.png | Error Outline | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/eventIcon.svg | Error Outline | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/settingsIcon.svg | Settings | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/submitCaret.svg | Keyboard Arrow Right | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/successIcon.svg | Check | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/pngIcons/doneIcon.png | Check | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/unknownCategoryIcon.svg | Help Outline | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/warning.svg | Warning Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/hintIcon.svg | Help Icon | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/filtericon.svg | Filter | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/bufferSizeIcon.svg |Buffer Size Icon | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/curlyBraceIcon.svg | Modified Icon | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/defaultIcon.svg | File Icon | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/xmlIcon.svg | Meta Icon | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/searchIcon.svg | Search Icon | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/listLengthIcon.svg | List Icon | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/deviceIcon.svg | Device Icon |[Bosch SI Example Code License][5] | Own Creation
+| /developer-ui-frontend/src/images/deviceIconLight.svg | Device Icon | [Bosch SI Example Code License][5]| Own Creation
+| /developer-ui-frontend/src/images/telemetryIcon.svg | Telemetry Icon | [Bosch SI Example Code License][5]| Own Creation
+| /developer-ui-frontend/src/images/documentation/* | User Documentation | [Bosch SI Example Code License][5]| Own Creation
+| /developer-ui-frontend/src/images/backgrounds/backgroundHeader.jpg | Background Header | [Unsplash License][6] | [Robert Haverly][7]
+| /developer-ui-frontend/src/images/caretDownIcon.svg | Keyboard Arrow Down | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/copyClipboardIcon.svg | Assignment Return | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/unmaskPwIcon.svg | Remove Red Eye | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/moreIcon.svg | More Vert | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/saveIcon.svg | Save | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/searchicon.svg | Search | [Creative Commons 4][3] | [Font Awesome][4]|aa
+| /developer-ui-frontend/src/images/addPwCredentialIcon.svg | _edited from VPN Key and Folder_ | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/accountIcon.svg | Account Circle | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/deletePwCredentialIcon.svg | _edited from VPN Key and Folder_ | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/addPwSecretIcon.svg | _edited from VPN Key_ | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/deletePwSecretIcon.svg | _edited from VPN Key_ | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/successIconCircle.svg |  _edited from Done_ | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/pwCredentialIcon.svg | _edited from VPN Key and Folder_ | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/certificateIcon.svg | Certificate | [Creative Commons 4][3] | [Font Awesome][4]|
+| /developer-ui-frontend/src/images/addPwDevice.svg | _edited from VPN Key_ | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/newDeviceWithWizardIcon.svg | Description | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/pwSecretIcon.svg | VPN Key | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/addDeviceIcon.svg | Device Icon | [Bosch SI Example Code License][5]| Own Creation
+| /developer-ui-frontend/src/images/favicon.ico | Favicon | [Bosch SI Example Code License][5]| Own Creation
+| /developer-ui-frontend/src/images/warningIcon.svg | Warning | [Apache License 2.0][1] | [Material.io][2]|
+| /devui.png | Key Visual | [Bosch SI Example Code License][5]| Own Creation
 
 [1]: https://github.com/google/material-design-icons/blob/master/LICENSE
 [2]: https://material.io/icons/

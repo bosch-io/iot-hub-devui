@@ -5,7 +5,7 @@ import "styles/settings.scss";
 import React from "react";
 import PropTypes from "prop-types";
 import SettingsDropdownMenu from "./presentation/SettingsDropdownMenu";
-import ConfirmationModal from "components/common/ConfirmationModal";
+import { ConfirmationModal } from "components/common/dialogModals";
 import HoverTooltip from "components/common/HoverTooltip";
 // Redux
 import { connect } from "react-redux";
@@ -84,8 +84,9 @@ class SettingsDropdown extends React.Component {
         subject="Clear All Logs"
         modalShown={this.state.confirmModalOpen}
         toggleModal={this.toggleConfirmModal}
-        confirm={() => flushLogs()}>
-        <p>Are you sure, you want to delete all captured logs?</p>
+        confirm={() => flushLogs()}
+        submitType="delete">
+        {"Are you sure, you want to delete all captured logs?"}
       </ConfirmationModal>
     ];
   }
@@ -97,9 +98,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   flushLogs: () => dispatch(removeAllLogs())
 });
-export default (SettingsDropdown = connect(mapStateToProps, mapDispatchToProps)(
-  SettingsDropdown
-));
+export default (SettingsDropdown = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsDropdown));
 
 SettingsDropdown.propTypes = {
   initialState: PropTypes.object,

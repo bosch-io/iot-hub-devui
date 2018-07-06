@@ -28,6 +28,10 @@ $column_five_width: 33.33332%;
   transform: translateX(-51%);
   transition: opacity 0.2s, transform 0.2s;
 
+  @media (max-width: 1465px) {
+    transform: translateX(0) !important;
+  }
+
   &:before {
     content: "";
     position: absolute;
@@ -242,7 +246,12 @@ $column_five_width: 33.33332%;
     }
 
     svg {
-      fill: $table_footer_font_color;
+      &:not(.disconnected) {
+        fill: url(#a);
+      }
+      &.disconnected {
+        fill: #ccc;
+      }
       height: 1.3em;
       padding-left: 1em;
       vertical-align: middle;

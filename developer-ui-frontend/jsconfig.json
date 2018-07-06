@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "baseUrl": ".",
+    "paths": {
+      "__mocks__/*": ["./src/__mocks__/*"],
+      "actions/*": ["./src/actions/*"],
+      "animations/*": ["./src/animations/*"],
+      "components/*": ["./src/components/*"],
+      "images/*": ["./src/images/*"],
+      "reducers/*": ["./src/reducers/*"],
+      "styles/*": ["./src/styles/*"],
+      "utils/*": ["./src/utils/*"],
+      "validation/*": ["./src/validation/*"]
+    }
+  },
+  "exclude": ["node_modules", "target"]
+}

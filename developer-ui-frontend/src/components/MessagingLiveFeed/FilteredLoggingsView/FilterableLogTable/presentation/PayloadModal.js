@@ -9,13 +9,24 @@ import { formatDateString } from "utils";
 // Modal for shortened payload entries
 import Modal from "react-modal";
 // Code Syntax Highlighting for the modal view (Prism.js)
-const Prism = require("prismjs");
-const Parser = require("html-react-parser");
-require("prismjs/components/prism-php.min.js");
-require("prismjs/components/prism-yaml.min.js");
-require("prismjs/components/prism-wiki.min.js");
-require("prismjs/components/prism-markdown.min.js");
-require("prismjs/components/prism-json.min.js");
+import Prism from "prismjs";
+import Parser from "html-react-parser";
+import Normalizer from "prismjs/plugins/normalize-whitespace/prism-normalize-whitespace";
+import "prismjs/components/prism-php.min.js";
+import "prismjs/components/prism-yaml.min.js";
+import "prismjs/components/prism-wiki.min.js";
+import "prismjs/components/prism-markdown.min.js";
+import "prismjs/components/prism-json.min.js";
+import { RoundOutlineButton } from "components/common/buttons";
+
+const normalizer = new Normalizer({
+  "remove-trailing": true,
+  "remove-indent": true,
+  "left-trim": true,
+  "right-trim": true,
+  "tabs-to-spaces": 0,
+  "spaces-to-tabs": 4
+});
 
 export default class PayloadModal extends React.Component {
   constructor(props) {
@@ -23,7 +34,7 @@ export default class PayloadModal extends React.Component {
     this.getLanguageFormat = this.getLanguageFormat.bind(this);
   }
 
-  componentMount() {
+  componentDidMount() {
     Modal.setAppElement("#filterable-table");
   }
 
@@ -55,31 +66,35 @@ export default class PayloadModal extends React.Component {
     return (
       <Modal
         ariaHideApp={false}
-        overlayClassName="payload-modal"
+        overlayClassName="confirmation-modal"
         className="payload-modal-inner"
         isOpen={showModal}
         closeTimeoutMS={150}
         contentLabel="Payload Modal">
         <div id="modal-header">
-          <h2>Payload</h2>
+          <h5>Payload</h5>
           <p>
             {modalMessage ? modalMessage.message.type : ""} message from&nbsp;
             {modalMessage ? formatDateString(modalMessage.time) : ""}
           </p>
-          <button onClick={handleCloseModal}>x</button>
+          <button id="close-btn" onClick={handleCloseModal}>
+            x
+          </button>
         </div>
         <div id="payload-code-block">
           <pre className="custom-scrollbar-2">
             {modalMessage
               ? Parser(
                   Prism.highlight(
-                    modalMessage.message.content,
+                    normalizer.normalize(modalMessage.message.content),
                     this.getLanguageFormat()
                   )
                 )
               : ""}
           </pre>
-          <button onClick={handleCloseModal}>CLOSE</button>
+          <RoundOutlineButton secondary onClick={handleCloseModal}>
+            CLOSE
+          </RoundOutlineButton>
         </div>
       </Modal>
     );

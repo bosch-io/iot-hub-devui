@@ -1,0 +1,191 @@
+@import "_globalVars.scss";
+@import "_mixins.scss";
+
+header {
+  height: $header-height;
+  min-height: 6rem;
+  background: $accent_color;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2em;
+  position: relative;
+  border-bottom: 2px solid #828c97;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+
+  span {
+    display: inline-flex;
+    height: 100%;
+    align-items: center;
+    p {
+      display: inline-block;
+      font-size: 1.5em;
+      margin: 0;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
+      object {
+        // Page Logo
+        height: 1.3em;
+        width: 1.3em;
+        vertical-align: middle;
+        margin-right: 0.3em;
+
+        path {
+          fill: #fff;
+        }
+      }
+
+      span {
+        font-weight: 200;
+        color: rgba(255, 255, 255, 0.4);
+      }
+    }
+
+    nav {
+      display: inline-block;
+      height: 100%;
+      margin: 0 3rem;
+      font-size: 1em;
+      font-weight: 200;
+      color: rgba(255, 255, 255, 0.4);
+      text-decoration: none !important;
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 12rem;
+        transition: color 0.2s ease-in-out;
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none !important;
+
+        &:-webkit-any-link,
+        &:link,
+        &:visited {
+          color: rgba(255, 255, 255, 0.4) !important;
+          text-decoration: none !important;
+          &.active {
+            color: #fff !important;
+          }
+        }
+
+        &.active {
+          color: #fff !important;
+          box-shadow: 0px 14px 3px -12px $accent_red;
+          font-weight: 400;
+        }
+
+        &:hover {
+          color: #fff !important;
+        }
+      }
+    }
+  }
+
+  .tenant-info-wrapper {
+    .icon-window {
+      width: 2.4rem;
+      height: 2.4rem;
+      overflow: hidden;
+      position: relative;
+
+      &:hover {
+        .icons-wrapper:not(.loading) {
+          transform: translateY(-2.4rem);
+
+          svg:nth-of-type(2) {
+            opacity: 1;
+            cursor: pointer;
+            path {
+              fill: rgba(255, 255, 255, 1);
+            }
+          }
+          svg:nth-of-type(1) {
+            opacity: 0;
+          }
+        }
+      }
+
+      .icons-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-flex;
+        height: 4.8rem;
+        width: 2.4rem;
+        flex-direction: column;
+        transition: transform 0.3s ease-out;
+
+        svg {
+          width: 2.4rem;
+          height: 2.4rem;
+          transition: opacity 0.2s ease-out;
+          path {
+            fill: rgba(255, 255, 255, 0.4);
+            transition: fill 0.3s ease-out 0.2s;
+          }
+        }
+
+        svg:nth-of-type(1) {
+          opacity: 1;
+        }
+
+        svg:nth-of-type(2) {
+          opacity: 0;
+        }
+      }
+    }
+    height: unset !important;
+    .tenant-info {
+      z-index: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Roboto", "RobotoDraft", "Helvetica Neue, Helvetica, Arial",
+        sans-serif;
+      text-decoration: none;
+      color: $accent_blue;
+      background: transparent;
+      border: none;
+      font-weight: 500;
+      font-size: 1.1em;
+      padding: 0.3em 0;
+      margin-left: 1em;
+      outline: none;
+      height: 2.2em;
+      transition: width 0.3s;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: $accent_blue;
+        transform: scaleX(1);
+        transform-origin: right center;
+        transition: transform 0.3s cubic-bezier(0.32, 0.84, 0.28, 1.27);
+      }
+
+      &.fetching {
+        &::after {
+          transform: scaleX(0);
+        }
+      }
+
+      &:hover ~ .icon-window > .icons-wrapper:not(.loading) {
+        transform: translateY(-2.4rem);
+        svg:nth-of-type(2) {
+          opacity: 1;
+        }
+        svg:nth-of-type(1) {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}

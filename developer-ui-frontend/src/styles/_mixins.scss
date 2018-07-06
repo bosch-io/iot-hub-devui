@@ -1,5 +1,18 @@
 @import "_globalVars.scss";
 
+@function mdc-typography-get-letter-spacing_($tracking, $font-size) {
+  @return $tracking / ($font-size * 16) * 1em;
+}
+
+$mdc-typography-font-weight-values: (
+  thin: 100,
+  light: 300,
+  regular: 400,
+  medium: 500,
+  bold: 700,
+  black: 900
+) !default;
+
 @mixin customScrollbar(
   $scrollbar-width,
   $thumb-color,
@@ -10,109 +23,18 @@
   &::-webkit-scrollbar {
     background-color: $track-color;
   }
-  &::-webkit-scrollbar {
+  &::-webkit-scrollbar:vertical {
     width: $scrollbar-width;
+  }
+  &::-webkit-scrollbar:horizontal {
+    height: $scrollbar-width;
   }
   &::-webkit-scrollbar-thumb {
     border-radius: $thumb-border-radius;
     background-color: $thumb-color;
   }
-}
-%btnRegular {
-  cursor: pointer;
-  font-size: 1.2em;
-  border-radius: 0.2rem;
-  padding: 0.5rem 2rem;
-  svg {
-    display: inline-block;
-    width: auto; // adjust size with height property only
-  }
-  &:disabled {
-    cursor: not-allowed;
-    color: #ccc;
-  }
-}
-@mixin outlineBtn($col) {
-  @extend %btnRegular;
-  border: 1px solid $col;
-  transition: background-color 0.3s ease-out, color 0.3s ease-out;
-  background: none;
-  color: $col;
-  svg {
-    height: 1em;
-    vertical-align: middle;
-    path {
-      transition: fill 0.3s ease-out;
-      fill: $col;
-    }
-  }
-  &:hover {
-    background-color: $col;
-    color: #fff;
-    svg path {
-      fill: #fff !important;
-    }
-  }
-}
-// Flat Buttons = No Border
-@mixin flatBtn($col, $animationType) {
-  @extend %btnRegular;
-  border: 0;
-  outline: none;
-  font-family: "Roboto", "RobotoDraft", "Helvetica Neue, Helvetica, Arial",
-    sans-serif;
-  background: none;
-  color: $col;
-  @if $animationType = "" {
-    opacity: 0.5;
-    transition: opacity 0.18s ease-out;
-  }
-  &:hover {
-    @if $animationType = "" {
-      opacity: 1;
-    }
-    svg {
-      @if $animationType == "submit" {
-        transform: translateX(0.5em);
-      }
-      path {
-        fill: $col;
-      }
-    }
-  }
-  &:disabled {
-    &:hover {
-      svg {
-        @if $animationType == "submit" {
-          transform: translateX(0) !important;
-        }
-        path {
-          @if $animationType == "submit" {
-            transform: translateX(0) !important;
-          }
-          fill: #ccc !important;
-        }
-      }
-    }
-  }
-  svg {
-    transition: transform 0.3s ease-out;
-    @if $animationType == "submit" {
-      transform: translateX(0);
-      padding-right: 0.75em;
-      height: 0.6em;
-    } @else {
-      height: 1em;
-      vertical-align: middle;
-    }
-    path {
-      @if $animationType == "submit" {
-        transition: fill 0.5s ease-out;
-        fill: #ccc;
-      } @else {
-        fill: $col;
-      }
-    }
+  &::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0);
   }
 }
 @mixin formConfigCard($width, $height) {
@@ -126,49 +48,11 @@
   overflow: hidden;
   border-radius: 4px;
 }
-@mixin bigSearchbar($width) {
-  height: 6rem;
-  position: relative;
-  input[type="text"] {
-    position: relative;
-    width: $width;
-    height: 100%;
-    padding: 12px 20px 12px 40px;
-    background-color: #fff;
-    background-image: url("../images/searchicon.svg");
-    background-size: 2rem 2rem;
-    background-position: 10px 20px;
-    border-color: #ccc;
-    transition: box-shadow 0.2s;
-    background-repeat: no-repeat;
-    @include focusAnimatedTextField();
-    &:hover:not(:focus) {
-      box-shadow: inset 0px 0px 0px 1px rgba(45, 62, 80, 0.16);
-      color: #2d3e50;
-    }
-    &:focus {
-      z-index: 1;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.15);
-      background-image: url("../images/searchiconBlue.svg") !important;
-    }
-  }
-  .__react_component_tooltip {
-    position: absolute !important;
-    left: 0 !important;
-    top: 6rem !important;
-    &:after {
-      left: 25px !important;
-    }
-  }
-}
-@mixin focusAnimatedTextField() {
-  &:focus {
-    outline: none;
-    ~ .bar {
-      &:before,
-      &:after {
-        width: 50%;
-      }
-    }
-  }
+@mixin body2Typo {
+  font-size: 1.4rem; // 14sp
+  line-height: 2rem; // 20sp
+  font-weight: map-get($mdc-typography-font-weight-values, regular);
+  letter-spacing: mdc-typography-get-letter-spacing_(0.25, 0.875);
+  text-decoration: inherit;
+  text-transform: inherit;
 }

@@ -1,19 +1,22 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import "styles/additionalSecretsModal.scss";
 import React from "react";
-import Modal from "react-modal";
 import PropTypes from "prop-types";
 import { reduxForm, Field, formValueSelector } from "redux-form/immutable";
-import SubmitCaret from "images/submitCaret.svg";
 import AddSecretLogo from "images/addPwSecretIcon.svg";
 import { connect } from "react-redux";
 import {
   createNewSecret,
   createNewCredential
 } from "actions/CredentialActions";
-import TextInput from "components/common/TextInput";
+import {
+  ConfigurationModal,
+  ConfigurationModalHeader,
+  ConfigurationModalFooter,
+  ConfigurationModalBody
+} from "components/common/dialogModals";
+import { TextField } from "components/common/textInputs";
 import { selectCredentialById } from "reducers/selectors";
 // TODO: Enable Certificates Option
 // No Props checking (Redux Form works!)
@@ -81,25 +84,18 @@ class AddSecretModalWrapped extends React.Component {
       submitting,
       invalid
     } = this.props;
+
+    const subjectTitle = "Add a Secret for ";
     return (
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={() => changeIsOpen(false)}
-        overlayClassName="confirmation-modal"
-        className="confirmation-modal-inner shadow-z-2"
-        contentLabel="Confirmation Modal"
-        ariaHideApp={false}>
-        <form
-          onSubmit={handleSubmit(this.submit.bind(this))}
-          className="configuration-modal">
-          <div className="configuration-modal-header">
-            <h2>
-              <AddSecretLogo className="configuration-modal-logo" />
-              Add a Secret for <span>{authId}</span>
-            </h2>
-          </div>
-          <div className="configuration-modal-content">
-            <div>
+      <form onSubmit={handleSubmit(this.submit.bind(this))}>
+        <ConfigurationModal modalShown={isOpen} changeIsOpen={changeIsOpen}>
+          <ConfigurationModalHeader
+            subject={subjectTitle}
+            subTitle={authId}
+            icon={<AddSecretLogo />}
+          />
+          <ConfigurationModalBody className="configuration-modal-content">
+            <div className="dropdown-input">
               <label htmlFor="secretType">Type</label>
               <Field name="secretType" component="select">
                 <option value="Hashed Password">Hashed Password</option>
@@ -109,7 +105,7 @@ class AddSecretModalWrapped extends React.Component {
               </Field>
             </div>
             {selectedType === "Hashed Password" && (
-              <div>
+              <div className="dropdown-input">
                 <label htmlFor="hashAlgorithm">{"Hash Algorithm"}</label>
                 <Field name="hashAlgorithm" component="select">
                   <option>SHA-512</option>
@@ -118,29 +114,21 @@ class AddSecretModalWrapped extends React.Component {
                 </Field>
               </div>
             )}
-            <Field
+            <TextField
+              asField
               name="password"
-              component={TextInput}
               type="password"
               label="Password"
             />
-          </div>
-          <div className="confirmation-btns">
-            <button
-              type="button"
-              onClick={() => changeIsOpen(false)}
-              id="cancel-btn">
-              Cancel
-            </button>
-            <button
-              disabled={invalid || pristine || submitting}
-              type="submit"
-              id="submit-btn">
-              Submit <SubmitCaret />
-            </button>
-          </div>
-        </form>
-      </Modal>
+          </ConfigurationModalBody>
+          <ConfigurationModalFooter
+            submitType="submit"
+            toggleModal={() => changeIsOpen(!isOpen)}
+            submitBlocked={invalid || pristine || submitting}
+            confirm={handleSubmit(this.submit.bind(this))}
+          />
+        </ConfigurationModal>
+      </form>
     );
   }
 }
@@ -158,7 +146,9 @@ const mapStateToProps = (state, ownProps) => {
     selectedType: selector(state, "secretType"),
     firstInitialization:
       selectCredentialById(state, ownProps.authId) &&
-      Boolean(selectCredentialById(state, ownProps.authId).get("needsSecret")),
+      Boolean(
+        selectCredentialById(state, ownProps.authId).get("firstInitTime")
+      ),
     credentialType:
       selectCredentialById(state, ownProps.authId) &&
       selectCredentialById(state, ownProps.authId).get("type")

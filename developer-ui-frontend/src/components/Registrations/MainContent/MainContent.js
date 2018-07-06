@@ -9,6 +9,7 @@ import CredentialsInfoContent from "./CredentialsEditor/CredentialsInfoContent";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { fetchCredentialsByDeviceId } from "actions/DataFetchActions";
+import { formValueSelector } from "redux-form/immutable";
 const tabNames = {
   REG_INFO: {
     id: "REG_INFO",
@@ -49,7 +50,6 @@ class MainContentWrapped extends Component {
     const {
       mainPanelExpanded,
       selectedDevice,
-      setSelectedDevice,
       setMainPanel,
       style
     } = this.props;
@@ -78,8 +78,6 @@ class MainContentWrapped extends Component {
         style={style}>
         <div id="main-panel-headline-wrapper">
           <MainContentHeadline
-            selectedDevice={selectedDevice}
-            setSelectedDevice={setSelectedDevice}
             mainPanelExpanded={mainPanelExpanded}
             setMainPanel={setMainPanel}
           />
@@ -122,7 +120,12 @@ class MainContentWrapped extends Component {
 
 const MainContent = withRouter(
   connect(
-    null,
+    state => ({
+      selectedDevice: formValueSelector("registrationsTabListing")(
+        state,
+        "selectedDevice"
+      )
+    }),
     { fetchCredentialsByDeviceId }
   )(MainContentWrapped)
 );
@@ -130,7 +133,6 @@ const MainContent = withRouter(
 MainContentWrapped.propTypes = {
   mainPanelExpanded: PropTypes.bool.isRequired,
   selectedDevice: PropTypes.string,
-  setSelectedDevice: PropTypes.func.isRequired,
   fetchCredentialsByDeviceId: PropTypes.func.isRequired,
   setMainPanel: PropTypes.func.isRequired,
   style: PropTypes.bool

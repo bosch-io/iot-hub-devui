@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24.690001 24.690001" enable-background="new">
+  <defs>
+    <linearGradient id="a" x2="24" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 .69)">
+      <stop offset="0%" stop-color="#68d0d1"/>
+      <stop offset="20%" stop-color="#68d0d1"/>
+      <stop offset="100%" stop-color="#b3ffab"/>
+    </linearGradient>
+    <linearGradient xlink:href="#a" id="d" x1="-.64718282" y1="-.23901764" x2="32.45602" y2="35.068382" gradientUnits="userSpaceOnUse" gradientTransform="translate(.55216659 .55217426) scale(.95527)"/>
+    <linearGradient xlink:href="#a" id="c" x1="-2.4965513" y1="-6.641202" x2="39.049202" y2="40.531208" gradientUnits="userSpaceOnUse" gradientTransform="translate(.55216659 .55217426) scale(.95527)"/>
+    <linearGradient xlink:href="#b" id="e" x1="-2.4965513" y1="-6.641202" x2="39.049202" y2="40.531208" gradientUnits="userSpaceOnUse" gradientTransform="translate(.5521663 .552174) scale(.95527)"/>
+    <linearGradient id="b" x2="24" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 .69)">
+      <stop offset="0%" stop-color="#68d0d1"/>
+      <stop offset="20%" stop-color="#68d0d1"/>
+      <stop offset="100%" stop-color="#b3ffab"/>
+    </linearGradient>
+    <filter id="f" x="-.034875" width="1.06975" y="-.04580597" height="1.0916119" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation=".24431075"/>
+      <feBlend mode="overlay" in2="BackgroundImage"/>
+    </filter>
+  </defs>
+  <path d="M9.1496123 16.686714l-4.0121414-4.012141-1.3373804 1.33738 5.3495218 5.349522L20.612873 7.8982139l-1.33738-1.3373804z" fill="url(#c)"/>
+  <circle cx="12.344914" cy="12.345086" r="11.171822" fill="none" stroke="url(#d)" stroke-width="1.29999995" stroke-linecap="round" paint-order="markers fill stroke"/>
+  <path d="M9.1496123 16.686714l-4.012141-4.012141-1.337381 1.33738 5.349522 5.349522L20.612873 7.8982137l-1.33738-1.3373804z" opacity=".48800001" fill="url(#e)" filter="url(#f)"/>
+</svg>

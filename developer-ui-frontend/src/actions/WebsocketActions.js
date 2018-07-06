@@ -105,8 +105,8 @@ export function handleNewLog(message) {
     // This dispatch causes a new log entry and an increment of logsCount and totalThroughput
     // Check if a new Memory calculation is needed
     if (
-      getState().getIn(["logMemoryCalculation", "totalThroughput"]) %
-        AVERAGE_MEMCALC_INTERVAL -
+      (getState().getIn(["logMemoryCalculation", "totalThroughput"]) %
+        AVERAGE_MEMCALC_INTERVAL) -
         1 ===
       0
     ) {

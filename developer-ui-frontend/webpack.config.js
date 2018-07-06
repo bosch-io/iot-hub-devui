@@ -10,6 +10,7 @@ var postCssConfig = {
   loader: "postcss-loader",
   options: {
     ident: "postcss",
+    sourceMap: true,
     plugins: () => [
       require("postcss-flexbugs-fixes"),
       autoprefixer({
@@ -28,13 +29,13 @@ var postCssConfig = {
 var isProd = process.env.NODE_ENV === "production";
 var devProfile = {
   css: [
-    "style-loader",
-    { loader: "css-loader", options: { importLoaders: 1 } },
+    { loader: "style-loader", options: { sourceMap: true } },
+    { loader: "css-loader", options: { sourceMap: true, importLoaders: 1 } },
     postCssConfig,
-    "sass-loader"
+    { loader: "sass-loader", options: { sourceMap: true } }
   ],
   publicPath: "/", // Webpack Dev Server is started on root -> always serve on root
-  fileLoaderPublicPath: "./"
+  fileLoaderPublicPath: "/"
 };
 var prodProfile = {
   css: ExtractTextPlugin.extract({
@@ -74,7 +75,7 @@ module.exports = {
     publicPath: publicPathConfig
   },
   stats: { errorDetails: true },
-  devtool: isProd ? "source-map" : "eval-source-map",
+  devtool: isProd ? "source-map" : "cheap-module-source-map",
   module: {
     rules: [
       {
@@ -91,6 +92,9 @@ module.exports = {
           {
             loader: "react-svg-loader",
             options: {
+              svgo: {
+                plugins: [{ removeUselessDefs: false, cleanupIDs: false }]
+              },
               jsx: true, // true outputs JSX tags
               match: /\.jsx?/
             }
@@ -140,6 +144,7 @@ module.exports = {
       disable: !isProd,
       allChunks: true
     }),
+    // Makes some environment variables available to the JS code
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
       "process.env.PUBLIC_PATH": JSON.stringify(process.env.PUBLIC_PATH)

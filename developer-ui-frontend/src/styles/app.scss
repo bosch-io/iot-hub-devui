@@ -1,9 +1,10 @@
 @import "_globalVars.scss";
 @import "_mixins.scss";
+@import "_typography.scss";
 @import "~pretty-checkbox/src/pretty-checkbox.scss";
 
 html {
-  font-size: 62.5%; // For rem units support
+  font-size: 62.5%; // For rem units support (62.5% of 16px = 10px -> easier calculations)
   font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
 }
@@ -16,141 +17,24 @@ html {
   position: absolute;
 }
 
-header {
-  height: $header-height;
-  min-height: 6rem;
-  background: $accent_color;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2em;
-  position: relative;
-  border-bottom: 2px solid #828c97;
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-    0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
-
-  span {
-    display: inline-flex;
-    height: 100%;
-    align-items: center;
-    p {
-      display: inline-block;
-      font-size: 1.5em;
-      margin: 0;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 1);
-      object {
-        // Page Logo
-        height: 1.3em;
-        width: 1.3em;
-        vertical-align: middle;
-        margin-right: 0.3em;
-
-        path {
-          fill: #fff;
-        }
-      }
-
-      span {
-        font-weight: 200;
-        color: rgba(255, 255, 255, 0.4);
-      }
-    }
-
-    nav {
-      display: inline-block;
-      height: 100%;
-      margin: 0 3rem;
-      font-size: 1em;
-      font-weight: 200;
-      color: rgba(255, 255, 255, 0.4);
-      text-decoration: none !important;
-
-      a {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        width: 12rem;
-        transition: color 0.2s ease-in-out;
-        color: rgba(255, 255, 255, 0.4);
-        text-decoration: none !important;
-
-        &:-webkit-any-link,
-        &:link,
-        &:visited {
-          color: rgba(255, 255, 255, 0.4) !important;
-          text-decoration: none !important;
-          &.active {
-            color: #fff !important;
-          }
-        }
-
-        &.active {
-          color: #fff !important;
-          box-shadow: 0px 14px 3px -12px $accent_red;
-          font-weight: 400;
-        }
-
-        &:hover {
-          color: #fff !important;
-        }
-      }
-    }
-  }
-
-  .tenant-info-wrapper {
-    height: unset !important;
-    path {
-      fill: rgba(255, 255, 255, 0.4);
-    }
-    .tenant-info {
-      z-index: 1;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Roboto", "RobotoDraft", "Helvetica Neue, Helvetica, Arial",
-        sans-serif;
-      text-decoration: none;
-      color: $accent_blue;
-      background: transparent;
-      border: none;
-      font-weight: 500;
-      font-size: 1.1em;
-      padding: 0.3em 0;
-      margin-left: 1em;
-      outline: none;
-      height: 2.2em;
-      transition: width 0.3s;
-
-      &::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: $accent_blue;
-        transform: scaleX(1);
-        transform-origin: right center;
-        transition: transform 0.3s cubic-bezier(0.32, 0.84, 0.28, 1.27);
-      }
-
-      &.fetching {
-        &::after {
-          transform: scaleX(0);
-        }
-      }
-    }
-  }
-}
-
 /* <select>s and <option>s are just used to hold the form data and keep this data inside reduxForm control,
 the actual dropdowns are styled as divs and <ul>s and the DOM events on their <li>s control the hidden <option>s */
 select,
 option {
   display: none !important;
+}
+
+::-webkit-input-placeholder {
+  color: $disabled_font_color;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="url"],
+input[type="search"],
+input[type="email"] {
+  font-family: "Roboto", "RobotoDraft", "Helvetica Neue", "Helvetica", "Arial",
+    Sans-Serif;
 }
 
 header::after {
@@ -224,6 +108,21 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+
+  #registrations-form-container,
+  .main-view {
+    transition: 0.1s filter linear;
+  }
+
+  // blur on opened modal
+
+  &.ReactModal__Body--open {
+    #registrations-form-container,
+    .main-view {
+      filter: blur(5px);
+      transition: 0.5s filter linear;
+    }
+  }
 }
 
 .main-view {
@@ -243,6 +142,7 @@ h1 {
 
 .live-feed-headline {
   font-weight: 100;
+  user-select: none;
 
   span {
     font-size: 0.5em;
@@ -267,54 +167,18 @@ h1 {
   align-items: baseline;
 }
 
-.bar {
-  position: relative;
-  display: block;
-  &:before,
-  &:after {
-    content: "";
-    height: 2px;
-    width: 0;
-    bottom: 0;
-    position: absolute;
-    background: $accent_blue;
-    transition: all 0.15s ease;
-    z-index: 2;
-  }
-  &:before {
-    left: 50%;
-  }
-  &:after {
-    right: 50%;
-  }
-
-  &.error {
-    &:before,
-    &:after {
-      background: $accent_red !important;
-    }
-    & ~ span {
-      color: $accent_red !important;
-
-      #hint {
-        border-color: $accent_red !important;
-      }
-    }
-  }
-
-  &.warning {
-    &:before,
-    &:after {
-      background: $accent_yellow;
-    }
-    & ~ span {
-      color: $accent_yellow !important;
-
-      #hint {
-        border-color: $accent_yellow !important;
-      }
-    }
-  }
+.confirmation-modal {
+  z-index: 3;
+  position: fixed;
+  top: calc(7vh + 2px);
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: radial-gradient(
+    ellipse 200% 120% at bottom,
+    rgba(22, 29, 37, 0.9),
+    rgba(22, 29, 37, 0.34)
+  );
 }
 
 .custom-scrollbar-1 {
@@ -334,6 +198,7 @@ h1 {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
+// KEYFRAMES
 @-webkit-keyframes tada {
   0% {
     -webkit-transform: scale3d(1, 1, 1);
@@ -406,6 +271,39 @@ h1 {
     box-shadow: 0 0 0 0 rgba($accent_green, 0);
   }
 }
+
+@keyframes pulseBlue {
+  // Button animation onClick (:focus:not(:active))
+  70% {
+    box-shadow: 0 0 0 50px rgba(62, 146, 204, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(62, 146, 204, 0);
+  }
+}
+@keyframes pulseWhite {
+  // Button animation onClick (:focus:not(:active))
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 50px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+@keyframes spinAndShow {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+  }
+}
+
 // TODO: Define separate typography stylesheet file
 .no-content {
   display: flex;

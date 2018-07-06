@@ -66,7 +66,6 @@ export const registerNewStatusHandler = (eventBus, channel, dispatch) => {
 export const unregisterHandler = (eventBus, channel, dispatch) => {
   eventBus.unregisterHandler("device." + channel, incomingMessageHandler);
   dispatch(subDeleted(eventBus, channel));
-  console.log("New eventBus: ", eventBus);
   console.log(`device.${channel} deregistered as handler"`);
 };
 // Create the Websocket connection (the eventBus object)

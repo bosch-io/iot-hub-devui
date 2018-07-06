@@ -8,11 +8,6 @@ export const startingStyleConfig = {
   opacity: spring(1, { stiffness: 210, damping: 17 })
 };
 
-export const startingStyleConfigRegistrySearch = {
-  height: spring(49, { stiffness: 210, damping: 17 }),
-  opacity: spring(1, { stiffness: 210, damping: 17 })
-};
-
 export const defaultStyleConfig = { height: 0, opacity: 0 };
 
 export const mapDevicesToTransitionStyle = (styleConfig, devices) =>

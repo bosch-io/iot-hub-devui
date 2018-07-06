@@ -1,15 +1,15 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-const enhanceWithClickOutside = require('react-click-outside');
-import FilterDropdownEntry from '../presentation/FilterDropdownEntry';
-import { FILTER_CATEGORIES } from '_APP_CONSTANTS';
+const enhanceWithClickOutside = require("react-click-outside");
+import FilterDropdownEntry from "../presentation/FilterDropdownEntry";
+import { FILTER_CATEGORIES } from "_APP_CONSTANTS";
 
 // SVG Imports
-import FilterIcon from 'images/filtericon.svg';
+import FilterIcon from "images/filtericon.svg";
 
 /**
  * The filter dropdown element, including any number of FilterDropdownEntry components, defined by the FILTER_CATEGORIES.
@@ -47,12 +47,12 @@ export class FilterDropdown extends React.Component {
     // Take the DOM value as selected <option> in <select>
     selectDropdownRef.value = entry;
     // Simulate an actual click on the selected <option> of the hidden <select>
-    const clickEvent = new MouseEvent('click', {
+    const clickEvent = new MouseEvent("click", {
       view: window,
       bubbles: true,
       cancelable: false
     });
-    const changeEvent = new Event('change', {
+    const changeEvent = new Event("change", {
       bubbles: true
     });
     selectDropdownRef.options[selectDropdownRef.selectedIndex].dispatchEvent(
@@ -68,25 +68,23 @@ export class FilterDropdown extends React.Component {
         <div className="dropdown-toggle" onClick={this.handleClick}>
           <span className="title">
             <FilterIcon />
-            {selectedDropdownItem ? selectedDropdownItem : ' Add a Filter ...'}
+            {selectedDropdownItem ? selectedDropdownItem : " Add a Filter ..."}
           </span>
           <span
-            className={this.state.isOpened ? 'caret caret-rotated' : 'caret'}
+            className={this.state.isOpened ? "caret caret-rotated" : "caret"}
           />
         </div>
         <div
-          className={
-            this.state.isOpened
-              ? 'dropdown-menu dropdown-menu-active shadow-z-1'
-              : 'dropdown-menu'
-          }>
+          className={`dropdown-menu filter-dropdown ${
+            this.state.isOpened ? "dropdown-menu-active shadow-z-1" : ""
+          }`}>
           <ul>
             {FILTER_CATEGORIES.map((category, index) => (
               <FilterDropdownEntry
                 categoryName={category}
                 changeDropdownVisibility={this.handleClickOutside}
                 changeSelectedDropdown={en => this.changeSelectedDropdown(en)}
-                key={'FilterEntry' + index}
+                key={"FilterEntry" + index}
               />
             ))}
           </ul>

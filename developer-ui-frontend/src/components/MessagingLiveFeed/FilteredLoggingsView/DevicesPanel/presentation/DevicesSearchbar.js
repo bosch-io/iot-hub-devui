@@ -1,12 +1,11 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from "react";
-import PropTypes from "prop-types";
-import { Field } from "redux-form/immutable";
+import React, { Component, Fragment } from "react";
 import ReactTooltip from "react-tooltip";
+import { SearchbarS } from "components/common/textInputs";
 
-export default class DevicesSearchbar extends React.Component {
+export default class DevicesSearchbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,28 +15,27 @@ export default class DevicesSearchbar extends React.Component {
   }
 
   showTooltipForSomeTime(time) {
-    ReactTooltip.show(this.searchRef.getRenderedComponent());
+    ReactTooltip.show(this.searchRef);
     setTimeout(() => {
       this.setState({ validationText: "" });
-      ReactTooltip.hide(this.searchRef.getRenderedComponent());
+      ReactTooltip.hide(this.searchRef);
     }, time);
   }
 
   render() {
     return (
-      <div>
-        <Field
+      <Fragment>
+        <SearchbarS
+          asField
           data-tip
           data-for="additional-sub-search-tooltip"
           name="additionalSubsRegistrySearch"
-          type="text"
-          component="input"
           autoComplete="off"
+          type="text"
           placeholder="Search for Devices..."
-          ref={ref => {
+          inputRef={ref => {
             this.searchRef = ref;
           }}
-          withRef
         />
         <ReactTooltip
           id="additional-sub-search-tooltip"
@@ -49,7 +47,7 @@ export default class DevicesSearchbar extends React.Component {
             {this.state.validationText}
           </span>
         </ReactTooltip>
-      </div>
+      </Fragment>
     );
   }
 }

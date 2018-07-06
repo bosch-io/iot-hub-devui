@@ -1,11 +1,11 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import DeviceEntityItem from "./DeviceEntityItem";
 import { Field } from "redux-form/immutable";
-import ConfirmationModal from "components/common/ConfirmationModal";
+import { ConfirmationModal } from "components/common/dialogModals";
 import { TransitionMotion, Motion } from "react-motion";
 import * as devicesListTransition from "animations/devicesListTransitions";
 
@@ -187,12 +187,13 @@ export default class DevicesListing extends React.Component {
           subject="Delete Subscription"
           modalShown={this.state.confirmModal.open}
           toggleModal={this.toggleConfirmModal}
-          confirm={() => deleteSub(this.state.confirmModal.deviceId)}>
-          <p>
+          confirm={() => deleteSub(this.state.confirmModal.deviceId)}
+          submitType="delete">
+          <Fragment>
             Are you sure, you want to delete the subscription for{" "}
             <i>{this.state.confirmModal.deviceId}</i>
             ? You will no longer see any traffic of it in the feed.
-          </p>
+          </Fragment>
         </ConfirmationModal>
       </span>
     );

@@ -3,16 +3,21 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import ConfirmationModal from "components/common/ConfirmationModal";
+// Child Components
+import { ConfirmationModal } from "components/common/dialogModals";
+import HoverTooltip from "components/common/HoverTooltip";
+import Spinner from "components/common/Spinner";
+// Animations TODO: Replace Velocity
+import { VelocityComponent } from "velocity-react";
 // SVG Imports
 // import DeviceIcon from "images/deviceIcon.svg"; // TODO: Use this again
 import DeleteIcon from "images/deleteIcon.svg";
-import { VelocityComponent } from "velocity-react";
+// Redux
 import { connect } from "react-redux";
 import { selectIsFetchingByDeviceId } from "reducers/selectors";
 import { deleteRegistration } from "actions/RegistrationActions";
-import HoverTooltip from "components/common/HoverTooltip";
-import Spinner from "components/common/Spinner";
+// Redux Form
+import { reset, formValueSelector } from "redux-form/immutable";
 
 class MainContentHeadlineWrapped extends Component {
   constructor(props) {
@@ -25,9 +30,9 @@ class MainContentHeadlineWrapped extends Component {
   }
 
   confirmDeletion() {
-    const { setSelectedDevice, deleteReg, selectedDevice } = this.props;
+    const { resetSelectedDevice, deleteReg, selectedDevice } = this.props;
     const rememberedSelection = selectedDevice;
-    setSelectedDevice(null); // Clear selection
+    resetSelectedDevice(); // Clear selection
     deleteReg(rememberedSelection);
   }
 
@@ -86,8 +91,9 @@ class MainContentHeadlineWrapped extends Component {
           subject={"Delete device " + selectedDevice}
           modalShown={this.state.confirmModalOpen}
           toggleModal={this.toggleConfirmModal}
-          confirm={this.confirmDeletion}>
-          <p>Are you sure, you want to delete this registration?</p>
+          confirm={this.confirmDeletion}
+          submitType="delete">
+          {"Are you sure, you want to delete this registration?"}
         </ConfirmationModal>
         {selectedDevice && (
           <HoverTooltip
@@ -102,16 +108,23 @@ class MainContentHeadlineWrapped extends Component {
 
 const MainContentHeadline = connect(
   (state, ownProps) => ({
-    isFetching: selectIsFetchingByDeviceId(state, ownProps.selectedDevice)
+    isFetching: selectIsFetchingByDeviceId(state, ownProps.selectedDevice),
+    selectedDevice: formValueSelector("registrationsTabListing")(
+      state,
+      "selectedDevice"
+    )
   }),
-  { deleteReg: deleteRegistration }
+  dispatch => ({
+    deleteReg: deviceId => dispatch(deleteRegistration(deviceId)),
+    resetSelectedDevice: () => dispatch(reset("registrationsTabListing"))
+  })
 )(MainContentHeadlineWrapped);
 
 MainContentHeadlineWrapped.propTypes = {
   mainPanelExpanded: PropTypes.bool.isRequired,
   setMainPanel: PropTypes.func.isRequired,
   selectedDevice: PropTypes.string,
-  setSelectedDevice: PropTypes.func.isRequired,
+  resetSelectedDevice: PropTypes.func.isRequired,
   deleteReg: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired
 };

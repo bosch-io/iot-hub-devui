@@ -15,7 +15,6 @@
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
-  border: 1px solid rgb(204, 204, 204);
   border-top: 0;
   padding: 0;
   width: 50%;
@@ -40,8 +39,9 @@
     margin-left: -0.1em;
     margin-right: -0.1em;
     padding: 0 2rem;
+    border-radius: 4px;
   }
-  h2 {
+  h5 {
     padding-top: 2rem;
     padding-bottom: 2rem;
     margin: 0;
@@ -51,11 +51,11 @@
     color: #ccc;
   }
 
-  button {
-    border: none;
+  #close-btn {
     background: transparent;
     outline: none;
     cursor: pointer;
+    border: none;
   }
 }
 
@@ -72,6 +72,8 @@
     font-family: "Roboto Mono", monospace;
     max-height: calc(#{$filtering_section_height} - 6rem);
     overflow: auto;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
   }
   button {
     position: absolute;
@@ -79,38 +81,22 @@
     right: 0;
     margin-bottom: 2rem;
     margin-right: 3rem;
-    background: transparent;
     z-index: 1;
-    cursor: pointer;
-    text-align: center;
-    border-radius: 2rem;
-    color: $accent_green;
-    border: 2px solid $accent_green;
-    font-weight: 400;
-    font-size: 1.1em;
-    padding: 0.3em 1.1em;
-    outline: none;
-    transition: color 0.3s, background 0.3s;
-
-    &:hover {
-      color: #fff;
-      background: $accent_green;
-    }
   }
 }
 
-.ReactModalPortal > * {
-  // When the modal is closed, overlay div has no css class
-  // This selector should be overridden by the `&--after-open` class below
-  opacity: 0;
-}
-.ReactModal__Overlay {
-  transition: opacity 150ms ease-in-out;
-  background: rgba(255, 255, 255, 0.75);
-  &--after-open {
-    opacity: 1;
-  }
-  &--before-close {
-    opacity: 0;
-  }
-}
+// .ReactModalPortal > * {
+//   // When the modal is closed, overlay div has no css class
+//   // This selector should be overridden by the `&--after-open` class below
+//   opacity: 0;
+// }
+// .ReactModal__Overlay {
+//   transition: opacity 150ms ease-in-out;
+//   background: rgba(255, 255, 255, 0.75);
+//   &--after-open {
+//     opacity: 1;
+//   }
+//   &--before-close {
+//     opacity: 0;
+//   }
+// }

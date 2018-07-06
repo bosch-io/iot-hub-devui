@@ -9,7 +9,7 @@ import { deleteCredential } from "actions/CredentialActions";
 import CredentialAccordionTabDropdownMenu from "./CredentialAccordionTabDropdownMenu";
 import HoverTooltip from "components/common/HoverTooltip";
 import AddSecretModal from "./AddSecretModal";
-import ConfirmationModal from "components/common/ConfirmationModal";
+import { ConfirmationModal } from "components/common/dialogModals";
 import DeleteSecretModal from "./DeleteSecretModal";
 // SVG Imports
 import MoreIcon from "images/moreIcon.svg";
@@ -81,8 +81,9 @@ class CredentialAccordionTabDropdownWrapped extends React.Component {
               toggleModal={this.toggleModal}
               confirm={() =>
                 this.props.deleteCredential(selectedDevice, authId)
-              }>
-              <p>Are you sure, you want to delete this credential?</p>
+              }
+              submitType="delete">
+              {"Are you sure, you want to delete this credential?"}
             </ConfirmationModal>
           );
           break;

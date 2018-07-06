@@ -13,7 +13,6 @@ import Registrations from "../Registrations";
 // Components (Only for Prop Tables)
 import SideContent from "../SideContent/SideContent";
 import RegistrationsTable from "../SideContent/container/RegistrationsTable";
-import RegistrationsTableEntry from "../SideContent/presentation/RegistrationsTableEntry";
 import MainContent from "../MainContent/MainContent";
 import MainContentHeadline from "../MainContent/MainContentHeadline";
 import RegistrationInfoContent from "../MainContent/RegInfoEditor/RegistrationInfoContent";
@@ -22,8 +21,7 @@ import CredentialInfoContent from "../MainContent/CredentialsEditor/CredentialsI
 const allPropTablesDevicesListing = [
   Registrations,
   RegistrationsTable,
-  SideContent,
-  RegistrationsTableEntry
+  SideContent
 ];
 const allPropTablesMainPanel = [
   Registrations,

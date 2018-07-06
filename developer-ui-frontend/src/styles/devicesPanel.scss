@@ -38,18 +38,23 @@
     height: 6rem;
     width: 100%;
 
-    #arrow-button {
-      cursor: pointer;
-      vertical-align: middle;
-      height: 1.4em;
-      padding-right: 0.5em;
-    }
-
-    h3 {
-      margin: 0;
-      font-weight: 400;
-      white-space: nowrap;
-      overflow: hidden;
+    span {
+      display: inline-flex;
+      align-items: baseline;
+      #arrow-button {
+        cursor: pointer;
+        vertical-align: middle;
+        height: 1.45rem;
+        width: 1.45rem;
+        padding-right: 1em;
+      }
+      h6 {
+        font-size: 1.75rem;
+        margin: 0;
+        font-weight: 400;
+        white-space: nowrap;
+        overflow: hidden;
+      }
     }
 
     #add-button {
@@ -317,13 +322,15 @@
     }
 
     h3 {
-      font-size: 1.3em;
       color: rgba(255, 255, 255, 0.8);
+      font-size: 1.8rem;
+      line-height: 2.6rem;
     }
 
     p {
       color: rgba(255, 255, 255, 0.4);
       font-size: 0.8em;
+      line-height: 1.5rem;
     }
   }
 }
@@ -358,50 +365,8 @@
 }
 
 #additional-subs-form {
-  width: 100%;
-  height: 100%;
-
-  input[type="text"] {
-    border-radius: 1.25rem;
-    box-sizing: border-box;
-    transition: all 0.2s ease-out;
-    width: 100%;
-    height: 100%;
-    padding-left: 24px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0);
-    color: #555;
-    outline: none;
-    background-image: url("../images/searchicon.svg");
-    background-size: 1rem 1rem;
-    background-position: 8px 7px;
-    background-repeat: no-repeat;
-
-    &:focus {
-      background-color: rgba(245, 245, 245, 0.3);
-      border-color: rgba(255, 255, 255, 0.4);
-      color: #ccc;
-      font-weight: 600;
-
-      &::-webkit-input-placeholder {
-        color: transparent;
-        font-weight: 400;
-      }
-    }
-
-    & ~ .__react_component_tooltip {
-      position: absolute !important;
-      left: 0 !important;
-      background-color: #151e26;
-      opacity: 1 !important;
-
-      &:after {
-        left: 25px !important;
-        border-top-color: #151e26;
-        color: rgba(255, 255, 255, 0.8);
-      }
-    }
-  }
+  //   width: 100%;
+  //   height: 100%;
 
   #subscription-confirm-btn {
     position: fixed;

@@ -20,3 +20,10 @@ export const selectSecretsByCredentialId = (state, credentialId) => {
     ? secretIds.map(id => state.getIn(["secrets", "byId", id]))
     : fromJS([]);
 };
+
+export const selectUninitializedCredentials = state =>
+  state
+    .get("allIds")
+    .map(credId => state.getIn(["byId", credId]))
+    .filter(cred => cred.get("firstInitTime"))
+    .sort((a, b) => a.get("firstInitTime") - b.get("firstInitTime"));

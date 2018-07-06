@@ -1,9 +1,10 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from "react";
+import React, { Fragment } from "react";
 import Velocity from "velocity-react/lib/velocity-animate-shim";
 import PropTypes from "prop-types";
+import { TransitionMotion, spring } from "react-motion";
 import { formatDateString } from "utils";
 import ImmutablePropTypes from "react-immutable-proptypes";
 import Spinner from "components/common/Spinner";
@@ -19,7 +20,7 @@ export default class TextAreaWithLed extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // We use the change indicating ledActive flag instead of the feeedLines prop to avoid the need of deep comparison
-    if (nextProps.feedLines.size > this.props.feedLines.size) {
+    if (nextProps.numberOfAllLogs > this.props.numberOfAllLogs) {
       this.setState({ ledActive: true }, () =>
         setTimeout(() => this.setState({ ledActive: false }), 200)
       );
@@ -107,12 +108,37 @@ export default class TextAreaWithLed extends React.Component {
               readOnly
               value={output.join("")}
             />
-            {showLoadingSpinner && (
-              <div className="loader-container">
-                <Spinner type="bubbles" />
-                <span>Connecting ...</span>
-              </div>
-            )}
+            {/* Fade the loader in and out with a mount/unmount transition */}
+            <TransitionMotion
+              willLeave={() => ({ opacity: spring(0) })}
+              willEnter={() => ({ opacity: spring(1) })}
+              config={{ stiffness: 210, damping: 20 }}
+              styles={
+                showLoadingSpinner
+                  ? [
+                      {
+                        key: "spinner",
+                        style: { opacity: 1 }
+                      }
+                    ]
+                  : []
+              }>
+              {interpolatedStyles => (
+                <Fragment>
+                  {interpolatedStyles.map(config => (
+                    <div
+                      className="loader-container"
+                      key={config.key}
+                      style={{
+                        opacity: config.style.opacity
+                      }}>
+                      <Spinner type="bubbles" />
+                      <span>Connecting ...</span>
+                    </div>
+                  ))}
+                </Fragment>
+              )}
+            </TransitionMotion>
           </div>
         </form>
       </div>
@@ -124,5 +150,6 @@ export default class TextAreaWithLed extends React.Component {
 TextAreaWithLed.propTypes = {
   scrollAnimationActive: PropTypes.bool,
   feedLines: ImmutablePropTypes.list,
+  numberOfAllLogs: PropTypes.number.isRequired,
   showLoadingSpinner: PropTypes.bool
 };

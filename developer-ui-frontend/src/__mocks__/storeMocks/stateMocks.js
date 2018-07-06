@@ -859,3 +859,104 @@ export const exampleStateNotConnected = fromJS({
     }
   }
 });
+
+export const exampleStateNoRegistrations = fromJS({
+  devices: {
+    byId: {},
+    allIds: []
+  },
+  logs: {
+    byId: {},
+    allIds: []
+  },
+  connection: {
+    eventBus: exampleEventBus,
+    eventBusConnected: true,
+    hubConnected: true,
+    fetchInProgress: {
+      tenant: false,
+      registrations: {
+        global: false,
+        byId: []
+      },
+      credentials: {
+        global: false,
+        byId: []
+      }
+    }
+  },
+  settings: {
+    scrollAnimationActive: true,
+    numberOfFeedLines: 50,
+    logsSorting: {
+      category: "unsorted",
+      ascending: false
+    }
+  },
+  filters: {
+    byId: {
+      "type-telemetry": {
+        type: "Type",
+        value: "telemetry",
+        id: "type-telemetry"
+      }
+    },
+    allIds: ["type-telemetry"]
+  },
+  logMemoryCalculation: {
+    averageSizeOfLog: 160,
+    maximumAmountOfLogs: 1250000,
+    memCalcCounter: 2,
+    totalThroughput: 7,
+    bufferSize: 200
+  },
+  credentials: exampleCredentialsInStore,
+  form: {
+    additionalSubscriptionsForm: {
+      registeredFields: {
+        registrations: {
+          name: "registrations",
+          type: "FieldArray",
+          count: 0
+        },
+        additionalSubsRegistrySearch: {
+          name: "additionalSubsRegistrySearch",
+          type: "Field",
+          count: 0
+        }
+      },
+      values: {
+        additionalSubsRegistrySearch: "",
+        registrations: []
+      },
+      initial: {
+        additionalSubsRegistrySearch: "",
+        registrations: []
+      },
+      fields: {
+        registrations: [],
+        additionalSubsRegistrySearch: {
+          touched: true
+        }
+      },
+      anyTouched: true,
+      submitSucceeded: true
+    },
+    initialSubscriptionsForm: {
+      registeredFields: {
+        registrySearch: {
+          name: "registrySearch",
+          type: "Field",
+          count: 1
+        }
+      },
+      fields: {
+        registrySearch: {
+          visited: true,
+          touched: true
+        }
+      },
+      anyTouched: true
+    }
+  }
+});
