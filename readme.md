@@ -24,7 +24,7 @@ The following features are available:
 * View devices and their credentials
 
 ## System Requirements
-To Hub Developer UI works best using the following system environment:
+The Hub Developer UI works best using the following system environment:
 * Java 8 
 * Google Chrome
 
