@@ -23,6 +23,11 @@ The following features are available:
 * Register new devices and credentials
 * View devices and their credentials
 
+## System Requirements
+To Hub Developer UI works best using the following system environment:
+* Java 8 
+* Google Chrome
+
 ## Usage
 * To use the Hub Developer UI you will need a Bosch IoT Hub Tenant. There is a free service plan offering available: [Bosch IoT Hub][1]
 
