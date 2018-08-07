@@ -51,6 +51,8 @@
           &:before {
             right: -50%;
             left: auto !important;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16),
+              0 3px 6px rgba(0, 0, 0, 0.23);
           }
         }
       }
@@ -156,20 +158,19 @@
     flex: 0;
 
     // half circle cut out
-    // &:after {
-    //   content: "";
-    //   position: absolute;
-    //   top: 12.9rem;
-    //   left: -29px;
-    //   width: 58px;
-    //   height: 58px;
-    //   transform: translateY(-50%);
-    //   background-color: #fff;
-    //   border-radius: 100% 100%;
-    //   box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.16),
-    //     inset 0 3px 6px rgba(0, 0, 0, 0.23);
-    //   clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
-    // }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 12.9rem;
+      left: -29px;
+      width: 58px;
+      height: 58px;
+      transform: translateY(-50%);
+      background-color: #fff;
+      border-radius: 100% 100%;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.16),
+        inset 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
     // Hide every element of the main content except the #main-panel-headline (animated with Velocity.js)
     #tabs,
     #accordion-wrapper {

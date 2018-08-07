@@ -45,20 +45,28 @@ export default class TextAreaWithLed extends React.Component {
 
   formatNewLines(concatedString) {
     // TODO: Use this after state normalization and log aggregation refactoring
-    let concatedStringWithNewlines;
+    let concatedStringWithNewlines = "";
     const charWidth =
       parseInt(
         window
           .getComputedStyle(this.textArea, null)
           .getPropertyValue("font-size"),
         10
-      ) * 0.555; // 0.55 * font-size on monospace font = charWidth
+      ) * 0.6; // 0.6 * font-size on monospace font = charWidth
     const textAreaWidth = this.textArea.clientWidth;
+    const newLineInterval = parseInt(textAreaWidth / charWidth, 10) - 3; // 3 spaces are prepended
+    let charsSinceNewline = 0;
     for (let i = 0; i < concatedString.length; i++) {
-      concatedStringWithNewlines += concatedString.charAt(i);
-      if (i % (textAreaWidth / charWidth) === 0) {
+      const currentChar = concatedString.charAt(i);
+      concatedStringWithNewlines += currentChar;
+      if (currentChar === "\n") {
+        charsSinceNewline = 0;
+      } else if (i !== 0 && charsSinceNewline - newLineInterval === 0) {
         console.log("NewLine after", i, "characters");
-        concatedStringWithNewlines += "§"; // TODO: Replace with \n
+        concatedStringWithNewlines += "\n   ";
+        charsSinceNewline = 0;
+      } else {
+        charsSinceNewline++;
       }
     }
     return concatedStringWithNewlines;
@@ -70,7 +78,7 @@ export default class TextAreaWithLed extends React.Component {
       .map(log => {
         const time = log.get("time");
         const type = log.getIn(["message", "type"]);
-        const content = JSON.stringify(log.getIn(["message", "content"]));
+        const content = String(log.getIn(["message", "content"]));
         const contentType = log.getIn(["message", "contentType"]);
         const deviceId = log.getIn(["message", "deviceId"]);
         const concatedString =
@@ -86,7 +94,7 @@ export default class TextAreaWithLed extends React.Component {
           ": " +
           content +
           "\n";
-        return concatedString;
+        return this.formatNewLines(concatedString);
       })
       .toJS();
 
