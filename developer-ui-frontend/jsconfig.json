@@ -15,5 +15,5 @@
       "validation/*": ["./src/validation/*"]
     }
   },
-  "exclude": ["node_modules", "target"]
+  "exclude": ["node_modules", "node", "target"]
 }

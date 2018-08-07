@@ -4,11 +4,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { CREDENTIAL_TYPES } from "_APP_CONSTANTS";
-import { reduxForm, SubmissionError } from "redux-form/immutable";
+import { reduxForm, SubmissionError, change } from "redux-form/immutable";
 import { connect } from "react-redux";
 import { toJS } from "components/helpers/to-js";
 import { createStandardPasswordRegistration } from "actions/RegistrationActions";
-import { autogenerateAuthId } from "utils";
 import ConfigurationViewBody from "./ConfigurationViewBody";
 import { selectFetchingDevices, selectTenant } from "reducers/selectors";
 import { noDuplicateDevices } from "validation/addRegistrationValidation";
@@ -93,6 +92,13 @@ class AddRegistrationModalContainer extends React.Component {
   changeIsOpen(opened) {
     this.props.changeIsOpen(opened, CREDENTIAL_TYPES.PASSWORD);
     this.props.redirectToRegistrations();
+    // if a new device was created and the modal is about to be closed
+    if (!opened && this.state.newDeviceId) {
+      // Select the newly created device in the mainContent part of the
+      // registrations tab (expand it)
+      this.props.changeCurrentlySelectedDevice(this.state.newDeviceId);
+      this.props.setMainPanel(true);
+    }
   }
 
   render() {
@@ -156,10 +162,24 @@ AddRegistrationModalContainer.propTypes = {
   changeIsOpen: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   createStandardPasswordRegistration: PropTypes.func.isRequired,
+  changeCurrentlySelectedDevice: PropTypes.func.isRequired,
   redirectToRegistrations: PropTypes.func.isRequired,
+  setMainPanel: PropTypes.func.isRequired,
   fetchingRegistrations: PropTypes.array.isRequired,
   availableDevices: PropTypes.array
 };
+
+const mapStateToProps = state => ({
+  fetchingRegistrations: selectFetchingDevices(state),
+  tenant: selectTenant(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+  createStandardPasswordRegistration: (deviceId, authId, secretData) =>
+    dispatch(createStandardPasswordRegistration(deviceId, authId, secretData)),
+  changeCurrentlySelectedDevice: deviceId =>
+    dispatch(change("registrationsTabListing", "selectedDevice", deviceId))
+});
 
 AddRegistrationModalContainer = reduxForm({
   form: "newRegistration",
@@ -167,13 +187,8 @@ AddRegistrationModalContainer = reduxForm({
   warn
 })(AddRegistrationModalContainer);
 AddRegistrationModalContainer = connect(
-  state => ({
-    fetchingRegistrations: selectFetchingDevices(state),
-    tenant: selectTenant(state)
-  }),
-  {
-    createStandardPasswordRegistration
-  }
+  mapStateToProps,
+  mapDispatchToProps
 )(toJS(AddRegistrationModalContainer));
 
 export default AddRegistrationModalContainer;

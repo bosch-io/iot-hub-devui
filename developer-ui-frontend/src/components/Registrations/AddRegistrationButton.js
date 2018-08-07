@@ -57,7 +57,7 @@ class AddRegistrationButton extends React.Component {
 
   render() {
     const { addRegistrationModalIsOpen, addRegistrationModalType } = this.state;
-    const { hasCallout } = this.props;
+    const { hasCallout, setMainPanel } = this.props;
     const tooltipIdFirstReg = "first-reg";
     return (
       <Fragment>
@@ -95,6 +95,7 @@ class AddRegistrationButton extends React.Component {
                   password: ""
                 }}
                 changeIsOpen={this.changeAddRegistrationModalIsOpen}
+                setMainPanel={setMainPanel}
               />
             );
           }}
@@ -111,7 +112,8 @@ class AddRegistrationButton extends React.Component {
 }
 
 AddRegistrationButton.propTypes = {
-  hasCallout: PropTypes.bool.isRequired
+  hasCallout: PropTypes.bool.isRequired,
+  setMainPanel: PropTypes.func.isRequired
 };
 
 export default AddRegistrationButton;

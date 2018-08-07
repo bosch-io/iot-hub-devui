@@ -48,7 +48,10 @@ export class Registrations extends React.Component {
             mainPanelExpanded={mainPanelExpanded}
             setMainPanel={this.setMainPanel}
           />
-          <AddRegistrationButton hasCallout={numberOfDevices === 0} />
+          <AddRegistrationButton
+            hasCallout={numberOfDevices === 0}
+            setMainPanel={this.setMainPanel}
+          />
         </div>
       </BigCard>
     );

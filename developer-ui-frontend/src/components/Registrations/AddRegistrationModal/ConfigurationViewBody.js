@@ -14,6 +14,16 @@ import { ConfigurationModalBody } from "components/common/dialogModals";
 // No Props checking (Redux Form works!)
 /* eslint-disable react/prop-types */
 export default class ConfigurationViewBody extends Component {
+  constructor(props) {
+    super(props);
+    this.textfieldRef;
+  }
+  componentDidMount() {
+    if (this.textfieldRef) {
+      this.textfieldRef.focus();
+    }
+  }
+
   render() {
     const {
       type,
@@ -37,6 +47,9 @@ export default class ConfigurationViewBody extends Component {
               type="text"
               placeholder="Enter an id for your new Device ..."
               label="Device Id"
+              inputRef={ref => {
+                this.textfieldRef = ref;
+              }}
             />
             <TextField
               asField

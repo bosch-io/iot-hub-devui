@@ -2,6 +2,7 @@
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import FocusBar from "./FocusBar";
 import styled from "styled-components";
 import { transparentize } from "polished";
@@ -158,7 +159,8 @@ class TextField extends Component {
       warning,
       touched,
       active,
-      asField
+      asField,
+      inputRef
     } = this.props;
     let { input } = this.props;
 
@@ -179,6 +181,7 @@ class TextField extends Component {
                 type={type}
                 error={((touched && !active) || !asField) && error}
                 warning={((touched && !active) || !asField) && warning}
+                innerRef={inputRef}
               />
               <FocusBar
                 className="bar"
@@ -200,6 +203,16 @@ class TextField extends Component {
     );
   }
 }
+
+TextField.propTypes = {
+  error: PropTypes.string,
+  warning: PropTypes.string,
+  label: PropTypes.string,
+  type: PropTypes.string,
+  touched: PropTypes.bool,
+  asField: PropTypes.bool,
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
+};
 
 export default props =>
   props.asField ? (
