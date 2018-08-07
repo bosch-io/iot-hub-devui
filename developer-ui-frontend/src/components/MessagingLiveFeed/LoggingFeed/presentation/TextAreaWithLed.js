@@ -5,6 +5,7 @@ import React, { Fragment } from "react";
 import Velocity from "velocity-react/lib/velocity-animate-shim";
 import PropTypes from "prop-types";
 import { TransitionMotion, spring } from "react-motion";
+import Measure from "react-measure";
 import { formatDateString } from "utils";
 import ImmutablePropTypes from "react-immutable-proptypes";
 import Spinner from "components/common/Spinner";
@@ -13,9 +14,12 @@ export default class TextAreaWithLed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ledActive: false
+      ledActive: false,
+      newLineInterval: null
     };
     this.formatNewLines = this.formatNewLines.bind(this);
+    this.setNewlineInterval = this.setNewlineInterval.bind(this);
+    this.formatOutput = this.formatOutput.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,9 +47,7 @@ export default class TextAreaWithLed extends React.Component {
     }
   }
 
-  formatNewLines(concatedString) {
-    // TODO: Use this after state normalization and log aggregation refactoring
-    let concatedStringWithNewlines = "";
+  setNewlineInterval(contentRect) {
     const charWidth =
       parseInt(
         window
@@ -53,16 +55,23 @@ export default class TextAreaWithLed extends React.Component {
           .getPropertyValue("font-size"),
         10
       ) * 0.6; // 0.6 * font-size on monospace font = charWidth
-    const textAreaWidth = this.textArea.clientWidth;
+    const textAreaWidth = contentRect.client.width;
     const newLineInterval = parseInt(textAreaWidth / charWidth, 10) - 3; // 3 spaces are prepended
+    this.setState({ newLineInterval });
+  }
+
+  formatNewLines(concatedString) {
+    let concatedStringWithNewlines = "";
     let charsSinceNewline = 0;
     for (let i = 0; i < concatedString.length; i++) {
       const currentChar = concatedString.charAt(i);
       concatedStringWithNewlines += currentChar;
       if (currentChar === "\n") {
         charsSinceNewline = 0;
-      } else if (i !== 0 && charsSinceNewline - newLineInterval === 0) {
-        console.log("NewLine after", i, "characters");
+      } else if (
+        i !== 0 &&
+        charsSinceNewline - this.state.newLineInterval === 0
+      ) {
         concatedStringWithNewlines += "\n   ";
         charsSinceNewline = 0;
       } else {
@@ -72,9 +81,8 @@ export default class TextAreaWithLed extends React.Component {
     return concatedStringWithNewlines;
   }
 
-  render() {
-    const { feedLines, showLoadingSpinner } = this.props;
-    const output = feedLines
+  formatOutput() {
+    return this.props.feedLines
       .map(log => {
         const time = log.get("time");
         const type = log.getIn(["message", "type"]);
@@ -96,7 +104,15 @@ export default class TextAreaWithLed extends React.Component {
           "\n";
         return this.formatNewLines(concatedString);
       })
-      .toJS();
+      .toJS()
+      .join("");
+  }
+
+  render() {
+    const { feedLines, showLoadingSpinner } = this.props;
+    const output = this.state.newLineInterval
+      ? this.formatOutput(feedLines)
+      : feedLines.join("");
 
     return (
       <div id="feedContainer">
@@ -106,16 +122,23 @@ export default class TextAreaWithLed extends React.Component {
               className={this.state.ledActive ? "blink" : ""}
               id="statusLed"
             />
-            <textarea
-              id="feed"
-              className={showLoadingSpinner ? "disconnected" : null}
-              cols="50"
-              ref={textarea => {
-                this.textArea = textarea;
-              }}
-              readOnly
-              value={output.join("")}
-            />
+            <Measure
+              client
+              onResize={contentRect => this.setNewlineInterval(contentRect)}
+              innerRef={ref => {
+                this.textArea = ref;
+              }}>
+              {({ measureRef }) => (
+                <textarea
+                  id="feed"
+                  className={showLoadingSpinner ? "disconnected" : null}
+                  cols="50"
+                  ref={measureRef}
+                  readOnly
+                  value={output}
+                />
+              )}
+            </Measure>
             {/* Fade the loader in and out with a mount/unmount transition */}
             <TransitionMotion
               willLeave={() => ({ opacity: spring(0) })}
