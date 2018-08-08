@@ -41,6 +41,15 @@
   font-size: 1em;
 }
 
+#searchbar-form {
+  input[name="filterSearch"]:focus {
+    z-index: 2;
+  }
+  svg.searchIcon {
+    z-index: 3;
+  }
+}
+
 .dropdown-wrapper {
   flex: 1;
   position: relative;

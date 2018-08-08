@@ -17,13 +17,11 @@ import InitialSubscriptionsSelection, {
   InitialSubscriptionsSelectionWrapped
 } from "../InitialSubscriptionsSelection";
 import DeviceSelectionList from "../presentation/DeviceSelectionList";
-import RegisteredDeviceItem from "../presentation/RegisteredDeviceItem";
 import RegistrySearchbar from "../presentation/RegistrySearchbar";
 
 const allPropTables = [
   InitialSubscriptionsSelectionWrapped,
   DeviceSelectionList,
-  RegisteredDeviceItem,
   RegistrySearchbar
 ];
 

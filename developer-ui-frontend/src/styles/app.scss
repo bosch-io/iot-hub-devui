@@ -143,6 +143,7 @@ h1 {
 .live-feed-headline {
   font-weight: 100;
   user-select: none;
+  color: #303f4f;
 
   span {
     font-size: 0.5em;
@@ -150,7 +151,7 @@ h1 {
 
   span:first-child {
     font-weight: bold;
-    background: $accent_red;
+    background: #303f4f;
     color: #fff;
     text-transform: uppercase;
     opacity: 0.75;

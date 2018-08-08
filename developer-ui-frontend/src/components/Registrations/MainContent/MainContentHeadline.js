@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 // Child Components
-import { ConfirmationModal } from "components/common/dialogModals";
+import DeleteRegistrationModal from "../DeleteRegistrationModal";
 import HoverTooltip from "components/common/HoverTooltip";
 import Spinner from "components/common/Spinner";
 // Animations TODO: Replace Velocity
@@ -23,10 +23,17 @@ class MainContentHeadlineWrapped extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      confirmModalOpen: false
+      confirmModalOpen: false,
+      footerOptionChecked: true
     };
     this.toggleConfirmModal = this.toggleConfirmModal.bind(this);
     this.confirmDeletion = this.confirmDeletion.bind(this);
+  }
+
+  onCheckboxClick() {
+    this.setState(state => ({
+      footerOptionChecked: !state.footerOptionChecked
+    }));
   }
 
   confirmDeletion() {
@@ -37,6 +44,7 @@ class MainContentHeadlineWrapped extends Component {
   }
 
   toggleConfirmModal() {
+    console.log("Toggle called, to", !this.state.confirmModalOpen);
     this.setState(state => ({ confirmModalOpen: !state.confirmModalOpen }));
   }
 
@@ -87,14 +95,12 @@ class MainContentHeadlineWrapped extends Component {
             </span>
           </div>
         </VelocityComponent>
-        <ConfirmationModal
+        <DeleteRegistrationModal
           subject={"Delete device " + selectedDevice}
           modalShown={this.state.confirmModalOpen}
           toggleModal={this.toggleConfirmModal}
           confirm={this.confirmDeletion}
-          submitType="delete">
-          {"Are you sure, you want to delete this registration?"}
-        </ConfirmationModal>
+        />
         {selectedDevice && (
           <HoverTooltip
             id={tooltipIdDeleteReg}

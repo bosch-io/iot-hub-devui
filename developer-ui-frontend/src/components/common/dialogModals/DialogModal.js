@@ -78,7 +78,9 @@ const DialogModalFtr = styled.div`
   -webkit-backface-visibility: hidden;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: ${props =>
+    props.hasCheckbox ? "space-between" : "flex-end"};
+  align-items: center;
   padding: 1rem 2.4rem 2.4rem 2.4rem;
   text-decoration: none;
   border-top: 1px solid rgba(34, 36, 38, 0.15);
@@ -88,7 +90,8 @@ export const DialogModalFooter = ({
   submitType,
   toggleModal,
   submitBlocked,
-  confirm
+  confirm,
+  checkboxOption
 }) => {
   let ConfirmBtn = null;
   if (submitType === "delete") {
@@ -113,11 +116,14 @@ export const DialogModalFooter = ({
     );
   }
   return (
-    <DialogModalFtr>
-      <FlatButton cancel onClick={() => toggleModal(null, false)}>
-        Cancel
-      </FlatButton>
-      {ConfirmBtn}
+    <DialogModalFtr hasCheckbox={Boolean(checkboxOption)}>
+      {checkboxOption && checkboxOption}
+      <span>
+        <FlatButton cancel onClick={() => toggleModal(null, false)}>
+          Cancel
+        </FlatButton>
+        {ConfirmBtn}
+      </span>
     </DialogModalFtr>
   );
 };
@@ -126,5 +132,8 @@ DialogModalFooter.propTypes = {
   submitType: PropTypes.oneOf(["delete", "submit"]).isRequired,
   toggleModal: PropTypes.func.isRequired,
   confirm: PropTypes.func.isRequired,
-  submitBlocked: PropTypes.bool
+  submitBlocked: PropTypes.bool,
+  /* If provided, this content gets added on the left hand side of
+  the footer (usually a checkbox like "Don't show me again") */
+  checkboxOption: PropTypes.element
 };

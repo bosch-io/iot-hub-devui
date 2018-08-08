@@ -40,18 +40,14 @@ export default class Table extends React.Component {
     theadRow[theadRow.length - 1] = <th key="payload">Payload</th>;
     const tableRows = [];
     this.props.tableRows.map((logObj, index) => {
-      const hasHyperLink = logObj.message.content.length > HYPERLINK_MINLENGTH;
-
       const timeCell = <td>{formatDateString(logObj.time)}</td>;
       const typeCell = <td>{logObj.message.type}</td>;
       const deviceCell = <td>{logObj.message.deviceId}</td>;
       const contentTypeCell = <td>{logObj.message.contentType}</td>;
       const contentCell = (
         <td
-          className={hasHyperLink ? "withEllipsis" : null}
-          onClick={
-            hasHyperLink ? () => this.props.handleOpenModal(logObj) : null
-          }>
+          className="withEllipsis"
+          onClick={() => this.props.handleOpenModal(logObj)}>
           {logObj.message.content.substring(0, HYPERLINK_MINLENGTH)}
         </td>
       );
