@@ -1,3 +1,6 @@
+/*
+ * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
+ */
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -7,12 +10,7 @@ const Checkbox = ({ checked, onCheckboxClick, label, ...others }) => (
       others && others.className ? others.className : ""
     }`}
     {...others}>
-    <input
-      type="checkbox"
-      id={"checkbox-" + label}
-      onChange={onCheckboxClick}
-      checked={checked}
-    />
+    <input type="checkbox" onChange={onCheckboxClick} checked={checked} />
     <div className="state p-info">
       <svg className="svg svg-icon" viewBox="0 0 20 20">
         <path

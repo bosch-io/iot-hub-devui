@@ -16,6 +16,7 @@ import DeleteIcon from "images/deleteIcon.svg";
 import { connect } from "react-redux";
 import { selectIsFetchingByDeviceId } from "reducers/selectors";
 import { deleteRegistration } from "actions/RegistrationActions";
+import { deleteAllCredentialsOfDevice } from "actions/CredentialActions";
 // Redux Form
 import { reset, formValueSelector } from "redux-form/immutable";
 
@@ -40,11 +41,16 @@ class MainContentHeadlineWrapped extends Component {
     const { resetSelectedDevice, deleteReg, selectedDevice } = this.props;
     const rememberedSelection = selectedDevice;
     resetSelectedDevice(); // Clear selection
-    deleteReg(rememberedSelection);
+    if (this.state.footerOptionChecked) {
+      this.props
+        .deleteAllCredentialsOfDevice(rememberedSelection)
+        .then(() => deleteReg(rememberedSelection));
+    } else {
+      deleteReg(rememberedSelection);
+    }
   }
 
   toggleConfirmModal() {
-    console.log("Toggle called, to", !this.state.confirmModalOpen);
     this.setState(state => ({ confirmModalOpen: !state.confirmModalOpen }));
   }
 
@@ -122,6 +128,8 @@ const MainContentHeadline = connect(
   }),
   dispatch => ({
     deleteReg: deviceId => dispatch(deleteRegistration(deviceId)),
+    deleteAllCredentialsOfDevice: deviceId =>
+      dispatch(deleteAllCredentialsOfDevice(deviceId)),
     resetSelectedDevice: () => dispatch(reset("registrationsTabListing"))
   })
 )(MainContentHeadlineWrapped);
@@ -132,6 +140,7 @@ MainContentHeadlineWrapped.propTypes = {
   selectedDevice: PropTypes.string,
   resetSelectedDevice: PropTypes.func.isRequired,
   deleteReg: PropTypes.func.isRequired,
+  deleteAllCredentialsOfDevice: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired
 };
 

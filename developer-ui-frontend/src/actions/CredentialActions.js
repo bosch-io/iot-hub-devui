@@ -19,8 +19,8 @@ import {
 import {
   selectCredentialById,
   selectSecretById,
-  selectNumberOfSecretsByCredentialId,
-  selectCredentialApiFormat
+  selectCredentialApiFormat,
+  selectCredentialIdsByDeviceId
 } from "reducers/selectors";
 import { RESTSERVER_URL } from "_APP_CONSTANTS";
 import { mapCredentialParams, mapSecretParams } from "utils";
@@ -116,7 +116,7 @@ export function creatingNewCredentialFailed(authId, deviceId, newCredential) {
   };
 }
 
-// This method creates a new Credential with a new Secret on the backend (The API does not distinguish between
+// This function creates a new Credential with a new Secret on the backend (The API does not distinguish between
 // credentials and secrets)
 // It could be called after an empty credential was initialized and a firstInitialization
 // has been done (the first secret was added to the empty credential) or after a quickstart like
@@ -265,5 +265,14 @@ export function deleteCredential(deviceId, authId) {
         dispatch(deletingCredentialFailed(deviceId, authId));
         console.error(err);
       });
+  };
+}
+
+export function deleteAllCredentialsOfDevice(deviceId) {
+  return (dispatch, getState) => {
+    const credentials = selectCredentialIdsByDeviceId(getState(), deviceId);
+    return Promise.all(
+      credentials.map(id => dispatch(deleteCredential(deviceId, id)))
+    );
   };
 }
