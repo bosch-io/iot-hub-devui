@@ -12,18 +12,27 @@ import {
   SearchbarS,
   SearchbarM,
   SearchbarL,
-  TextCopyField
+  TextCopyField,
+  DatePicker
 } from "../index";
 
 const invertedColorsContainer = {
-  backgroundColor: "rgba(72, 85, 99, 0.75)",
+  background:
+    "linear-gradient(to right, rgba(72, 85, 99, 0) 0%, rgba(72, 85, 99, 0.75) 5%, rgba(72, 85, 99, 0.75) 95%, rgba(72, 85, 99, 0) 100%)",
   padding: "2rem"
 };
 
 storiesOf("Styleguide", module).add(
   "TextInputs",
   withInfo({
-    propTables: [TextField, SearchbarS, SearchbarM, SearchbarL, TextCopyField]
+    propTables: [
+      TextField,
+      SearchbarS,
+      SearchbarM,
+      SearchbarL,
+      TextCopyField,
+      DatePicker
+    ]
   })(() => (
     <div className="styleguide-card">
       <h1>Text Inputs</h1>
@@ -42,14 +51,16 @@ storiesOf("Styleguide", module).add(
           label="With Warning"
         />
       </div>
-      <div className="styleguide-card-row" style={invertedColorsContainer}>
-        <SearchbarS placeholder="Small Searchbar" />
-      </div>
-      <div className="styleguide-card-row">
-        <SearchbarM placeholder="Medium Sized Searchbar" />
-      </div>
-      <div className="styleguide-card-row">
-        <SearchbarL placeholder="Large Searchbar" />
+      <div className="styleguide-card-row" style={{ alignItems: "center" }}>
+        <div style={{ flex: 1 }}>
+          <SearchbarS placeholder="Small Searchbar" />
+        </div>
+        <div style={{ flex: 2 }}>
+          <SearchbarM placeholder="Medium Sized Searchbar" />
+        </div>
+        <div style={{ flex: 3 }}>
+          <SearchbarL placeholder="Large Searchbar" />
+        </div>
       </div>
       <div className="styleguide-card-row" style={invertedColorsContainer}>
         <TextCopyField
@@ -63,6 +74,9 @@ storiesOf("Styleguide", module).add(
           type="password"
           label="Copy Box Password:"
         />
+      </div>
+      <div className="styleguide-card-row">
+        <DatePicker />
       </div>
     </div>
   ))

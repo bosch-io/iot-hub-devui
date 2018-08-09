@@ -4,9 +4,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { TransitionMotion, spring } from "react-motion";
+// Child Components
 import { RoundOutlineButton } from "components/common/buttons";
+import ExpandLink from "components/common/ExpandLink";
 import LoginInformation from "./LoginInformation";
 import DetailsInformation from "./DetailsInformation";
+// SVG Imports
 import SuccessIcon from "images/successIconCircle.svg";
 
 export default class ConfirmationView extends Component {
@@ -80,20 +83,15 @@ export default class ConfirmationView extends Component {
                   pw={newPw}
                   shiftingAnimationFinished={shiftingAnimationFinished}
                 />
-                <a
-                  id="details-link"
-                  onClick={() =>
+                <ExpandLink
+                  expanded={this.state.detailsExpanded}
+                  toggle={() =>
                     this.setState(state => ({
                       detailsExpanded: !state.detailsExpanded
                     }))
                   }>
-                  <span
-                    className={`caret ${
-                      detailsExpanded ? "caret-rotated" : ""
-                    }`}
-                  />{" "}
                   Details
-                </a>
+                </ExpandLink>
                 {detailsExpanded && (
                   <DetailsInformation
                     deviceId={newDeviceId}

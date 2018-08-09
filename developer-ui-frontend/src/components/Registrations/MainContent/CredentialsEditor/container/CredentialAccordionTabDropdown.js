@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { deleteCredential } from "actions/CredentialActions";
 import CredentialAccordionTabDropdownMenu from "./CredentialAccordionTabDropdownMenu";
 import HoverTooltip from "components/common/HoverTooltip";
-import AddSecretModal from "./AddSecretModal";
+import AddSecretModal from "../../../AddSecretModal";
 import { ConfirmationModal } from "components/common/dialogModals";
 import DeleteSecretModal from "./DeleteSecretModal";
 // SVG Imports

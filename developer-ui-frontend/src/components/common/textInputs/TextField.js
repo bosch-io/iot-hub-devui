@@ -49,6 +49,7 @@ const TextInput = styled.input`
   color: #757575;
   padding: 0.4rem 0;
   transition: background-color 0.2s ease-out;
+  background-color: transparent;
 
   &:focus {
     outline: none;

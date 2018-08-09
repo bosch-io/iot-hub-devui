@@ -13,7 +13,7 @@ import { initializeEmptyCredential } from "actions/CredentialActions";
 import { addCustomNotification } from "actions/globalActions";
 import CredentialEditor from "./container/CredentialEditor";
 import AddCredentialTab from "./container/AddCredentialTab";
-import AddSecretModal from "./container/AddSecretModal";
+import AddSecretModal from "../../AddSecretModal";
 
 class CredentialsInfoContentWrapped extends Component {
   constructor(props) {

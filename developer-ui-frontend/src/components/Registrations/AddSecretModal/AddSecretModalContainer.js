@@ -1,24 +1,17 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from "react";
-import PropTypes from "prop-types";
-import { reduxForm, Field, formValueSelector } from "redux-form/immutable";
-import AddSecretLogo from "images/addPwSecretIcon.svg";
+import React, { Component } from "react";
 import { connect } from "react-redux";
+import { default as AddSecretModalInner } from "./AddSecretModal";
+import PropTypes from "prop-types";
+import { reduxForm, formValueSelector } from "redux-form/immutable";
 import {
   createNewSecret,
   createNewCredential
 } from "actions/CredentialActions";
-import {
-  ConfigurationModal,
-  ConfigurationModalHeader,
-  ConfigurationModalFooter,
-  ConfigurationModalBody
-} from "components/common/dialogModals";
-import { TextField } from "components/common/textInputs";
 import { selectCredentialById } from "reducers/selectors";
-// TODO: Enable Certificates Option
+
 // No Props checking (Redux Form works!)
 /* eslint-disable react/prop-types */
 const validate = values => {
@@ -38,7 +31,7 @@ const warn = values => {
   return warnings;
 };
 
-class AddSecretModalWrapped extends React.Component {
+class AddSecretModalWrapped extends Component {
   submit(values) {
     const {
       authId,
@@ -84,50 +77,18 @@ class AddSecretModalWrapped extends React.Component {
       submitting,
       invalid
     } = this.props;
-
-    const subjectTitle = "Add a Secret for ";
     return (
       <form onSubmit={handleSubmit(this.submit.bind(this))}>
-        <ConfigurationModal modalShown={isOpen} changeIsOpen={changeIsOpen}>
-          <ConfigurationModalHeader
-            subject={subjectTitle}
-            subTitle={authId}
-            icon={<AddSecretLogo />}
-          />
-          <ConfigurationModalBody className="configuration-modal-content">
-            <div className="dropdown-input">
-              <label htmlFor="secretType">Type</label>
-              <Field name="secretType" component="select">
-                <option value="Hashed Password">Hashed Password</option>
-                <option value="Certificate" disabled>
-                  Certificate
-                </option>
-              </Field>
-            </div>
-            {selectedType === "Hashed Password" && (
-              <div className="dropdown-input">
-                <label htmlFor="hashAlgorithm">{"Hash Algorithm"}</label>
-                <Field name="hashAlgorithm" component="select">
-                  <option>SHA-512</option>
-                  <option>SHA-256</option>
-                  <option>SHA-1</option>
-                </Field>
-              </div>
-            )}
-            <TextField
-              asField
-              name="password"
-              type="password"
-              label="Password"
-            />
-          </ConfigurationModalBody>
-          <ConfigurationModalFooter
-            submitType="submit"
-            toggleModal={() => changeIsOpen(!isOpen)}
-            submitBlocked={invalid || pristine || submitting}
-            confirm={handleSubmit(this.submit.bind(this))}
-          />
-        </ConfigurationModal>
+        <AddSecretModalInner
+          isOpen={isOpen}
+          authId={authId}
+          changeIsOpen={changeIsOpen}
+          handleSubmit={handleSubmit(this.submit.bind(this))}
+          selectedType={selectedType}
+          pristine={pristine}
+          submitting={submitting}
+          invalid={invalid}
+        />
       </form>
     );
   }
