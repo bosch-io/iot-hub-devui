@@ -46,6 +46,18 @@ $input-disabled-solid-color: $input-disabled-color !default;
     transform: translateX(0);
     transition: transform 0.3s;
     pointer-events: inherit;
+
+    a {
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      text-decoration: inherit;
+      align-items: center;
+      color: inherit;
+      margin-left: -1.3em;
+      padding-left: 1.3em;
+    }
   }
 
   .settings-text-form {
@@ -208,9 +220,9 @@ $input-disabled-solid-color: $input-disabled-color !default;
   }
 
   li {
+    position: relative;
     padding-left: 1.2em !important;
     transition: background 0.2s ease-out;
-
     svg {
       padding-right: 1.3em !important;
     }

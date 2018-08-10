@@ -13,7 +13,6 @@ import { initializeEmptyCredential } from "actions/CredentialActions";
 import { addCustomNotification } from "actions/globalActions";
 import CredentialEditor from "./container/CredentialEditor";
 import AddCredentialTab from "./container/AddCredentialTab";
-import AddSecretModal from "../../AddSecretModal";
 
 class CredentialsInfoContentWrapped extends Component {
   constructor(props) {
@@ -25,14 +24,9 @@ class CredentialsInfoContentWrapped extends Component {
       initialOpenedId = props.credentials.getIn([0, "auth-id"]);
     }
     this.state = {
-      addSecretModalIsOpen: false,
-      addSecretModalAuthId: null, // Auth id of the Credential to which the secret is added
       idIsOpened: initialOpenedId
     };
     this.triggerErrorMessage = this.triggerErrorMessage.bind(this);
-    this.changeAddSecretModalIsOpen = this.changeAddSecretModalIsOpen.bind(
-      this
-    );
     this.toggleIsOpened = this.toggleIsOpened.bind(this);
   }
 
@@ -73,25 +67,13 @@ class CredentialsInfoContentWrapped extends Component {
       });
     }
   }
-
-  changeAddSecretModalIsOpen(isOpen, authId) {
-    if (isOpen && authId) {
-      this.setState({ addSecretModalAuthId: authId });
-    }
-    this.setState({ addSecretModalIsOpen: isOpen });
-  }
-
   triggerErrorMessage(message) {
     this.props.addCustomNotification(message, "error");
   }
 
   render() {
     const { credentials, selectedDevice } = this.props;
-    const {
-      addSecretModalIsOpen,
-      addSecretModalAuthId,
-      idIsOpened
-    } = this.state;
+    const { idIsOpened } = this.state;
     return (
       <div id="credential-accordion">
         <span>
@@ -104,7 +86,6 @@ class CredentialsInfoContentWrapped extends Component {
                 isOpened={credential.get("auth-id") === idIsOpened}
                 triggerErrorMessage={this.triggerErrorMessage}
                 selectedDevice={selectedDevice}
-                changeAddSecretModalIsOpen={this.changeAddSecretModalIsOpen}
                 toggleIsOpened={this.toggleIsOpened}
               />
             );
@@ -114,15 +95,6 @@ class CredentialsInfoContentWrapped extends Component {
             selectedDevice={selectedDevice}
             focusTab={this.focusTab}
           />
-          {addSecretModalIsOpen && (
-            <AddSecretModal
-              deviceId={selectedDevice}
-              isOpen={addSecretModalIsOpen}
-              authId={addSecretModalAuthId}
-              changeIsOpen={this.changeAddSecretModalIsOpen}
-              expandNewTab={this.expandNewTab}
-            />
-          )}
         </span>
       </div>
     );

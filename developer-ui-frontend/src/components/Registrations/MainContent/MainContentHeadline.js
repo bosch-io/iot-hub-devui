@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 // Child Components
-import DeleteRegistrationModal from "../DeleteRegistrationModal";
+import DeleteRegistrationModal from "../Modals/DeleteRegistrationModal";
 import HoverTooltip from "components/common/HoverTooltip";
 import Spinner from "components/common/Spinner";
 // Animations TODO: Replace Velocity

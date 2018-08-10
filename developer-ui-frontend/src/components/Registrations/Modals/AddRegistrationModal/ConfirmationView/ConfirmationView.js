@@ -23,6 +23,8 @@ export default class ConfirmationView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(this.props.inConfirmationMode);
+    console.log(nextProps.inConfirmationMode);
     if (
       (nextProps.inConfirmationMode && !this.props.inConfirmationMode) ||
       !this.state.checkmarkAnimationFinished

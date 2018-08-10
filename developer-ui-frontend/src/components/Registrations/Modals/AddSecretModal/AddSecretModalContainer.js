@@ -3,6 +3,7 @@
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { default as AddSecretModalInner } from "./AddSecretModal";
 import PropTypes from "prop-types";
 import { reduxForm, formValueSelector } from "redux-form/immutable";
@@ -32,6 +33,18 @@ const warn = values => {
 };
 
 class AddSecretModalWrapped extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: true
+    };
+    this.changeIsOpen = this.changeIsOpen.bind(this);
+  }
+
+  changeIsOpen(opened) {
+    this.setState({ isOpen: opened });
+  }
+
   submit(values) {
     const {
       authId,
@@ -63,26 +76,25 @@ class AddSecretModalWrapped extends Component {
         secretData
       );
     }
-    this.props.changeIsOpen(false);
+    this.changeIsOpen(false);
   }
 
   render() {
     const {
-      isOpen,
       authId,
-      changeIsOpen,
       handleSubmit,
       selectedType,
       pristine,
       submitting,
       invalid
     } = this.props;
-    return (
+    const { isOpen } = this.state;
+    return isOpen ? (
       <form onSubmit={handleSubmit(this.submit.bind(this))}>
         <AddSecretModalInner
           isOpen={isOpen}
           authId={authId}
-          changeIsOpen={changeIsOpen}
+          changeIsOpen={this.changeIsOpen}
           handleSubmit={handleSubmit(this.submit.bind(this))}
           selectedType={selectedType}
           pristine={pristine}
@@ -90,6 +102,8 @@ class AddSecretModalWrapped extends Component {
           invalid={invalid}
         />
       </form>
+    ) : (
+      <Redirect to="/registrations" />
     );
   }
 }
@@ -126,8 +140,6 @@ AddSecretModal = connect(
 AddSecretModalWrapped.propTypes = {
   authId: PropTypes.string,
   firstInitialization: PropTypes.bool,
-  isOpen: PropTypes.bool.isRequired,
-  changeIsOpen: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   createNewSecret: PropTypes.func.isRequired,
   createNewCredential: PropTypes.func.isRequired,

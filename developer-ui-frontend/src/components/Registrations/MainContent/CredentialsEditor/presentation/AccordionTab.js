@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
+import { Link } from "react-router-dom";
 import Measure from "react-measure";
 import { Motion, spring, presets } from "react-motion";
 import HoverTooltip from "components/common/HoverTooltip";
@@ -28,7 +29,6 @@ export default class AccordionTab extends Component {
     const { height } = this.state;
     const {
       credential,
-      changeAddSecretModalIsOpen,
       isOpened,
       changeIsOpened,
       selectedDevice,
@@ -51,17 +51,16 @@ export default class AccordionTab extends Component {
             {isOpened && (
               <React.Fragment>
                 {credential.get("firstInitTime") && (
-                  <AddSecretIcon
-                    onClick={() =>
-                      changeAddSecretModalIsOpen(
-                        true,
-                        credential.get("auth-id")
-                      )
-                    }
-                    className="header-icon-right callout"
-                    data-tip
-                    data-for={tooltipIdAddSecret}
-                  />
+                  <Link
+                    to={`/registrations/${selectedDevice}/${credential.get(
+                      "auth-id"
+                    )}/additionalSecrets`}>
+                    <AddSecretIcon
+                      className="header-icon-right callout"
+                      data-tip
+                      data-for={tooltipIdAddSecret}
+                    />
+                  </Link>
                 )}
                 <HoverTooltip text="Add a Secret..." id={tooltipIdAddSecret} />
                 <CredentialAccordionTabDropdown
@@ -123,7 +122,6 @@ export default class AccordionTab extends Component {
 AccordionTab.propTypes = {
   credential: ImmutablePropTypes.map.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  changeAddSecretModalIsOpen: PropTypes.func.isRequired,
   isOpened: PropTypes.bool.isRequired,
   changeIsOpened: PropTypes.func.isRequired,
   selectedDevice: PropTypes.string

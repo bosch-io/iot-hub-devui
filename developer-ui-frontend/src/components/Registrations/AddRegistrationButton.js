@@ -10,11 +10,9 @@
 
 import "styles/flyOutButton.scss";
 import React, { Fragment } from "react";
-import AddRegistrationModal from "./AddRegistrationModal";
-import { CREDENTIAL_TYPES } from "_APP_CONSTANTS";
 import PropTypes from "prop-types";
 import HoverTooltip from "components/common/HoverTooltip";
-import { Link, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 // SVG Imports
 import AddIcon from "images/addIcon.svg";
 
@@ -25,25 +23,6 @@ const M_Y = 25;
 class AddRegistrationButton extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      addRegistrationModalIsOpen: false,
-      addRegistrationModalType: CREDENTIAL_TYPES.PASSWORD
-    };
-    this.changeAddRegistrationModalIsOpen = this.changeAddRegistrationModalIsOpen.bind(
-      this
-    );
-    this.handleButtonClick = this.handleButtonClick.bind(this);
-  }
-
-  changeAddRegistrationModalIsOpen(isOpen, type) {
-    this.setState({
-      addRegistrationModalType: type,
-      addRegistrationModalIsOpen: isOpen
-    });
-  }
-
-  handleButtonClick() {
-    this.changeAddRegistrationModalIsOpen(true, CREDENTIAL_TYPES.PASSWORD);
   }
 
   mainButtonStyles() {
@@ -56,8 +35,7 @@ class AddRegistrationButton extends React.Component {
   }
 
   render() {
-    const { addRegistrationModalIsOpen, addRegistrationModalType } = this.state;
-    const { hasCallout, setMainPanel } = this.props;
+    const { hasCallout } = this.props;
     const tooltipIdFirstReg = "first-reg";
     return (
       <Fragment>
@@ -68,8 +46,7 @@ class AddRegistrationButton extends React.Component {
           data-for={tooltipIdFirstReg}>
           <div
             id="flyout-btn-wrapper"
-            className={hasCallout ? "callout" : null}
-            onClick={() => this.handleButtonClick()}>
+            className={hasCallout ? "callout" : null}>
             <div
               className="flyout-btn-main-button"
               style={{ ...this.mainButtonStyles() }}>
@@ -77,29 +54,6 @@ class AddRegistrationButton extends React.Component {
             </div>
           </div>
         </Link>
-        <Route
-          path={`/registrations/additionalRegs/:deviceId?`}
-          render={({ match, history }) => {
-            // If the route matches but the addRegistrationModalIsOpen state isn't true
-            // the route is changed from outside the component by a Link. Never the less
-            // We want the modal to open. -> Call setState and set it to true.
-            !addRegistrationModalIsOpen &&
-              this.setState({ addRegistrationModalIsOpen: true });
-            return (
-              <AddRegistrationModal
-                redirectToRegistrations={() => history.push("/registrations")}
-                type={addRegistrationModalType}
-                isOpen={addRegistrationModalIsOpen}
-                initialValues={{
-                  deviceId: match.params.deviceId,
-                  password: ""
-                }}
-                changeIsOpen={this.changeAddRegistrationModalIsOpen}
-                setMainPanel={setMainPanel}
-              />
-            );
-          }}
-        />
         {hasCallout ? (
           <HoverTooltip
             text="Register your first Device"
@@ -112,8 +66,7 @@ class AddRegistrationButton extends React.Component {
 }
 
 AddRegistrationButton.propTypes = {
-  hasCallout: PropTypes.bool.isRequired,
-  setMainPanel: PropTypes.func.isRequired
+  hasCallout: PropTypes.bool.isRequired
 };
 
 export default AddRegistrationButton;

@@ -3,6 +3,7 @@
  */
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 // SVG Imports
 import DeleteCredIcon from "images/deletePwCredentialIcon.svg";
 import DeletePwSecretIcon from "images/deletePwSecretIcon.svg";
@@ -13,7 +14,7 @@ export default class CredentialOption extends React.Component {
   constructor(props) {
     super(props);
     this.getIcon = this.getIcon.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.getPath = this.getPath.bind(this);
   }
 
   getIcon() {
@@ -29,38 +30,57 @@ export default class CredentialOption extends React.Component {
         icon = <DeleteCredIcon />;
         break;
       default:
-        console.log("unknown filter category - can't load corresponding image");
+        console.error(
+          "unknown filter category - can't load corresponding image"
+        );
     }
     return icon;
   }
 
-  handleClick() {
-    const { toggleDropdownMenu, toggleModal, categoryName } = this.props;
-    toggleDropdownMenu();
-    toggleModal(categoryName);
+  getPath(categoryName) {
+    const { selectedDevice, authId } = this.props;
+    let path;
+    switch (categoryName) {
+      case "Add Secret":
+        path = `/registrations/${selectedDevice}/${authId}/additionalSecrets`;
+        break;
+      case "Delete Secret":
+        path = `/registrations/${selectedDevice}/${authId}/deleteSecrets`;
+        break;
+      case "Delete Credential":
+        path = `registrations/${selectedDevice}/deleteCredential`;
+        break;
+      default:
+        console.error(
+          "unknown filter category - can't load corresponding image"
+        );
+    }
+    return path;
   }
 
   render() {
-    const { categoryName, disabled } = this.props;
+    const { categoryName, disabled, toggleDropdownMenu } = this.props;
     const disabledTooltipId = "tt-" + camelCase(categoryName) + "-disabled";
     return (
       <li
         className={disabled ? "disabled" : null}
-        onClick={disabled ? null : () => this.handleClick()}
         data-for={disabled ? disabledTooltipId : null}
         data-tip={disabled}>
-        <div>
-          {this.getIcon()}
-          {categoryName}
-        </div>
+        <Link to={this.getPath(categoryName)} onClick={toggleDropdownMenu}>
+          <div>
+            {this.getIcon()}
+            {categoryName}
+          </div>
+        </Link>
       </li>
     );
   }
 }
 
 CredentialOption.propTypes = {
+  selectedDevice: PropTypes.string.isRequired,
+  authId: PropTypes.string.isRequired,
   categoryName: PropTypes.string,
   toggleDropdownMenu: PropTypes.func,
-  toggleModal: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired
 };

@@ -94,7 +94,6 @@ export default class ConfigurationViewBody extends Component {
 
 ConfigurationViewBody.propTypes = {
   type: PropTypes.string,
-  redirectToRegistrations: PropTypes.func.isRequired,
   changeIsOpen: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   inConfirmationMode: PropTypes.bool.isRequired,

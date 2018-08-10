@@ -10,6 +10,7 @@ import {
   ConfigurationModalFooter,
   ConfigurationModalBody
 } from "components/common/dialogModals";
+import { Redirect } from "react-router-dom";
 import DeleteSecretLogo from "images/deletePwSecretIcon.svg";
 import { connect } from "react-redux";
 import { deleteSecret } from "actions/CredentialActions";
@@ -26,18 +27,32 @@ const validate = values => {
 };
 
 class DeleteSecretModalWrapped extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: true
+    };
+  }
+
+  changeIsOpen(opened) {
+    this.setState({ isOpen: opened });
+  }
+
   submit(values) {
     const { deviceId, authId } = this.props;
     this.props.deleteSecret(deviceId, authId, values.get("secretSelect"));
-    this.props.changeIsOpen(false);
+    this.changeIsOpen(false);
   }
 
   render() {
-    const { isOpen, authId, changeIsOpen, handleSubmit, secrets } = this.props;
+    const { authId, handleSubmit, secrets } = this.props;
+    const { isOpen } = this.state;
     const subjectTitle = "Delete a Secret from ";
-    return (
+    return isOpen ? (
       <form onSubmit={handleSubmit(this.submit.bind(this))}>
-        <ConfigurationModal modalShown={isOpen} changeIsOpen={changeIsOpen}>
+        <ConfigurationModal
+          modalShown={isOpen}
+          changeIsOpen={this.changeIsOpen}>
           <ConfigurationModalHeader
             subject={subjectTitle}
             subTitle={authId}
@@ -58,11 +73,13 @@ class DeleteSecretModalWrapped extends React.Component {
           </ConfigurationModalBody>
           <ConfigurationModalFooter
             submitType="submit"
-            toggleModal={() => changeIsOpen(!isOpen)}
+            toggleModal={() => this.changeIsOpen(!isOpen)}
             confirm={handleSubmit(this.submit.bind(this))}
           />
         </ConfigurationModal>
       </form>
+    ) : (
+      <Redirect to="/registrations" />
     );
   }
 }
@@ -88,8 +105,6 @@ DeleteSecretModal = connect(
 
 DeleteSecretModalWrapped.propTypes = {
   authId: PropTypes.string,
-  isOpen: PropTypes.bool.isRequired,
-  changeIsOpen: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   deviceId: PropTypes.string,
   secrets: PropTypes.array.isRequired,

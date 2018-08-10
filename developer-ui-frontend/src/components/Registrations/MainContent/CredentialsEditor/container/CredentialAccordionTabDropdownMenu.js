@@ -18,13 +18,7 @@ class CredentialAccordionTabDropdownMenu extends React.Component {
   }
 
   render() {
-    const {
-      toggleDropdownMenu,
-      isOpened,
-      toggleModal,
-      authId,
-      selectedDevice
-    } = this.props;
+    const { toggleDropdownMenu, isOpened, authId, selectedDevice } = this.props;
 
     return (
       <div
@@ -38,7 +32,6 @@ class CredentialAccordionTabDropdownMenu extends React.Component {
               <CredentialDropdownOptions
                 selectedItemRef={this.selectedItemRef}
                 toggleDropdownMenu={toggleDropdownMenu}
-                toggleModal={toggleModal}
                 authId={authId}
                 selectedDevice={selectedDevice}
               />
@@ -82,6 +75,5 @@ CredentialAccordionTabDropdownMenu.propTypes = {
   isOpened: PropTypes.bool,
   toggleDropdownMenu: PropTypes.func,
   updateSetting: PropTypes.func,
-  authId: PropTypes.string.isRequired,
-  toggleModal: PropTypes.func.isRequired
+  authId: PropTypes.string.isRequired
 };

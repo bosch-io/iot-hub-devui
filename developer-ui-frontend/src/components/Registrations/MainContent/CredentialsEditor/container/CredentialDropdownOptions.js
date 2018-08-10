@@ -79,37 +79,38 @@ class CredentialDropdownOptionsWrapped extends React.Component {
   }
 
   render() {
-    const { toggleDropdownMenu, toggleModal } = this.props;
+    const { toggleDropdownMenu, selectedDevice, authId } = this.props;
     return (
       <React.Fragment>
         <ul>
           {CREDENTIAL_OPTIONS.map((category, index) => (
             <CredentialOption
               categoryName={category}
+              selectedDevice={selectedDevice}
+              authId={authId}
               key={index}
               disabled={this.getIsDisabled(category)}
               toggleDropdownMenu={toggleDropdownMenu}
               changeSelectedDropdown={en => this.changeSelectedSetting(en)}
-              toggleModal={toggleModal}
             />
           ))}
         </ul>
-        {
+        {this.getIsDisabled("Delete Secret") && (
           <HoverTooltip
             id={"tt-deleteSecret-disabled"}
             text={this.getDisabledText("Delete Secret")}
             effect="float"
             delayShow={0}
           />
-        }
-        {
+        )}
+        {this.getIsDisabled("Delete Credential") && (
           <HoverTooltip
             id={"tt-deleteCredential-disabled"}
             text={this.getDisabledText("Delete Credential")}
             effect="float"
             delayShow={0}
           />
-        }
+        )}
       </React.Fragment>
     );
   }
@@ -129,7 +130,6 @@ CredentialDropdownOptionsWrapped.propTypes = {
   selectedItemRef: PropTypes.object,
   numberOfSecrets: PropTypes.number.isRequired,
   numberOfCredentials: PropTypes.number.isRequired,
-  toggleModal: PropTypes.func.isRequired,
   authId: PropTypes.string.isRequired
 };
 

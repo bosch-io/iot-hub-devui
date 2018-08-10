@@ -4,6 +4,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { CREDENTIAL_TYPES } from "_APP_CONSTANTS";
+import { Redirect } from "react-router-dom";
 import { reduxForm, SubmissionError, change } from "redux-form/immutable";
 import { connect } from "react-redux";
 import { toJS } from "components/helpers/to-js";
@@ -45,7 +46,8 @@ class AddRegistrationModalContainer extends React.Component {
       newDeviceId: "",
       newAuthId: "",
       newPw: "",
-      inConfirmationMode: false
+      inConfirmationMode: false,
+      isOpen: true
     };
     this.submit = this.submit.bind(this);
     this.changeIsOpen = this.changeIsOpen.bind(this);
@@ -90,8 +92,7 @@ class AddRegistrationModalContainer extends React.Component {
   }
 
   changeIsOpen(opened) {
-    this.props.changeIsOpen(opened, CREDENTIAL_TYPES.PASSWORD);
-    this.props.redirectToRegistrations();
+    this.setState({ isOpen: opened });
     // if a new device was created and the modal is about to be closed
     if (!opened && this.state.newDeviceId) {
       // Select the newly created device in the mainContent part of the
@@ -102,7 +103,8 @@ class AddRegistrationModalContainer extends React.Component {
   }
 
   render() {
-    const { handleSubmit, isOpen, type, tenant, ...others } = this.props;
+    const { handleSubmit, type, tenant, ...others } = this.props;
+    const { isOpen } = this.state;
     /* eslint-disable react/prop-types */
     const { invalid, pristine, submitting } = this.props;
     /* eslint-enable */
@@ -116,7 +118,7 @@ class AddRegistrationModalContainer extends React.Component {
     const subjectTitle = `New Device with ${
       type === CREDENTIAL_TYPES.PASSWORD ? "Standard Password " : "Certificate "
     } Credential`;
-    return (
+    return isOpen ? (
       <form onSubmit={handleSubmit(this.submit)}>
         <ConfigurationModal
           modalShown={isOpen}
@@ -144,26 +146,25 @@ class AddRegistrationModalContainer extends React.Component {
           {!inConfirmationMode && (
             <ConfigurationModalFooter
               submitType="submit"
-              toggleModal={() => this.changeIsOpen(!this.state.isOpen)}
+              toggleModal={() => this.changeIsOpen(!isOpen)}
               submitBlocked={invalid || pristine || submitting}
               confirm={handleSubmit(this.submit)}
             />
           )}
         </ConfigurationModal>
       </form>
+    ) : (
+      <Redirect to="/registrations" />
     );
   }
 }
 
 AddRegistrationModalContainer.propTypes = {
   type: PropTypes.string,
-  isOpen: PropTypes.bool.isRequired,
   tenant: PropTypes.string,
-  changeIsOpen: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   createStandardPasswordRegistration: PropTypes.func.isRequired,
   changeCurrentlySelectedDevice: PropTypes.func.isRequired,
-  redirectToRegistrations: PropTypes.func.isRequired,
   setMainPanel: PropTypes.func.isRequired,
   fetchingRegistrations: PropTypes.array.isRequired,
   availableDevices: PropTypes.array

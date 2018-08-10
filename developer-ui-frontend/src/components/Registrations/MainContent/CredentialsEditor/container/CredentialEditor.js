@@ -10,7 +10,6 @@ import AccordionTab from "../presentation/AccordionTab";
 
 const CredentialEditorWrapped = ({
   credential,
-  changeAddSecretModalIsOpen,
   selectedDevice,
   isFetching,
   isOpened,
@@ -21,7 +20,6 @@ const CredentialEditorWrapped = ({
     credential={credential}
     selectedDevice={selectedDevice}
     isFetching={isFetching}
-    changeAddSecretModalIsOpen={changeAddSecretModalIsOpen}
     changeIsOpened={() => toggleIsOpened(credential.get("auth-id"))}
   />
 );
@@ -39,7 +37,6 @@ CredentialEditorWrapped.propTypes = {
   isOpened: PropTypes.bool.isRequired,
   toggleIsOpened: PropTypes.func.isRequired,
   triggerErrorMessage: PropTypes.func.isRequired,
-  changeAddSecretModalIsOpen: PropTypes.func.isRequired,
   selectedDevice: PropTypes.string
 };
 

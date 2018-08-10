@@ -8,9 +8,7 @@ import { connect } from "react-redux";
 import { deleteCredential } from "actions/CredentialActions";
 import CredentialAccordionTabDropdownMenu from "./CredentialAccordionTabDropdownMenu";
 import HoverTooltip from "components/common/HoverTooltip";
-import AddSecretModal from "../../../AddSecretModal";
 import { ConfirmationModal } from "components/common/dialogModals";
-import DeleteSecretModal from "./DeleteSecretModal";
 // SVG Imports
 import MoreIcon from "images/moreIcon.svg";
 
@@ -19,14 +17,9 @@ class CredentialAccordionTabDropdownWrapped extends React.Component {
     super(props);
     this.state = {
       isOpened: false,
-      currentModal: {
-        opened: false,
-        type: null
-      },
       ...props.initialState
     };
     this.toggleDropdownMenu = this.toggleDropdownMenu.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
   }
 
   toggleDropdownMenu() {
@@ -34,63 +27,10 @@ class CredentialAccordionTabDropdownWrapped extends React.Component {
     setTimeout(() => this.setState({ inEditingView: false }), 300);
   }
 
-  toggleModal(type) {
-    this.setState(state => ({
-      currentModal: {
-        opened: !state.currentModal.opened,
-        type: type ? type : state.currentModal.type
-      }
-    }));
-  }
-
   render() {
     const { authId, selectedDevice } = this.props;
     const { isOpened } = this.state;
     const tooltipIdOptions = "options-btn";
-    let CurrentModalJsx = null;
-    if (this.state.currentModal.opened) {
-      switch (this.state.currentModal.type) {
-        case "Add Secret":
-          CurrentModalJsx = (
-            <AddSecretModal
-              key="dropdownFrag2"
-              deviceId={selectedDevice}
-              isOpen={this.state.currentModal.opened}
-              authId={authId}
-              changeIsOpen={this.toggleModal}
-            />
-          );
-          break;
-        case "Delete Secret":
-          CurrentModalJsx = (
-            <DeleteSecretModal
-              key="dropdownFrag2"
-              deviceId={selectedDevice}
-              isOpen={this.state.currentModal.opened}
-              authId={authId}
-              changeIsOpen={this.toggleModal}
-            />
-          );
-          break;
-        case "Delete Credential":
-          CurrentModalJsx = (
-            <ConfirmationModal
-              key="dropdownFrag2"
-              modalShown={this.state.currentModal.opened}
-              subject={`Delete ${authId}?`}
-              toggleModal={this.toggleModal}
-              confirm={() =>
-                this.props.deleteCredential(selectedDevice, authId)
-              }
-              submitType="delete">
-              {"Are you sure, you want to delete this credential?"}
-            </ConfirmationModal>
-          );
-          break;
-        default:
-          CurrentModalJsx = null;
-      }
-    }
     return [
       <div key="dropdownFrag1" id="settings-wrapper">
         <div id="settings-button-wrapper">
@@ -110,10 +50,8 @@ class CredentialAccordionTabDropdownWrapped extends React.Component {
           selectedDevice={selectedDevice}
           inEditingView={this.state.inEditingView}
           toggleDropdownMenu={this.toggleDropdownMenu}
-          toggleModal={this.toggleModal}
         />
-      </div>,
-      CurrentModalJsx
+      </div>
     ];
   }
 }
