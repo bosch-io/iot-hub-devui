@@ -122,6 +122,15 @@ body {
       filter: blur(5px);
       transition: 0.5s filter linear;
     }
+    .notification {
+      background-color: rgba(0, 0, 0, 0.9) !important;
+      .notification-dismiss {
+        background-color: rgba(0, 0, 0, 0.9) !important;
+      }
+      .notification-message {
+        color: #fff !important;
+      }
+    }
   }
 }
 

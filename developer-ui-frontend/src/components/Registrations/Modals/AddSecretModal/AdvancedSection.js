@@ -67,15 +67,15 @@ class AdvancedSection extends Component {
   }
 }
 
+AdvancedSection.propTypes = {
+  changeSaltVal: PropTypes.func.isRequired
+};
+
 AdvancedSection = connect(
   null,
   dispatch => ({
     changeSaltVal: val => dispatch(change("newSecret", "salt", val))
   })
 )(AdvancedSection);
-
-AdvancedSection.propTypes = {
-  changeSaltVal: PropTypes.func.isRequired
-};
 
 export default AdvancedSection;

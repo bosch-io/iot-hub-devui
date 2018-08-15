@@ -52,7 +52,19 @@ class AddSecretModalWrapped extends Component {
       firstInitialization,
       credentialType
     } = this.props;
-    const secretData = { password: values.get("password") };
+    const secretData = {
+      password: values.get("password")
+    };
+    // Optional ("advanced") Field values
+    if (values.get("notBefore")) {
+      secretData["not-before"] = values.get("notBefore").toISOString();
+    }
+    if (values.get("notAfter")) {
+      secretData["not-after"] = values.get("notAfter").toISOString();
+    }
+    if (values.get("salt")) {
+      secretData.salt = values.get("salt");
+    }
     const hashAlgorithm = values.get("hashAlgorithm");
     if (hashAlgorithm) {
       secretData.hashMethod = hashAlgorithm;

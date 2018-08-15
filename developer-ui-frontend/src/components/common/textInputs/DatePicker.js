@@ -16,6 +16,7 @@ class DatePickerWrapped extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleInputClick = this.handleInputClick.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
     this.toggle = this.toggle.bind(this);
     this.component = React.createRef();
   }
@@ -30,23 +31,26 @@ class DatePickerWrapped extends Component {
 
   handleChange(date) {
     this.props.input.onChange(moment(date));
-    this.props.input.onFocus();
+    this.props.input.onBlur();
+  }
+
+  handleBlur() {
+    this.props.input.onBlur(this.props.input.value);
   }
 
   toggle() {
     const {
-      meta: { active },
-      input: { onFocus, onBlur }
+      meta: { active }
     } = this.props;
     this.component.setOpen(!active);
-    active ? onBlur() : onFocus();
+    active ? this.props.input.onBlur() : this.props.input.onFocus();
   }
 
   render() {
     const {
       placeholder,
-      input: { value, onBlur },
-      meta: { pristine, active }
+      input,
+      meta: { active }
     } = this.props;
 
     return (
@@ -55,11 +59,10 @@ class DatePickerWrapped extends Component {
           ref={r => {
             this.component = r;
           }}
-          selected={pristine ? null : moment(value, "MM/DD/YYYY")}
+          selected={input.value ? moment(input.value, "MM/DD/YYYY") : null}
           onChange={this.handleChange}
-          onBlur={onBlur}
-          onClickOutside={onBlur}
-          onSelect={onBlur}
+          onBlur={this.handleBlur}
+          onClickOutside={this.handleBlur}
           placeholderText={placeholder}
         />
         <CalendarIcon onClick={this.toggle} />
@@ -75,7 +78,7 @@ DatePickerWrapped.propTypes = {
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func.isRequired,
     onBlur: PropTypes.func.isRequired,
-    value: PropTypes.object.isRequired
+    value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired
   }).isRequired,
   placeholder: PropTypes.string,
   meta: PropTypes.shape({

@@ -102,17 +102,18 @@ export const mapCredentialParams = (authId, credType, data, secrets) => {
 export const mapSecretParams = (secretId, authId, secretType, data) => {
   const newSecretType = secretType;
   let newSecret = null;
-  let password = "";
   if (newSecretType === "Hashed Password") {
+    const { hashMethod, password, ...other } = data;
+    let pw = "";
     try {
-      const method = data.hashMethod;
-      const pw = data.password;
+      const method = hashMethod;
       const hashObj = new jssha(method, "TEXT");
-      hashObj.update(pw);
-      password = hashObj.getHash("B64");
+      hashObj.update(password);
+      pw = hashObj.getHash("B64");
       newSecret = {
         "hash-function": method,
-        "pwd-hash": password
+        "pwd-hash": pw,
+        ...other
       };
     } catch (err) {
       console.error(err);
