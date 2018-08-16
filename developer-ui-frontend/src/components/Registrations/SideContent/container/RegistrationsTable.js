@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { reduxForm, formValueSelector } from "redux-form/immutable";
+import { withRouter } from "react-router-dom";
 import ChecklistSelect, {
   ChecklistSelectHeader,
   ChecklistOptionEntries
@@ -21,12 +22,32 @@ class RegistrationsTableWrapped extends Component {
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
   }
 
-  handleItemClick() {
+  updatePath(path, item) {
+    const pathArr = path.split("/");
+    let newPathArr = null;
+    if (!item) {
+      newPathArr = pathArr.slice(0, 2);
+    } else {
+      if (pathArr.length > 3) {
+        newPathArr = [
+          ...pathArr.slice(0, 2),
+          item,
+          ...pathArr.slice(3, pathArr.length)
+        ];
+      } else if (pathArr.length <= 3) {
+        newPathArr = [...pathArr.slice(0, 2), item];
+      }
+    }
+    return newPathArr.join("/");
+  }
+
+  handleItemClick(item) {
     this.props.setMainPanel(true);
+    const newPath = this.updatePath(this.props.history.location.pathname, item);
+    this.props.history.push(newPath);
   }
 
   handleCheckboxClick(deviceId, enabled) {
-    console.log("Clicked!!");
     this.props.changeEnabled(deviceId, !enabled);
   }
 
@@ -49,7 +70,7 @@ class RegistrationsTableWrapped extends Component {
               checked: entry.enabled
             }))}
             filterText={registrySearchValue}
-            onClick={this.handleItemClick}
+            onClick={item => this.handleItemClick(item)}
             onCheckboxClick={this.handleCheckboxClick}
           />
         </ChecklistSelect>
@@ -74,10 +95,12 @@ let RegistrationsTableContainer = reduxForm({
   form: "registrationsTabListing"
 })(RegistrationsTableWrapped);
 
-RegistrationsTableContainer = connect(
-  mapStateToProps,
-  { changeEnabled }
-)(toJS(RegistrationsTableContainer));
+RegistrationsTableContainer = withRouter(
+  connect(
+    mapStateToProps,
+    { changeEnabled }
+  )(toJS(RegistrationsTableContainer))
+);
 
 RegistrationsTableWrapped.propTypes = {
   deviceData: PropTypes.arrayOf(
@@ -85,7 +108,8 @@ RegistrationsTableWrapped.propTypes = {
   ),
   setMainPanel: PropTypes.func.isRequired,
   changeEnabled: PropTypes.func.isRequired,
-  registrySearchValue: PropTypes.string
+  registrySearchValue: PropTypes.string,
+  history: PropTypes.object.isRequired
 };
 
 const RegistrationsTable = RegistrationsTableContainer;

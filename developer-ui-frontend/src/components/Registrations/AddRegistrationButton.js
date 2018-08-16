@@ -35,12 +35,12 @@ class AddRegistrationButton extends React.Component {
   }
 
   render() {
-    const { hasCallout } = this.props;
+    const { hasCallout, selectedDevice } = this.props;
     const tooltipIdFirstReg = "first-reg";
     return (
       <Fragment>
         <Link
-          to="/registrations/additionalRegs"
+          to={`/registrations/${selectedDevice}/additionalRegs`}
           id="flyout-btn-fixed-container"
           data-tip
           data-for={tooltipIdFirstReg}>
@@ -66,7 +66,8 @@ class AddRegistrationButton extends React.Component {
 }
 
 AddRegistrationButton.propTypes = {
-  hasCallout: PropTypes.bool.isRequired
+  hasCallout: PropTypes.bool.isRequired,
+  selectedDevice: PropTypes.string
 };
 
 export default AddRegistrationButton;

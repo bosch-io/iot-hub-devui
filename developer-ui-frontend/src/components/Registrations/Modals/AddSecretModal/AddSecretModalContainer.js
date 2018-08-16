@@ -98,7 +98,8 @@ class AddSecretModalWrapped extends Component {
       selectedType,
       pristine,
       submitting,
-      invalid
+      invalid,
+      deviceId
     } = this.props;
     const { isOpen } = this.state;
     return isOpen ? (
@@ -115,7 +116,7 @@ class AddSecretModalWrapped extends Component {
         />
       </form>
     ) : (
-      <Redirect to="/registrations" />
+      <Redirect to={`/registrations/${deviceId}`} />
     );
   }
 }

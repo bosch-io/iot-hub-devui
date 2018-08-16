@@ -65,6 +65,7 @@ export const selectAllDevices = state =>
   state.get("allIds").map(id => state.getIn(["byId", id]));
 export const selectNumberOfAllDevices = state => state.get("allIds").size;
 export const selectDeviceById = (state, id) => state.getIn(["byId", id]);
+export const hasDevice = (state, id) => Boolean(state.getIn(["byId", id]));
 export const selectCredentialIdsByDeviceId = (state, id) =>
   selectDeviceById(state, id).get("credentials");
 export const selectRegistrationInfo = (state, deviceId) =>

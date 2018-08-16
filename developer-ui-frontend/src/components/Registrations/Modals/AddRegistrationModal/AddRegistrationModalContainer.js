@@ -4,8 +4,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { CREDENTIAL_TYPES } from "_APP_CONSTANTS";
-import { Redirect } from "react-router-dom";
-import { reduxForm, SubmissionError, change } from "redux-form/immutable";
+import { Redirect, withRouter } from "react-router-dom";
+import {
+  reduxForm,
+  SubmissionError,
+  change,
+  formValueSelector
+} from "redux-form/immutable";
 import { connect } from "react-redux";
 import { toJS } from "components/helpers/to-js";
 import { createStandardPasswordRegistration } from "actions/RegistrationActions";
@@ -103,7 +108,13 @@ class AddRegistrationModalContainer extends React.Component {
   }
 
   render() {
-    const { handleSubmit, type, tenant, ...others } = this.props;
+    const {
+      handleSubmit,
+      type,
+      tenant,
+      selectedDevice,
+      ...others
+    } = this.props;
     const { isOpen } = this.state;
     /* eslint-disable react/prop-types */
     const { invalid, pristine, submitting } = this.props;
@@ -154,7 +165,7 @@ class AddRegistrationModalContainer extends React.Component {
         </ConfigurationModal>
       </form>
     ) : (
-      <Redirect to="/registrations" />
+      <Redirect to={`/registrations/${selectedDevice}/`} />
     );
   }
 }
@@ -167,12 +178,17 @@ AddRegistrationModalContainer.propTypes = {
   changeCurrentlySelectedDevice: PropTypes.func.isRequired,
   setMainPanel: PropTypes.func.isRequired,
   fetchingRegistrations: PropTypes.array.isRequired,
-  availableDevices: PropTypes.array
+  availableDevices: PropTypes.array,
+  selectedDevice: PropTypes.string
 };
 
 const mapStateToProps = state => ({
   fetchingRegistrations: selectFetchingDevices(state),
-  tenant: selectTenant(state)
+  tenant: selectTenant(state),
+  selectedDevice: formValueSelector("registrationsTabListing")(
+    state,
+    "selectedDevice"
+  )
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -187,9 +203,11 @@ AddRegistrationModalContainer = reduxForm({
   validate,
   warn
 })(AddRegistrationModalContainer);
-AddRegistrationModalContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(toJS(AddRegistrationModalContainer));
+AddRegistrationModalContainer = withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(toJS(AddRegistrationModalContainer))
+);
 
 export default AddRegistrationModalContainer;

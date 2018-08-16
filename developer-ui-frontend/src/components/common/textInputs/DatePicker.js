@@ -30,6 +30,7 @@ class DatePickerWrapped extends Component {
   }
 
   handleChange(date) {
+    console.log(date);
     this.props.input.onChange(moment(date));
     this.props.input.onBlur();
   }

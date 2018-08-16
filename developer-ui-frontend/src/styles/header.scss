@@ -86,6 +86,7 @@ header {
 
   .tenant-info-wrapper {
     .icon-window {
+      padding-right: 1em;
       width: 2.4rem;
       height: 2.4rem;
       overflow: hidden;
@@ -153,7 +154,6 @@ header {
       font-weight: 500;
       font-size: 1.1em;
       padding: 0.3em 0;
-      margin-left: 1em;
       outline: none;
       height: 2.2em;
       transition: width 0.3s;

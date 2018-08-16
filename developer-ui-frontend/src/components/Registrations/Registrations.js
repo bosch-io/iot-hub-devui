@@ -7,10 +7,12 @@ import { CREDENTIAL_TYPES } from "_APP_CONSTANTS";
 // React
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import { Route } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
+import { matchPath } from "react-router";
 // Redux
 import { connect } from "react-redux";
-import { selectNumberOfAllDevices } from "reducers/selectors";
+import { selectNumberOfAllDevices, hasDevice } from "reducers/selectors";
+import { formValueSelector, change } from "redux-form/immutable";
 // Child Components
 import BigCard from "components/common/BigCard";
 import MainContent from "./MainContent/MainContent";
@@ -32,8 +34,31 @@ export class Registrations extends React.Component {
     this.setMainPanel = this.setMainPanel.bind(this);
   }
 
+  /* eslint-disable react/no-did-mount-set-state */
+  // On first render, check the path and either redirect if that device
+  // doesn't exist or select that device in the Redux Form state
   componentDidMount() {
-    setTimeout(() => document.body.classList.add("withBgPattern"), 500); // wait some time to prevent laggy background transition
+    // wait some time to prevent laggy background transition
+    setTimeout(() => document.body.classList.add("withBgPattern"), 500);
+    const {
+      history,
+      validateDeviceId,
+      changeCurrentlySelectedDevice
+    } = this.props;
+    const match = matchPath(history.location.pathname, {
+      path: "/registrations/:selectedDeviceId",
+      exact: false,
+      strict: false
+    });
+    const pathDeviceId = match && match.params.selectedDeviceId;
+    if (pathDeviceId) {
+      if (validateDeviceId(pathDeviceId)) {
+        changeCurrentlySelectedDevice(pathDeviceId);
+        this.setState({ mainPanelExpanded: true });
+      } else {
+        history.push("/registrations");
+      }
+    }
   }
 
   setMainPanel(newState) {
@@ -42,7 +67,7 @@ export class Registrations extends React.Component {
 
   render() {
     const { mainPanelExpanded } = this.state;
-    const { numberOfDevices } = this.props;
+    const { numberOfDevices, selectedDevice } = this.props;
     return (
       <Fragment>
         <BigCard
@@ -59,13 +84,14 @@ export class Registrations extends React.Component {
               setMainPanel={this.setMainPanel}
             />
             <AddRegistrationButton
+              selectedDevice={selectedDevice}
               hasCallout={numberOfDevices === 0}
               setMainPanel={this.setMainPanel}
             />
           </div>
         </BigCard>
         <Route
-          path={`/registrations/additionalRegs/:deviceId?`}
+          path={`/registrations/:selectedDeviceId/additionalRegs/:deviceId?`}
           render={({ match }) => (
             <AddRegistrationModal
               type={CREDENTIAL_TYPES.PASSWORD}
@@ -103,11 +129,28 @@ export class Registrations extends React.Component {
 
 Registrations.propTypes = {
   initialState: PropTypes.object,
-  numberOfDevices: PropTypes.number.isRequired
+  numberOfDevices: PropTypes.number.isRequired,
+  selectedDevice: PropTypes.string,
+  history: PropTypes.object.isRequired,
+  changeCurrentlySelectedDevice: PropTypes.func.isRequired,
+  validateDeviceId: PropTypes.func.isRequired
 };
 
-Registrations = connect(state => ({
-  numberOfDevices: selectNumberOfAllDevices(state)
-}))(Registrations);
+Registrations = withRouter(
+  connect(
+    state => ({
+      selectedDevice: formValueSelector("registrationsTabListing")(
+        state,
+        "selectedDevice"
+      ),
+      numberOfDevices: selectNumberOfAllDevices(state),
+      validateDeviceId: deviceId => hasDevice(state, deviceId)
+    }),
+    dispatch => ({
+      changeCurrentlySelectedDevice: deviceId =>
+        dispatch(change("registrationsTabListing", "selectedDevice", deviceId))
+    })
+  )(Registrations)
+);
 
 export default Registrations;

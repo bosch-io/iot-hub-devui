@@ -43,6 +43,8 @@ export const selectNumberOfPendingUnsubscribes = state =>
   fromDevices.selectNumberOfPendingUnsubscribes(state.get("devices"));
 export const selectDeviceById = (state, id) =>
   fromDevices.selectDeviceById(state.get("devices"), id);
+export const hasDevice = (state, id) =>
+  fromDevices.hasDevice(state.get("devices"), id);
 export const selectCredentialIdsByDeviceId = (state, id) =>
   fromDevices.selectCredentialIdsByDeviceId(state.get("devices"), id);
 export const selectRegistrationInfo = (state, id) =>

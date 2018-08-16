@@ -7,7 +7,7 @@ import MainContentHeadline from "./MainContentHeadline";
 import RegistrationInfoContent from "./RegInfoEditor/RegistrationInfoContent";
 import CredentialsInfoContent from "./CredentialsEditor/CredentialsInfoContent";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Route } from "react-router-dom";
 import { fetchCredentialsByDeviceId } from "actions/DataFetchActions";
 import { formValueSelector } from "redux-form/immutable";
 const tabNames = {
@@ -72,48 +72,54 @@ class MainContentWrapped extends Component {
     }
 
     return (
-      <div
-        id="registrations-main-content"
-        className={this.props.mainPanelExpanded ? "expanded" : null}
-        style={style}>
-        <div id="main-panel-headline-wrapper">
-          <MainContentHeadline
-            mainPanelExpanded={mainPanelExpanded}
-            setMainPanel={setMainPanel}
-          />
-          <ul id="tabs">
-            <li
-              onClick={() => this.handleTabClick(tabNames.REG_INFO)}
-              className={
-                this.state.currentlySelectedTab.id === tabNames.REG_INFO.id
-                  ? tabsDisabledClass + "active"
-                  : tabsDisabledClass
-              }>
-              Registration Info
-            </li>
-            <li
-              onClick={() => this.handleTabClick(tabNames.CREDENTIALS)}
-              className={
-                this.state.currentlySelectedTab.id === tabNames.CREDENTIALS.id
-                  ? tabsDisabledClass + "active"
-                  : tabsDisabledClass
-              }>
-              Credentials
-            </li>
-          </ul>
-        </div>
-        <div id="accordion-wrapper">
+      <Route
+        path="/registrations/:selectedDeviceId?"
+        render={({ match }) => (
           <div
-            id="tab-content-wrapper"
-            className={
-              this.state.currentlySelectedTab.id === tabNames.REG_INFO.id
-                ? "reg-mode"
-                : null
-            }>
-            {renderedTabs}
+            id="registrations-main-content"
+            className={this.props.mainPanelExpanded ? "expanded" : null}
+            style={style}>
+            <div id="main-panel-headline-wrapper">
+              <MainContentHeadline
+                mainPanelExpanded={mainPanelExpanded}
+                setMainPanel={setMainPanel}
+              />
+              <ul id="tabs">
+                <li
+                  onClick={() => this.handleTabClick(tabNames.REG_INFO)}
+                  className={
+                    this.state.currentlySelectedTab.id === tabNames.REG_INFO.id
+                      ? tabsDisabledClass + "active"
+                      : tabsDisabledClass
+                  }>
+                  Registration Info
+                </li>
+                <li
+                  onClick={() => this.handleTabClick(tabNames.CREDENTIALS)}
+                  className={
+                    this.state.currentlySelectedTab.id ===
+                    tabNames.CREDENTIALS.id
+                      ? tabsDisabledClass + "active"
+                      : tabsDisabledClass
+                  }>
+                  Credentials
+                </li>
+              </ul>
+            </div>
+            <div id="accordion-wrapper">
+              <div
+                id="tab-content-wrapper"
+                className={
+                  this.state.currentlySelectedTab.id === tabNames.REG_INFO.id
+                    ? "reg-mode"
+                    : null
+                }>
+                {renderedTabs}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        )}
+      />
     );
   }
 }
