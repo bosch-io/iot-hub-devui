@@ -5,14 +5,12 @@ import "styles/settings.scss";
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { deleteCredential } from "actions/CredentialActions";
 import CredentialAccordionTabDropdownMenu from "./CredentialAccordionTabDropdownMenu";
 import HoverTooltip from "components/common/HoverTooltip";
-import { ConfirmationModal } from "components/common/dialogModals";
 // SVG Imports
 import MoreIcon from "images/moreIcon.svg";
 
-class CredentialAccordionTabDropdownWrapped extends React.Component {
+export default class CredentialAccordionTabDropdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,16 +54,8 @@ class CredentialAccordionTabDropdownWrapped extends React.Component {
   }
 }
 
-const CredentialAccordionTabDropdown = connect(
-  null,
-  { deleteCredential }
-)(CredentialAccordionTabDropdownWrapped);
-
-CredentialAccordionTabDropdownWrapped.propTypes = {
+CredentialAccordionTabDropdown.propTypes = {
   initialState: PropTypes.object,
   authId: PropTypes.string.isRequired,
-  selectedDevice: PropTypes.string,
-  deleteCredential: PropTypes.func.isRequired
+  selectedDevice: PropTypes.string
 };
-
-export default CredentialAccordionTabDropdown;

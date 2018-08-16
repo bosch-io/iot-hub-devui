@@ -3,18 +3,27 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 import ConfirmationModal, {
   ConfirmationModalHeader,
   ConfirmationModalBody,
   ConfirmationModalFooter
 } from "components/common/dialogModals/ConfirmationModal";
+// Redux
+import { connect } from "react-redux";
+import { deleteRegistration } from "actions/RegistrationActions";
+import { deleteAllCredentialsOfDevice } from "actions/CredentialActions";
+// Redux Form
+import { reset } from "redux-form/immutable";
 
-export default class DeleteRegistrationModal extends Component {
+class DeleteRegistrationModalWrapped extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      footerOptionChecked: true
+      footerOptionChecked: true,
+      isOpen: true
     };
+    this.changeIsOpen = this.changeIsOpen.bind(this);
     this.onCheckboxClick = this.onCheckboxClick.bind(this);
     this.confirm = this.confirm.bind(this);
   }
@@ -25,23 +34,37 @@ export default class DeleteRegistrationModal extends Component {
     }));
   }
 
+  changeIsOpen(opened) {
+    this.setState({ isOpen: opened });
+  }
+
   confirm() {
-    this.props.toggleModal(null, false);
-    this.props.confirm();
+    const { resetSelectedDevice, deleteReg, deviceId } = this.props;
+    this.changeIsOpen(false);
+    const rememberedSelection = deviceId;
+    resetSelectedDevice(); // Clear selection
+    if (this.state.footerOptionChecked) {
+      this.props
+        .deleteAllCredentialsOfDevice(rememberedSelection)
+        .then(() => deleteReg(rememberedSelection));
+    } else {
+      deleteReg(rememberedSelection);
+    }
   }
 
   render() {
-    const { subject, modalShown, toggleModal } = this.props;
-    return (
-      <ConfirmationModal modalShown={modalShown} toggleModal={toggleModal}>
-        <ConfirmationModalHeader subject={subject} />
+    const { deviceId } = this.props;
+    const { isOpen } = this.state;
+    return isOpen ? (
+      <ConfirmationModal modalShown={isOpen} toggleModal={this.changeIsOpen}>
+        <ConfirmationModalHeader subject={"Delete device " + deviceId} />
         <ConfirmationModalBody>
           {"Are you sure, you want to delete this registration?"}
         </ConfirmationModalBody>
         <ConfirmationModalFooter
           confirm={this.confirm}
           submitType="delete"
-          toggleModal={toggleModal}
+          toggleModal={this.changeIsOpen}
           checkboxOption={{
             checkboxLabel: "Also delete all credentials for that device",
             checked: this.state.footerOptionChecked,
@@ -49,13 +72,27 @@ export default class DeleteRegistrationModal extends Component {
           }}
         />
       </ConfirmationModal>
+    ) : (
+      <Redirect to="/registrations" />
     );
   }
 }
 
-DeleteRegistrationModal.propTypes = {
-  subject: PropTypes.string.isRequired,
-  modalShown: PropTypes.bool.isRequired,
-  toggleModal: PropTypes.func.isRequired,
-  confirm: PropTypes.func.isRequired
+const DeleteRegistrationModal = connect(
+  null,
+  dispatch => ({
+    deleteReg: deviceId => dispatch(deleteRegistration(deviceId)),
+    deleteAllCredentialsOfDevice: deviceId =>
+      dispatch(deleteAllCredentialsOfDevice(deviceId)),
+    resetSelectedDevice: () => dispatch(reset("registrationsTabListing"))
+  })
+)(DeleteRegistrationModalWrapped);
+
+DeleteRegistrationModalWrapped.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  deleteReg: PropTypes.func.isRequired,
+  deleteAllCredentialsOfDevice: PropTypes.func.isRequired,
+  resetSelectedDevice: PropTypes.func.isRequired
 };
+
+export default DeleteRegistrationModal;

@@ -3,11 +3,10 @@
  */
 import "styles/subscriptionsConfigForm.scss"; // TODO: Move shared scss to registryListing.scss
 import "styles/registrations.scss";
-import { CREDENTIAL_TYPES } from "_APP_CONSTANTS";
 // React
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import { Route, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { matchPath } from "react-router";
 // Redux
 import { connect } from "react-redux";
@@ -18,11 +17,7 @@ import BigCard from "components/common/BigCard";
 import MainContent from "./MainContent/MainContent";
 import SideContent from "./SideContent/SideContent";
 import AddRegistrationButton from "./AddRegistrationButton";
-// Modals (Child Components)
-import AddRegistrationModal from "./Modals/AddRegistrationModal";
-import AddSecretModal from "./Modals/AddSecretModal";
-import DeleteRegistrationModal from "./Modals/DeleteRegistrationModal";
-import DeleteSecretModal from "./Modals/DeleteSecretModal";
+import Modals from "./Modals";
 
 export class Registrations extends React.Component {
   constructor(props) {
@@ -90,38 +85,7 @@ export class Registrations extends React.Component {
             />
           </div>
         </BigCard>
-        <Route
-          path={`/registrations/:selectedDeviceId/additionalRegs/:deviceId?`}
-          render={({ match }) => (
-            <AddRegistrationModal
-              type={CREDENTIAL_TYPES.PASSWORD}
-              initialValues={{
-                deviceId: match.params.deviceId,
-                password: ""
-              }}
-              setMainPanel={this.setMainPanel}
-            />
-          )}
-        />
-        <Route
-          path={`/registrations/:selectedDeviceId/:selectedAuthId/additionalSecrets`}
-          render={({ match }) => (
-            <AddSecretModal
-              expandNewTab={this.expandNewTab}
-              authId={match.params.selectedAuthId}
-              deviceId={match.params.selectedDeviceId}
-            />
-          )}
-        />
-        <Route
-          path={`/registrations/:selectedDeviceId/:selectedAuthId/deleteSecrets`}
-          render={({ match }) => (
-            <DeleteSecretModal
-              authId={match.params.selectedAuthId}
-              deviceId={match.params.selectedDeviceId}
-            />
-          )}
-        />
+        <Modals setMainPanel={this.setMainPanel} />
       </Fragment>
     );
   }

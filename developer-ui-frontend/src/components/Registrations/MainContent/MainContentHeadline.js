@@ -3,57 +3,24 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 // Child Components
-import DeleteRegistrationModal from "../Modals/DeleteRegistrationModal";
 import HoverTooltip from "components/common/HoverTooltip";
 import Spinner from "components/common/Spinner";
 // Animations TODO: Replace Velocity
 import { VelocityComponent } from "velocity-react";
 // SVG Imports
-// import DeviceIcon from "images/deviceIcon.svg"; // TODO: Use this again
+// TODO: Use this again after issue with react-svg-loader is fixed
+// https://github.com/boopathi/react-svg-loader/issues/197
+// import DeviceIcon from "images/deviceIcon.svg";
 import DeleteIcon from "images/deleteIcon.svg";
 // Redux
 import { connect } from "react-redux";
 import { selectIsFetchingByDeviceId } from "reducers/selectors";
-import { deleteRegistration } from "actions/RegistrationActions";
-import { deleteAllCredentialsOfDevice } from "actions/CredentialActions";
 // Redux Form
-import { reset, formValueSelector } from "redux-form/immutable";
+import { formValueSelector } from "redux-form/immutable";
 
 class MainContentHeadlineWrapped extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      confirmModalOpen: false,
-      footerOptionChecked: true
-    };
-    this.toggleConfirmModal = this.toggleConfirmModal.bind(this);
-    this.confirmDeletion = this.confirmDeletion.bind(this);
-  }
-
-  onCheckboxClick() {
-    this.setState(state => ({
-      footerOptionChecked: !state.footerOptionChecked
-    }));
-  }
-
-  confirmDeletion() {
-    const { resetSelectedDevice, deleteReg, selectedDevice } = this.props;
-    const rememberedSelection = selectedDevice;
-    resetSelectedDevice(); // Clear selection
-    if (this.state.footerOptionChecked) {
-      this.props
-        .deleteAllCredentialsOfDevice(rememberedSelection)
-        .then(() => deleteReg(rememberedSelection));
-    } else {
-      deleteReg(rememberedSelection);
-    }
-  }
-
-  toggleConfirmModal() {
-    this.setState(state => ({ confirmModalOpen: !state.confirmModalOpen }));
-  }
-
   render() {
     const {
       mainPanelExpanded,
@@ -92,21 +59,16 @@ class MainContentHeadlineWrapped extends Component {
               {isFetching && <Spinner type="bubbles" />}
             </span>
             <span id="action-buttons">
-              <DeleteIcon
-                className={!selectedDevice ? "disabled" : null}
-                onClick={selectedDevice ? this.toggleConfirmModal : null}
-                data-tip
-                data-for={tooltipIdDeleteReg}
-              />
+              <Link to={`/registrations/${selectedDevice}/deleteRegistration`}>
+                <DeleteIcon
+                  className={!selectedDevice ? "disabled" : null}
+                  data-tip
+                  data-for={tooltipIdDeleteReg}
+                />
+              </Link>
             </span>
           </div>
         </VelocityComponent>
-        <DeleteRegistrationModal
-          subject={"Delete device " + selectedDevice}
-          modalShown={this.state.confirmModalOpen}
-          toggleModal={this.toggleConfirmModal}
-          confirm={this.confirmDeletion}
-        />
         {selectedDevice && (
           <HoverTooltip
             id={tooltipIdDeleteReg}
@@ -118,29 +80,18 @@ class MainContentHeadlineWrapped extends Component {
   }
 }
 
-const MainContentHeadline = connect(
-  (state, ownProps) => ({
-    isFetching: selectIsFetchingByDeviceId(state, ownProps.selectedDevice),
-    selectedDevice: formValueSelector("registrationsTabListing")(
-      state,
-      "selectedDevice"
-    )
-  }),
-  dispatch => ({
-    deleteReg: deviceId => dispatch(deleteRegistration(deviceId)),
-    deleteAllCredentialsOfDevice: deviceId =>
-      dispatch(deleteAllCredentialsOfDevice(deviceId)),
-    resetSelectedDevice: () => dispatch(reset("registrationsTabListing"))
-  })
-)(MainContentHeadlineWrapped);
+const MainContentHeadline = connect((state, ownProps) => ({
+  isFetching: selectIsFetchingByDeviceId(state, ownProps.selectedDevice),
+  selectedDevice: formValueSelector("registrationsTabListing")(
+    state,
+    "selectedDevice"
+  )
+}))(MainContentHeadlineWrapped);
 
 MainContentHeadlineWrapped.propTypes = {
   mainPanelExpanded: PropTypes.bool.isRequired,
   setMainPanel: PropTypes.func.isRequired,
   selectedDevice: PropTypes.string,
-  resetSelectedDevice: PropTypes.func.isRequired,
-  deleteReg: PropTypes.func.isRequired,
-  deleteAllCredentialsOfDevice: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired
 };
 

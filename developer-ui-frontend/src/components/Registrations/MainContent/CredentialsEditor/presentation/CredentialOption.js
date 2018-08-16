@@ -48,7 +48,7 @@ export default class CredentialOption extends React.Component {
         path = `/registrations/${selectedDevice}/${authId}/deleteSecrets`;
         break;
       case "Delete Credential":
-        path = `registrations/${selectedDevice}/deleteCredential`;
+        path = `/registrations/${selectedDevice}/${authId}/deleteCredential`;
         break;
       default:
         console.error(
