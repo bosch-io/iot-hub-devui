@@ -24,10 +24,15 @@
 
       form {
         height: 100%;
+        display: flex;
+        flex-direction: column;
       }
 
       .reg-listing {
+        margin-top: 1.5rem;
         padding: 0.5rem 1%;
+        height: unset !important;
+        flex: 1;
 
         #reg-listing-content {
           @include customScrollbar(8px, rgba(0, 0, 0, 0.4), 10px, transparent);

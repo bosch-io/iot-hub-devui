@@ -3,6 +3,7 @@
  */
 import React from "react";
 import PropTypes from "prop-types";
+import SwitchCheckbox from "components/common/SwitchCheckbox";
 // SVG Imports
 import ListLengthIcon from "images/listLengthIcon.svg";
 import BufferSizeIcon from "images/bufferSizeIcon.svg";
@@ -46,17 +47,11 @@ export default class Setting extends React.Component {
             {categoryName}
           </div>
         ) : (
-          <div className="pretty p-switch p-fill">
-            <input
-              type="checkbox"
-              id={categoryName.replace(/\s+/g, "-").toLowerCase()}
-              checked={scrollAnimationActive}
-              onChange={() => onCheckboxChange(!scrollAnimationActive)}
-            />
-            <div className="state">
-              <label>{categoryName}</label>
-            </div>
-          </div>
+          <SwitchCheckbox
+            checked={scrollAnimationActive}
+            onCheckboxClick={() => onCheckboxChange(!scrollAnimationActive)}
+            label={categoryName}
+          />
         )}
       </li>
     );

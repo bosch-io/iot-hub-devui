@@ -12,7 +12,6 @@ export const ListEntry = styled.li`
   display: flex;
   -ms-flex-align: center;
   align-items: center;
-  padding: 0.7rem 1.4rem;
   -ms-flex-pack: justify;
   justify-content: space-between;
 `;
@@ -22,13 +21,14 @@ const ChecklistContext = React.createContext();
 // Also create a HOC as simple API to wrap the children
 export const withChecklistContext = WrappedComponent => props => (
   <ChecklistContext.Consumer>
-    {({ asField, name, leadingCheckbox, useLeadingCheckbox }) => (
+    {({ asField, name, leadingCheckbox, useLeadingCheckbox, useSwitches }) => (
       <WrappedComponent
         {...props}
         asField={asField}
         name={name}
         leadingCheckbox={leadingCheckbox}
         useLeadingCheckbox={useLeadingCheckbox}
+        useSwitches={useSwitches}
       />
     )}
   </ChecklistContext.Consumer>
@@ -45,19 +45,21 @@ export default class ChecklistSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      leadingCheckbox: Boolean(props.leadingCheckbox)
+      leadingCheckbox: Boolean(props.leadingCheckbox),
+      useSwitches: Boolean(props.useSwitches)
     };
   }
   render() {
     const { asField, children, name } = this.props;
-    const { leadingCheckbox } = this.state;
+    const { leadingCheckbox, useSwitches } = this.state;
     return (
       <ChecklistContext.Provider
         value={{
           asField,
           name,
           leadingCheckbox,
-          useLeadingCheckbox: () => this.setState({ leadingCheckbox: true })
+          useLeadingCheckbox: () => this.setState({ leadingCheckbox: true }),
+          useSwitches
         }}>
         <ChecklistSelectStyled {...this.props}>
           {children}
@@ -74,5 +76,6 @@ ChecklistSelect.propTypes = {
   ]).isRequired,
   asField: PropTypes.bool,
   name: PropTypes.string,
-  leadingCheckbox: PropTypes.bool
+  leadingCheckbox: PropTypes.bool,
+  useSwitches: PropTypes.bool
 };

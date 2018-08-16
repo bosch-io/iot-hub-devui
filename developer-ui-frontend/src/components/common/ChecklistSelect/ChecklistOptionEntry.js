@@ -5,6 +5,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Checkbox from "../Checkbox";
+import SwitchCheckbox from "../SwitchCheckbox";
 
 const OptionEntry = styled.li`
   cursor: pointer;
@@ -38,6 +39,19 @@ const OptionEntry = styled.li`
         }
       }
     `};
+    ${props =>
+      !props.checked &&
+      props.useSwitches &&
+      `
+      .pretty {
+        .state:before {
+          border-color: ${props.theme.accentBlue};
+        }
+        label:after {
+          background-color: transparent !important;
+        }
+      }
+      `};
   }
 `;
 
@@ -48,12 +62,20 @@ const ChecklistOptionEntry = ({
   onCheckboxClick,
   style,
   leadingCheckbox,
+  useSwitches,
   ...others
 }) => (
   <div style={style} className="reg-item" onClick={onClick} {...others}>
-    <OptionEntry leadingCheckbox={leadingCheckbox} checked={checked}>
+    <OptionEntry
+      leadingCheckbox={leadingCheckbox}
+      checked={checked}
+      useSwitches={useSwitches}>
       <span>{text}</span>
-      <Checkbox checked={checked} onCheckboxClick={onCheckboxClick} />
+      {useSwitches ? (
+        <SwitchCheckbox checked={checked} onCheckboxClick={onCheckboxClick} />
+      ) : (
+        <Checkbox checked={checked} onCheckboxClick={onCheckboxClick} />
+      )}
     </OptionEntry>
   </div>
 );
@@ -64,7 +86,8 @@ ChecklistOptionEntry.propTypes = {
   onClick: PropTypes.func.isRequired,
   onCheckboxClick: PropTypes.func.isRequired,
   style: PropTypes.object,
-  leadingCheckbox: PropTypes.bool
+  leadingCheckbox: PropTypes.bool,
+  useSwitches: PropTypes.bool
 };
 
 export default ChecklistOptionEntry;

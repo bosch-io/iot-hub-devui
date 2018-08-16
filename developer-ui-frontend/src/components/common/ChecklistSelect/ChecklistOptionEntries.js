@@ -66,6 +66,7 @@ class ChecklistOptionEntries extends Component {
       onCheckboxClick,
       name,
       asField,
+      useSwitches,
       leadingCheckbox
     } = this.props;
     return (
@@ -107,6 +108,7 @@ class ChecklistOptionEntries extends Component {
                       asField && this.changeSelect(text);
                     }}
                     onCheckboxClick={() => onCheckboxClick(text, checked)}
+                    useSwitches={useSwitches}
                   />
                 ))}
               </div>
@@ -140,6 +142,8 @@ ChecklistOptionEntries.propTypes = {
   name: PropTypes.string,
   /* Provided through the ChecklistContext */
   leadingCheckbox: PropTypes.bool,
+  /* Provided through the ChecklistContext */
+  useSwitches: PropTypes.bool,
   selectedOption: PropTypes.string,
   changeSelectedOption: PropTypes.func
 };

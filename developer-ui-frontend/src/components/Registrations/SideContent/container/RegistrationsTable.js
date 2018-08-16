@@ -62,7 +62,11 @@ class RegistrationsTableWrapped extends Component {
           autoComplete="off"
           asField
         />
-        <ChecklistSelect asField name="selectedDevice" className="reg-listing">
+        <ChecklistSelect
+          useSwitches
+          asField
+          name="selectedDevice"
+          className="reg-listing">
           <ChecklistSelectHeader textTitle="ID" checkedTitle="enabled" />
           <ChecklistOptionEntries
             data={deviceData.map(entry => ({
