@@ -57,10 +57,10 @@ class AddSecretModalWrapped extends Component {
     };
     // Optional ("advanced") Field values
     if (values.get("notBefore")) {
-      secretData["not-before"] = values.get("notBefore").toISOString();
+      secretData["not-before"] = values.get("notBefore").format();
     }
     if (values.get("notAfter")) {
-      secretData["not-after"] = values.get("notAfter").toISOString();
+      secretData["not-after"] = values.get("notAfter").format();
     }
     if (values.get("salt")) {
       secretData.salt = values.get("salt");

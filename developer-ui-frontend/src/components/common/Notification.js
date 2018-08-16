@@ -39,7 +39,7 @@ const style = {
       backgroundRepeat: "no-repeat",
       backgroundPosition: "4% 50%",
       backgroundSize: "20px 20px",
-      backgroundColor: "#ED473B",
+      backgroundColor: "rgba(227, 6, 19, 0.9)",
       color: "#fff"
     }
   },
@@ -97,6 +97,7 @@ NotificationContainer.propTypes = {
   notification: PropTypes.object
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  toJS(NotificationContainer)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(toJS(NotificationContainer));
