@@ -1,16 +1,45 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { formatDateString } from "utils";
+import moment from "moment";
 import Spinner from "components/common/Spinner";
 import ReactTooltip from "react-tooltip";
 import { Link } from "react-router-dom";
 // SVG Imports
 import AddIcon from "images/addIcon.svg";
 
-class DeviceEntityItem extends React.Component {
+class DeviceEntityItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lastActiveRelative: moment(props.lastActive).fromNow()
+    };
+    this.refreshDateInterval;
+  }
+  componentDidMount() {
+    this.refreshDateInterval = setInterval(
+      () =>
+        this.setState({
+          lastActiveRelative: moment(this.props.lastActive).fromNow()
+        }),
+      500
+    );
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.lastActive !== this.props.lastActive) {
+      this.setState({
+        lastActiveRelative: moment(nextProps.lastActive).fromNow()
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.refreshDateInterval);
+  }
+
   render() {
     // props.children is either a Field component (hidden checkbox controlled by the li if deviceAddingModeActive) or null
     // if props.children is not undefined, the additionalSubscriptions view (RegisteredDevicesListing) is active
@@ -20,9 +49,7 @@ class DeviceEntityItem extends React.Component {
       this.props.isSubscribed &&
       this.props.currentlyActive
     ) {
-      liSubline = (
-        <p>{"Last active " + formatDateString(this.props.lastActive)}</p>
-      );
+      liSubline = <p>{"Last active " + this.state.lastActiveRelative}</p>;
     } else if (!this.props.isSubscribed && !this.props.children) {
       liSubline = <p>Adding subscription</p>;
     } else {
