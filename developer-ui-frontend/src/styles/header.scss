@@ -186,6 +186,10 @@ header {
           opacity: 0;
         }
       }
+
+      @media (max-width: 995px) {
+        display: none;
+      }
     }
   }
 }

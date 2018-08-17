@@ -1,21 +1,28 @@
 @import "_globalVars.scss";
 @import "_mixins.scss";
 .payload-modal-container {
+  overflow: hidden !important;
   h5 {
     margin: 0;
     padding: 2.4rem;
   }
   .application-header-table-container {
     width: 100%;
+    background: #fff;
     max-height: 20.875rem;
-    overflow-y: auto;
-    @include customScrollbar(8px, rgba(255, 255, 255, 0.3), 10px, transparent);
+    // ignored because of max-width but used for relative positioning in the children
+    height: 9999999px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+    position: relative;
     .application-header-table {
       display: flex;
       width: 100%;
       flex-direction: column;
       padding: 0;
       box-sizing: border-box;
+      height: calc(100% - 7.6rem - 2.4rem);
+      overflow-y: auto;
+      @include customScrollbar(8px, rgba(0, 0, 0, 0.3), 10px, transparent);
 
       tr {
         width: 100%;
@@ -24,6 +31,7 @@
         display: flex;
         justify-content: space-between;
         text-align: left;
+        flex-shrink: 0;
 
         &:nth-child(odd) {
           background-color: $table_bg_accent;
@@ -39,20 +47,26 @@
     }
   }
 
+  .fixed-payload-header {
+    color: #f5f5f5;
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+
   #payload-code-block {
+    margin-top: -7.6rem;
     position: relative;
     width: 100%;
+    z-index: -1;
     max-height: calc(75vh - 10.1rem - 20.875rem);
     background: $accent_color_light;
     color: #fff;
     overflow: auto;
     @include customScrollbar(8px, rgba(255, 255, 255, 0.3), 10px, transparent);
-
     pre {
       margin: 0;
       tab-size: 4;
       box-sizing: border-box;
-      padding: 0 12.1rem 3em 3em;
+      padding: 8.6rem 12.1rem 3em 3em;
       font-weight: 500;
       font-family: "Roboto Mono", monospace;
       height: 100%;

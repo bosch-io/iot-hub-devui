@@ -1,4 +1,5 @@
 @import "_globalVars.scss";
+@import "_mixins.scss";
 
 $column_one_width: 16.66667%;
 $column_two_width: 16.66667%;
@@ -171,6 +172,7 @@ $column_five_width: 33.33332%;
     tr:nth-child(even) {
       background: $table_bg_accent;
     }
+    @include customScrollbar(8px, rgba(0, 0, 0, 0.3), 10px, transparent);
   }
 
   tr {
@@ -212,6 +214,7 @@ $column_five_width: 33.33332%;
   td:nth-child(5),
   th:nth-child(5) {
     width: $column_five_width;
+    text-align: end;
   }
 
   tfoot {

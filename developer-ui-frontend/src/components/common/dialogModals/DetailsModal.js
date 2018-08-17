@@ -10,6 +10,7 @@ import { RoundOutlineButton } from "components/common/buttons";
 
 const Body = styled.div`
   padding: 0;
+  z-index: -1;
   button {
     position: fixed;
     bottom: 0;

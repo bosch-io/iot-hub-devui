@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 // Code Syntax Highlighting for the modal view (Prism.js)
 import Prism from "prismjs";
@@ -53,19 +53,21 @@ class PayloadContent extends Component {
   render() {
     const { modalMessage } = this.props;
     return (
-      <div id="payload-code-block">
-        <h5>Payload</h5>
-        <pre className="custom-scrollbar-2">
-          {modalMessage
-            ? Parser(
-                Prism.highlight(
-                  normalizer.normalize(modalMessage.message.content),
-                  this.getLanguageFormat()
+      <Fragment>
+        <h5 className="fixed-payload-header">Payload</h5>
+        <div id="payload-code-block">
+          <pre className="custom-scrollbar-2">
+            {modalMessage
+              ? Parser(
+                  Prism.highlight(
+                    normalizer.normalize(modalMessage.message.content),
+                    this.getLanguageFormat()
+                  )
                 )
-              )
-            : ""}
-        </pre>
-      </div>
+              : ""}
+          </pre>
+        </div>
+      </Fragment>
     );
   }
 }
