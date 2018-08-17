@@ -22,7 +22,7 @@ import FilterIndicators from "../container/FilterIndicators";
 import FilterIndicator from "../presentation/FilterIndicator";
 import LogTable from "../container/LogTable";
 import Table from "../presentation/Table";
-import PayloadModal from "../presentation/PayloadModal";
+import MessageDetailsModal from "../MessageDetailsModal";
 
 const allPropTables = [
   FilterableLogTable,
@@ -34,7 +34,7 @@ const allPropTables = [
   FilterIndicator,
   LogTable,
   Table,
-  PayloadModal
+  MessageDetailsModal
 ];
 
 const mockProps = {
@@ -94,7 +94,7 @@ storiesOf("MessagingLiveFeed/FilterableLogTable", module)
       })(() => <FilterableLogTable {...mockProps} />)(story)}
     </StoryWrapper>
   ))
-  .add("PayloadModal", story => (
+  .add("MessageDetailsModal", story => (
     <StoryWrapper storePreset={exampleState} docText={docText}>
       {withInfo({
         text: docText,

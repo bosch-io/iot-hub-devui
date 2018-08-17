@@ -12,9 +12,13 @@ import {
   ConfigurationModal,
   ConfigurationModalHeader,
   ConfigurationModalFooter,
+  DetailsModal,
+  DetailsModalHeader,
+  DetailsModalBody,
   ConfirmationModal
 } from "../index";
 import AddDeviceLogo from "images/addDeviceIcon.svg";
+import MessageLogo from "images/messageIcon.svg";
 
 storiesOf("Styleguide", module).add(
   "Modals",
@@ -28,10 +32,12 @@ class Playground extends Component {
     super(props);
     this.state = {
       configModalShown: false,
-      confirmModalShown: false
+      confirmModalShown: false,
+      detailsModalShown: false
     };
     this.toggleConfigModal = this.toggleConfigModal.bind(this);
     this.toggleConfirmModal = this.toggleConfirmModal.bind(this);
+    this.toggleDetailsModal = this.toggleDetailsModal.bind(this);
   }
 
   toggleConfigModal() {
@@ -42,15 +48,22 @@ class Playground extends Component {
     this.setState(state => ({ confirmModalShown: !state.confirmModalShown }));
   }
 
+  toggleDetailsModal() {
+    this.setState(state => ({ detailsModalShown: !state.detailsModalShown }));
+  }
+
   render() {
     return (
       <div className="styleguide-card">
         <h1>Modals</h1>
         <FlatButton onClick={this.toggleConfirmModal} primary>
-          Toggle Configuration Modal
+          Toggle Confirmation Modal
         </FlatButton>
         <FlatButton onClick={this.toggleConfigModal} secondary>
-          Toggle Confirmation Modal
+          Toggle Configuration Modal
+        </FlatButton>
+        <FlatButton onClick={this.toggleDetailsModal} danger>
+          Toggle Details Modal
         </FlatButton>
         <ConfirmationModal
           modalShown={this.state.confirmModalShown}
@@ -82,6 +95,18 @@ class Playground extends Component {
             }}
           />
         </ConfigurationModal>
+        <DetailsModal
+          modalShown={this.state.detailsModalShown}
+          toggleModal={this.toggleDetailsModal}>
+          <DetailsModalHeader
+            subject={"Details View"}
+            subTitle={"without any forms/inputs"}
+            icon={<MessageLogo />}
+          />
+          <DetailsModalBody toggleModal={this.toggleDetailsModal}>
+            "Content"
+          </DetailsModalBody>
+        </DetailsModal>
       </div>
     );
   }

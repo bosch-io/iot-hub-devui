@@ -14,7 +14,7 @@ export const DialogModalBase = styled(Modal)`
   flex-direction: column;
   top: 50%;
   left: 50%;
-  border: 1px solid #cccccc;
+  border: ${props => (props.noBorders ? "none" : "1px solid #cccccc")};
   border-top: 0;
   width: 50%;
   max-height: 75vh;

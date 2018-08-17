@@ -12,7 +12,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Registrations from "../Registrations";
 // Components (Only for Prop Tables)
 import SideContent from "../SideContent/SideContent";
-import RegistrationsTable from "../SideContent/container/RegistrationsTable";
+import RegistrationsTable from "../SideContent/RegistrationsTable";
 import MainContent from "../MainContent/MainContent";
 import MainContentHeadline from "../MainContent/MainContentHeadline";
 import RegistrationInfoContent from "../MainContent/RegInfoEditor/RegistrationInfoContent";

@@ -37,7 +37,7 @@ export default class Table extends React.Component {
       </th>
     ));
     // Override last category (currently no payload sorting implemented)
-    theadRow[theadRow.length - 1] = <th key="payload">Payload</th>;
+    theadRow[theadRow.length - 1] = <th key="payload">Details</th>;
     const tableRows = [];
     this.props.tableRows.map((logObj, index) => {
       const timeCell = <td>{formatDateString(logObj.time)}</td>;

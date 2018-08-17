@@ -157,10 +157,7 @@ ConfirmationModal.propTypes = {
   subTitle: PropTypes.string,
   submitType: PropTypes.oneOf(["delete", "submit"]),
   toggleModal: PropTypes.func,
-  children: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.node)
-  ]),
+  children: PropTypes.any,
   confirm: PropTypes.func,
   checkboxOption: PropTypes.shape({
     checkboxLabel: PropTypes.string,

@@ -15,8 +15,8 @@ import {
   selectEventbusConnected,
   selectHubConnected
 } from "reducers/selectors";
-// Modal for shortened payload entries
-import PayloadModal from "../presentation/PayloadModal";
+// Modal for payload and application headers
+import MessageDetailsModal from "../MessageDetailsModal";
 import Table from "../presentation/Table";
 
 /**
@@ -31,11 +31,11 @@ let LogTable = props => {
     { name: "Type", id: "type" },
     { name: "Device", id: "deviceId" },
     { name: "Content-Type", id: "contentType" },
-    { name: "Payload", id: "payload" }
+    { name: "Details", id: "payload" }
   ];
   return (
     <div id="feedTableContainer">
-      <PayloadModal
+      <MessageDetailsModal
         showModal={props.showModal}
         modalMessage={props.modalMessage}
         handleOpenModal={props.handleOpenModal}
@@ -111,9 +111,10 @@ const mapDispatchToProps = dispatch => {
 };
 /* Decorate the LogTable container component with the redux aware props and use the props proxy HOC toJS to convert
 the immutable props to plain JS props. */
-export default (LogTable = connect(mapStateToProps, mapDispatchToProps)(
-  toJS(LogTable)
-));
+export default (LogTable = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(toJS(LogTable)));
 
 LogTable.propTypes = {
   /**
