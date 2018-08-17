@@ -3,7 +3,7 @@
  */
 import React from "react";
 import PropTypes from "prop-types";
-import RegistrationsTable from "./container/RegistrationsTable";
+import RegistrationsTable from "./RegistrationsTable";
 
 const SideContent = ({ mainPanelExpanded, setMainPanel }) => (
   <div id="registrations-side-content">

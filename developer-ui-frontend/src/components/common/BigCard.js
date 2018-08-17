@@ -73,8 +73,8 @@ const BigCard = ({ title, children, ...other }) => (
 BigCard.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element)
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
   ])
 };
 

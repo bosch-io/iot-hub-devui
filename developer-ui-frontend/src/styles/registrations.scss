@@ -83,24 +83,31 @@
           height: 5rem;
           margin-bottom: 0.9rem;
 
-          #action-buttons svg {
-            height: 2rem;
-            width: 2rem;
-            transition: opacity 0.2s;
+          #action-buttons {
+            a {
+              outline: none;
+              cursor: auto;
 
-            &:not(.disabled) {
-              cursor: pointer;
-            }
-            &.disabled {
-              opacity: 0.5;
-            }
+              svg {
+                height: 2rem;
+                width: 2rem;
+                transition: opacity 0.2s;
 
-            &:last-child {
-              margin-left: 1rem;
-            }
+                &:not(.disabled) {
+                  cursor: pointer;
+                }
+                &.disabled {
+                  opacity: 0.5;
+                }
 
-            path {
-              fill: #757575;
+                &:last-child {
+                  margin-left: 1rem;
+                }
+
+                path {
+                  fill: #757575;
+                }
+              }
             }
           }
 

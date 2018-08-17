@@ -71,8 +71,8 @@ export default class ChecklistSelect extends Component {
 
 ChecklistSelect.propTypes = {
   children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element)
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
   ]).isRequired,
   asField: PropTypes.bool,
   name: PropTypes.string,

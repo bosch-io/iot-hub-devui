@@ -59,7 +59,9 @@ class MainContentHeadlineWrapped extends Component {
               {isFetching && <Spinner type="bubbles" />}
             </span>
             <span id="action-buttons">
-              <Link to={`/registrations/${selectedDevice}/deleteRegistration`}>
+              <Link
+                to={`/registrations/${selectedDevice}/deleteRegistration`}
+                onClick={!selectedDevice ? e => e.preventDefault() : null}>
                 <DeleteIcon
                   className={!selectedDevice ? "disabled" : null}
                   data-tip

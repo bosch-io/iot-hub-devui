@@ -159,7 +159,7 @@ ConfirmationModal.propTypes = {
   toggleModal: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.string,
-    PropTypes.arrayOf(PropTypes.element)
+    PropTypes.arrayOf(PropTypes.node)
   ]),
   confirm: PropTypes.func,
   checkboxOption: PropTypes.shape({

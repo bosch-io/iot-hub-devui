@@ -20,6 +20,13 @@ export default class ConfirmationView extends Component {
       shiftingAnimationFinished: false,
       detailsExpanded: false
     };
+    this.startAnimations = this.startAnimations.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.inConfirmationMode) {
+      this.startAnimations();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -29,16 +36,15 @@ export default class ConfirmationView extends Component {
       (nextProps.inConfirmationMode && !this.props.inConfirmationMode) ||
       !this.state.checkmarkAnimationFinished
     ) {
-      // set shiftingAnimationFinished to true and start the staggered motion
-      setTimeout(
-        () => this.setState({ checkmarkAnimationFinished: true }),
-        1500
-      );
-      setTimeout(
-        () => this.setState({ shiftingAnimationFinished: true }),
-        1750
-      );
+      this.startAnimations();
     }
+  }
+
+  startAnimations() {
+    console.log("Cdm ConfirmationView, props: ", this.props);
+    // set shiftingAnimationFinished to true and start the staggered motion
+    setTimeout(() => this.setState({ checkmarkAnimationFinished: true }), 1500);
+    setTimeout(() => this.setState({ shiftingAnimationFinished: true }), 1750);
   }
 
   render() {

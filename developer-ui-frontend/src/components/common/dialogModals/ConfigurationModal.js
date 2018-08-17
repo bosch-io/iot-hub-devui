@@ -105,8 +105,8 @@ ConfigurationModal.propTypes = {
   modalShown: PropTypes.bool.isRequired,
   changeIsOpen: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element)
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node)
   ]).isRequired
 };
 

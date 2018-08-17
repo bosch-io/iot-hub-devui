@@ -108,7 +108,7 @@
         );
         .modal-body-content {
           flex: 1;
-          margin: 1rem 0;
+          margin: 1rem 0 4rem 0;
           .new-device-info {
             flex-flow: column wrap;
             pre {
@@ -141,6 +141,8 @@
       }
     }
     #ok-btn {
+      position: fixed;
+      bottom: 5rem;
       width: 10rem;
       align-self: center;
       flex-shrink: 0;
