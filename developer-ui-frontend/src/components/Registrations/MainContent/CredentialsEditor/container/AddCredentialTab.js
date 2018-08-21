@@ -3,11 +3,14 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { AccordionFixedFooter } from "components/common/Accordion";
+import { autogenerateAuthId } from "utils";
+// Redux
+import { Field, reduxForm, change } from "redux-form/immutable";
+import { connect } from "react-redux";
+// SVG Imports
 import AddIcon from "images/addPwCredentialIcon.svg";
 import SaveIcon from "images/saveIcon.svg";
-import { Field, reduxForm, change } from "redux-form/immutable";
-import { autogenerateAuthId } from "utils";
-import { connect } from "react-redux";
 import ArrowIcon from "images/arrow-right.svg"; // rotated 180deg = Arrow left
 
 class AddCredentialTabWrapped extends Component {
@@ -42,8 +45,8 @@ class AddCredentialTabWrapped extends Component {
     const { pristine, handleSubmit, reset, submitting } = this.props; // eslint-disable-line
 
     return (
-      <div className="accordion-tab">
-        <div
+      <div>
+        <AccordionFixedFooter
           className={`accordion-tab-header add-tab ${
             inAddingMode ? "adding-mode" : ""
           }`}>
@@ -87,7 +90,7 @@ class AddCredentialTabWrapped extends Component {
               {inAddingMode ? <SaveIcon /> : <AddIcon />}
             </button>
           </form>
-        </div>
+        </AccordionFixedFooter>
       </div>
     );
   }

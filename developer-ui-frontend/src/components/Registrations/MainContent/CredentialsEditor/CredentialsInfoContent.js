@@ -4,6 +4,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
+// Child Components
+import Accordion from "components/common/Accordion";
+import AccordionTab from "./container/AccordionTab";
+import AddCredentialTab from "./container/AddCredentialTab";
+// Redux
 import { connect } from "react-redux";
 import {
   selectAllCredentialsApiFormat,
@@ -11,8 +16,6 @@ import {
 } from "reducers/selectors";
 import { initializeEmptyCredential } from "actions/CredentialActions";
 import { addCustomNotification } from "actions/globalActions";
-import CredentialEditor from "./container/CredentialEditor";
-import AddCredentialTab from "./container/AddCredentialTab";
 
 class CredentialsInfoContentWrapped extends Component {
   constructor(props) {
@@ -75,28 +78,21 @@ class CredentialsInfoContentWrapped extends Component {
     const { credentials, selectedDevice } = this.props;
     const { idIsOpened } = this.state;
     return (
-      <div id="credential-accordion">
-        <span>
-          {credentials.map((credential, index) => {
-            const currentAuthId = credential.get("auth-id");
-            return (
-              <CredentialEditor
-                credential={credential}
-                key={currentAuthId}
-                isOpened={credential.get("auth-id") === idIsOpened}
-                triggerErrorMessage={this.triggerErrorMessage}
-                selectedDevice={selectedDevice}
-                toggleIsOpened={this.toggleIsOpened}
-              />
-            );
-          })}
-          <AddCredentialTab
-            initializeEmptyCredential={this.props.initializeEmptyCredential}
+      <Accordion>
+        {credentials.map(credential => (
+          <AccordionTab
+            key={credential.get("auth-id")}
+            credential={credential}
             selectedDevice={selectedDevice}
-            focusTab={this.focusTab}
+            idIsOpened={idIsOpened}
+            toggleIsOpened={this.toggleIsOpened}
           />
-        </span>
-      </div>
+        ))}
+        <AddCredentialTab
+          selectedDevice={selectedDevice}
+          initializeEmptyCredential={this.props.initializeEmptyCredential}
+        />
+      </Accordion>
     );
   }
 }
