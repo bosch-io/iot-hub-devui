@@ -73,6 +73,7 @@ const AccordionSectionHeader = ({
   expanded,
   toggleExpanded,
   children,
+  sticky,
   ...other
 }) => (
   <div>
@@ -84,12 +85,14 @@ const AccordionSectionHeader = ({
       </TitleContainer>
       <ActionButtonsWrapper>
         {expanded && children}
-        <CaretDown
-          className={
-            expanded ? "header-icon-right caret-rotated" : "header-icon-right"
-          }
-          onClick={toggleExpanded}
-        />
+        {!sticky && (
+          <CaretDown
+            className={
+              expanded ? "header-icon-right caret-rotated" : "header-icon-right"
+            }
+            onClick={toggleExpanded}
+          />
+        )}
       </ActionButtonsWrapper>
     </HeaderContainer>
   </div>

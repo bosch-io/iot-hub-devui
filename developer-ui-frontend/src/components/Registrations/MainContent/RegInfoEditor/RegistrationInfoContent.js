@@ -11,30 +11,46 @@ import {
 } from "reducers/selectors";
 import { updateRegistrationInfo } from "actions/RegistrationActions";
 import { addCustomNotification } from "actions/globalActions";
+import Accordion from "components/common/Accordion";
+import AccordionSection, {
+  AccordionSectionBody,
+  AccordionSectionHeader
+} from "components/common/Accordion/AccordionSection";
 // Code Syntax Highlighting for the modal view (Prism.js)
 import Prism from "prismjs";
 import Parser from "html-react-parser";
 import Spinner from "components/common/Spinner";
+import InfoIcon from "images/infoIcon.svg";
 
 class RegistrationInfoContentWrapped extends Component {
   render() {
     const { regInfo } = this.props;
     return (
-      <div id="info-console" className="reg-mode">
-        {this.props.isFetching && (
-          <span className="fetching-overlay">
-            <Spinner type="bubbles" />
-          </span>
-        )}
-        <pre>
-          {Parser(
-            Prism.highlight(
-              JSON.stringify(regInfo, null, 2),
-              Prism.languages.json
-            )
-          )}
-        </pre>
-      </div>
+      <Accordion>
+        <AccordionSection className="accordion-tab" sticky>
+          <AccordionSectionHeader
+            title="Registration Information"
+            icon={<InfoIcon />}
+          />
+          <AccordionSectionBody>
+            <div id="info-console" className="reg-mode">
+              {this.props.isFetching && (
+                <span className="fetching-overlay">
+                  <Spinner type="bubbles" />
+                </span>
+              )}
+              <pre>
+                {Parser(
+                  Prism.highlight(
+                    JSON.stringify(regInfo, null, 2),
+                    Prism.languages.json
+                  )
+                )}
+              </pre>
+            </div>
+          </AccordionSectionBody>
+        </AccordionSection>
+      </Accordion>
     );
   }
 }
