@@ -21,6 +21,10 @@ const AccordionContainer = styled.div`
 const AccordionInner = styled.span`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
   background-color: #ccc;
+  /* Prevent blurryness */
+  -webkit-font-smoothing: subpixel-antialiased;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 `;
 
 const Accordion = ({ children }) => (

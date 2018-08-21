@@ -276,6 +276,9 @@
 
         .accordion-tab {
           .accordion-tab-header {
+            a {
+              outline: none;
+            }
             #settings-wrapper {
               height: 1.5rem;
               #settings-dropdown-menu {
@@ -407,6 +410,7 @@
               opacity: 0.5;
               font-weight: 300;
               margin-right: 1rem;
+              outline: none;
 
               &:hover {
                 opacity: 1;
