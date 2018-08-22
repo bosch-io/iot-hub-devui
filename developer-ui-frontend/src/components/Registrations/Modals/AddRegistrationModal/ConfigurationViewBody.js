@@ -45,7 +45,7 @@ export default class ConfigurationViewBody extends Component {
               asField
               name="deviceId"
               type="text"
-              placeholder="Enter an id for your new Device ..."
+              placeholder="Enter a unique name for your new Device ..."
               label="Device Id"
               inputRef={ref => {
                 this.textfieldRef = ref;

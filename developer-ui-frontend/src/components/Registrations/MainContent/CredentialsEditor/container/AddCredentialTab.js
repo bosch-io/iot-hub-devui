@@ -4,9 +4,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { AccordionFixedFooter } from "components/common/Accordion";
+import { TextField } from "components/common/textInputs";
 import { autogenerateAuthId } from "utils";
 // Redux
-import { Field, reduxForm, change } from "redux-form/immutable";
+import { reduxForm, change } from "redux-form/immutable";
 import { connect } from "react-redux";
 // SVG Imports
 import AddIcon from "images/addPwCredentialIcon.svg";
@@ -21,6 +22,13 @@ class AddCredentialTabWrapped extends Component {
     };
     this.submit = this.submit.bind(this);
     this.autogenAuthId = this.autogenAuthId.bind(this);
+    this.expandForm = this.expandForm.bind(this);
+  }
+
+  expandForm() {
+    this.setState({ inAddingMode: true });
+    // Wait until the expand animation has finished, then focus
+    setTimeout(() => this.textInputRef.focus(), 300);
   }
 
   submit(values) {
@@ -53,9 +61,7 @@ class AddCredentialTabWrapped extends Component {
           <form
             onSubmit={handleSubmit(this.submit)}
             style={{ width: "100%" }}
-            onClick={
-              !inAddingMode ? () => this.setState({ inAddingMode: true }) : null
-            }>
+            onClick={!inAddingMode ? this.expandForm : null}>
             <span
               id="add-form-content"
               style={
@@ -69,13 +75,15 @@ class AddCredentialTabWrapped extends Component {
                 onClick={() => this.setState({ inAddingMode: false })}
               />
               <div id="authId-searchbar">
-                <Field
-                  name="authId"
-                  placeholder="Enter an authId..."
-                  component="input"
+                <TextField
+                  asField
                   type="text"
+                  name="authId"
+                  placeholder="Enter an auth-Id..."
+                  inputRef={ref => {
+                    this.textInputRef = ref;
+                  }}
                 />
-                <i className="bar" />
               </div>
               <a onClick={this.autogenAuthId}>Generate that for me</a>
             </span>

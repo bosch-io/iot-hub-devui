@@ -161,7 +161,8 @@ class TextField extends Component {
       touched,
       active,
       asField,
-      inputRef
+      inputRef,
+      ...other
     } = this.props;
     let { input } = this.props;
 
@@ -173,7 +174,7 @@ class TextField extends Component {
 
     return (
       <InputContainer>
-        <InputLabel htmlFor={input.name}>{label}</InputLabel>
+        {label && <InputLabel htmlFor={input.name}>{label}</InputLabel>}
         <TextInputContainer>
           <TextInputInnerContainer>
             <div style={{ flex: 1, position: "relative" }}>
@@ -183,6 +184,7 @@ class TextField extends Component {
                 error={((touched && !active) || !asField) && error}
                 warning={((touched && !active) || !asField) && warning}
                 innerRef={inputRef}
+                {...other}
               />
               <FocusBar
                 className="bar"
@@ -212,6 +214,7 @@ TextField.propTypes = {
   type: PropTypes.string,
   touched: PropTypes.bool,
   asField: PropTypes.bool,
+  placeholder: PropTypes.string,
   inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
 };
 

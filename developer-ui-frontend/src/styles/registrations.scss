@@ -397,6 +397,10 @@
                 width: 28rem;
 
                 &::placeholder {
+                  color: transparent;
+                }
+
+                &:focus::placeholder {
                   font-weight: 100;
                   color: #ddd;
                 }
