@@ -49,7 +49,7 @@
 
   .fixed-payload-header {
     color: #f5f5f5;
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(60, 139, 199, 0.15);
   }
 
   #payload-code-block {
@@ -58,7 +58,7 @@
     width: 100%;
     z-index: -1;
     max-height: calc(75vh - 10.1rem - 20.875rem);
-    background: $accent_color_light;
+    background: $code_background;
     color: #fff;
     overflow: auto;
     @include customScrollbar(8px, rgba(255, 255, 255, 0.3), 10px, transparent);
