@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { CREDENTIAL_OPTIONS } from "_APP_CONSTANTS";
 import CredentialOption from "../presentation/CredentialOption";
@@ -81,7 +81,7 @@ class CredentialDropdownOptionsWrapped extends React.Component {
   render() {
     const { toggleDropdownMenu, selectedDevice, authId } = this.props;
     return (
-      <React.Fragment>
+      <Fragment>
         <ul>
           {CREDENTIAL_OPTIONS.map((category, index) => (
             <CredentialOption
@@ -111,7 +111,7 @@ class CredentialDropdownOptionsWrapped extends React.Component {
             delayShow={0}
           />
         )}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }
