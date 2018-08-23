@@ -130,7 +130,6 @@ class TooltipMenu extends Component {
         right,
         bottom
       } = this.ButtonAncor.getBoundingClientRect();
-      console.log(left, top, right, bottom);
       return ReactDOM.createPortal(
         <Container
           left={left}

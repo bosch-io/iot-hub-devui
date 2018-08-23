@@ -279,25 +279,8 @@
             a {
               outline: none;
             }
-            #settings-wrapper {
+            #settings-button-wrapper {
               height: 1.5rem;
-              #settings-dropdown-menu {
-                right: calc(100% - 5rem) !important;
-                top: 169% !important;
-
-                &:before {
-                  right: 0.7rem !important;
-                }
-
-                li.disabled {
-                  opacity: 0.4;
-                  cursor: not-allowed;
-                  & > a {
-                    cursor: not-allowed;
-                    pointer-events: none;
-                  }
-                }
-              }
             }
 
             .header-icon-right {

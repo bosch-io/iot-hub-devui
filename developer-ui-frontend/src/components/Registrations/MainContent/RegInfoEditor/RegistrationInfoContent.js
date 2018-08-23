@@ -20,6 +20,7 @@ import AccordionSection, {
 } from "components/common/Accordion/AccordionSection";
 import Spinner from "components/common/Spinner";
 import TooltipMenu, { TooltipMenuOption } from "components/common/TooltipMenu";
+import HoverTooltip from "components/common/HoverTooltip";
 // Code Syntax Highlighting for the modal view (Prism.js)
 import Prism from "prismjs";
 import Parser from "html-react-parser";
@@ -64,7 +65,12 @@ class RegistrationInfoContentWrapped extends Component {
           <AccordionSectionHeader
             title="Registration Information"
             icon={<InfoIcon />}>
-            <MoreIcon id={menuBtnId} onClick={this.toggleMenu} />
+            <MoreIcon
+              id={menuBtnId}
+              data-tip
+              data-for={menuBtnId}
+              onClick={this.toggleMenu}
+            />
             <TooltipMenu
               open={menuExpanded}
               toggleOpen={this.toggleMenu}
@@ -92,6 +98,9 @@ class RegistrationInfoContentWrapped extends Component {
             </div>
           </AccordionSectionBody>
         </AccordionSection>
+        {!menuExpanded && (
+          <HoverTooltip id={menuBtnId} text="Edit Registration" />
+        )}
       </Accordion>
     );
   }
