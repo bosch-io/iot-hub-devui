@@ -45,6 +45,16 @@ const ActionButtonsWrapper = styled.span`
   overflow: visible;
   align-items: center;
   white-space: nowrap;
+
+  svg {
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+
+    path {
+      fill: #757575;
+    }
+  }
 `;
 
 const TitleContainer = styled.span`
@@ -84,7 +94,7 @@ const AccordionSectionHeader = ({
         {title}
       </TitleContainer>
       <ActionButtonsWrapper>
-        {expanded && children}
+        {(expanded || sticky) && children}
         {!sticky && (
           <CaretDown
             className={

@@ -12,23 +12,42 @@ import MoreIcon from "images/moreIcon.svg";
 import { MemoryRouter } from "react-router";
 import TooltipMenu, { TooltipMenuOption } from "components/common/TooltipMenu";
 
+const portalStyles = {
+  pointerEvents: "none",
+  position: "fixed",
+  top: 0,
+  right: 0,
+  left: 0,
+  bottom: 0
+};
+
 class MenuDemo extends Component {
   constructor(props) {
     super(props);
     this.state = { menuOpen: false };
+    this.toggleMenu = this.toggleMenu.bind(this);
   }
+
+  toggleMenu() {
+    this.setState(state => ({ menuOpen: !state.menuOpen }));
+  }
+
   render() {
     const { menuOpen } = this.state;
+    const menuBtnId = "registrations-menu-btn";
     return (
       <div className="styleguide-card">
         <h1>Menus</h1>
         <div className="styleguide-card-row">
+          <MoreIcon
+            id={menuBtnId}
+            onClick={this.toggleMenu}
+            style={{ cursor: "pointer", margin: 0 }}
+          />
           <TooltipMenu
             open={menuOpen}
-            toggleOpen={() =>
-              this.setState(state => ({ menuOpen: !state.menuOpen }))
-            }
-            menuIcon={<MoreIcon />}>
+            toggleOpen={this.toggleMenu}
+            ancorId={menuBtnId}>
             <TooltipMenuOption
               value="Option 1"
               route="/foo"
@@ -42,6 +61,9 @@ class MenuDemo extends Component {
             />
           </TooltipMenu>
         </div>
+        {/* Portals are normally rendered last in the DOM Hierarchy
+        (see <Portals/> after the <App/> Component in index.js) */}
+        <div id="menu-portal" style={portalStyles} />
       </div>
     );
   }

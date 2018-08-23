@@ -3,9 +3,10 @@
  */
 import "styles/app.scss";
 require("images/favicon.ico");
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { ThemeProvider } from "styled-components";
+import Portals from "components/Portals";
 
 const theme = require('sass-extract-loader?{"plugins": ["sass-extract-js"]}!./styles/_globalVars.scss');
 
@@ -21,7 +22,10 @@ ReactDOM.render(
     <Router basename={process.env.PUBLIC_PATH || "/"}>
       <LastLocationProvider>
         <ThemeProvider theme={theme}>
-          <App />
+          <Fragment>
+            <App />
+            <Portals />
+          </Fragment>
         </ThemeProvider>
       </LastLocationProvider>
     </Router>

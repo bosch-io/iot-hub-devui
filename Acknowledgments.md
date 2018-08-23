@@ -69,6 +69,8 @@ The following table gives an overview about the in this project used design asse
 | /developer-ui-frontend/src/images/calendarIcon.svg | Date Range | [Apache License 2.0][1] | [Material.io][2]|
 | /developer-ui-frontend/src/images/messageIcon.svg | Message | [Apache License 2.0][1] | [Material.io][2]|
 | /developer-ui-frontend/src/images/infoIcon.svg | Info | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/gatewayIcon.svg | Router | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/codeIcon.svg | Code | [Apache License 2.0][1] | [Material.io][2]|
 | /devui.png | Key Visual | [Bosch SI Example Code License][5]| Own Creation
 
 [1]: https://github.com/google/material-design-icons/blob/master/LICENSE

@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import "styles/jsonEditor.scss";
 import PropTypes from "prop-types";
+// Redux
 import { connect } from "react-redux";
 import {
   selectDeviceById,
@@ -11,27 +12,68 @@ import {
 } from "reducers/selectors";
 import { updateRegistrationInfo } from "actions/RegistrationActions";
 import { addCustomNotification } from "actions/globalActions";
+// Child Components
 import Accordion from "components/common/Accordion";
 import AccordionSection, {
   AccordionSectionBody,
   AccordionSectionHeader
 } from "components/common/Accordion/AccordionSection";
+import Spinner from "components/common/Spinner";
+import TooltipMenu, { TooltipMenuOption } from "components/common/TooltipMenu";
 // Code Syntax Highlighting for the modal view (Prism.js)
 import Prism from "prismjs";
 import Parser from "html-react-parser";
-import Spinner from "components/common/Spinner";
+// SVG Imports
 import InfoIcon from "images/infoIcon.svg";
+import CodeIcon from "images/codeIcon.svg";
+import GatewayIcon from "images/gatewayIcon.svg";
+import MoreIcon from "images/moreIcon.svg";
 
 class RegistrationInfoContentWrapped extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      menuExpanded: false
+    };
+    this.menuOptions = [
+      {
+        value: "Configure Gateway",
+        icon: <GatewayIcon />,
+        route: `/registrations/${props.deviceId}/addGateway/`
+      },
+      {
+        value: "Edit Raw",
+        icon: <CodeIcon />,
+        route: `/registrations/${props.deviceId}/raw/`
+      }
+    ];
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
+
+  toggleMenu() {
+    this.setState(state => ({ menuExpanded: !state.menuExpanded }));
+  }
+
   render() {
     const { regInfo } = this.props;
+    const { menuExpanded } = this.state;
+    const menuBtnId = "registrations-menu-btn";
     return (
       <Accordion>
         <AccordionSection className="accordion-tab" sticky>
           <AccordionSectionHeader
             title="Registration Information"
-            icon={<InfoIcon />}
-          />
+            icon={<InfoIcon />}>
+            <MoreIcon id={menuBtnId} onClick={this.toggleMenu} />
+            <TooltipMenu
+              open={menuExpanded}
+              toggleOpen={this.toggleMenu}
+              ancorId={menuBtnId}>
+              {this.menuOptions.map((option, index) => (
+                <TooltipMenuOption key={index} {...option} />
+              ))}
+            </TooltipMenu>
+          </AccordionSectionHeader>
           <AccordionSectionBody>
             <div id="info-console" className="reg-mode">
               {this.props.isFetching && (
