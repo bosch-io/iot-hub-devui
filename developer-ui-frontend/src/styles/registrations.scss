@@ -263,7 +263,6 @@
       overflow-y: auto;
       #tab-content-wrapper:not(.reg-mode) {
         display: flex;
-        min-height: min-content;
       }
       #tab-content-wrapper.reg-mode {
         display: block;

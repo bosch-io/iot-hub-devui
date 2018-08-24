@@ -6,6 +6,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import enhanceWithClickOutside from "react-click-outside";
+import ReactTooltip from "react-tooltip";
 
 /* eslint-disable react/no-multi-comp */
 const Container = styled.div`
@@ -119,6 +120,7 @@ class TooltipMenu extends Component {
   componentDidMount() {
     this.ButtonAncor = document.getElementById(this.props.ancorId);
     this.MenuPortal = document.getElementById("menu-portal");
+    ReactTooltip.rebuild();
   }
 
   render() {

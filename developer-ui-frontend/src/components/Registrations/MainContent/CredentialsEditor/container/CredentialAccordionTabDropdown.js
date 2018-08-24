@@ -2,7 +2,7 @@
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
 import "styles/settings.scss";
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 // Redux
 import { connect } from "react-redux";
@@ -19,7 +19,7 @@ import DeleteCredIcon from "images/deletePwCredentialIcon.svg";
 import DeletePwSecretIcon from "images/deletePwSecretIcon.svg";
 import AddPwSecretIcon from "images/addPwSecretIcon.svg";
 
-class CredentialAccordionTabDropdownWrapped extends React.Component {
+class CredentialAccordionTabDropdownWrapped extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -130,6 +130,8 @@ class CredentialAccordionTabDropdownWrapped extends React.Component {
               key={option.disabledHoverTooltipId}
               id={option.disabledHoverTooltipId}
               text={this.getDisabledText(option.value)}
+              effect="float"
+              delayShow={0}
             />
           ))}
       </div>
