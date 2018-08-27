@@ -23,6 +23,22 @@ const AccordionFixedFooterStyled = styled.div`
   color: #757575;
   align-items: center;
   justify-content: flex-start;
+
+  /*
+  This could be used to indicate that one can scroll further
+  &:before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      ellipse at bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0) 75%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  } */
 `;
 /* eslint-disable react/prop-types */
 const AccordionFixedFooter = ({ snapFooter, ...props }) =>

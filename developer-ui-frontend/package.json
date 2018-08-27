@@ -79,8 +79,10 @@
   "dependencies": {
     "@material/typography": "^0.35.0",
     "axios": "^0.16.2",
+    "brace": "^0.11.1",
     "html-react-parser": "^0.4.0",
     "immutable": "^3.8.1",
+    "jsoneditor-react": "^0.1.9",
     "jssha": "^2.3.1",
     "lodash": "^4.17.5",
     "lodash.range": "^3.2.0",
@@ -94,7 +96,6 @@
     "react-copy-to-clipboard": "^5.0.1",
     "react-datepicker": "^1.6.0",
     "react-dom": "^16.3.2",
-    "react-json-edit": "^0.3.1",
     "react-measure": "2.0.2",
     "react-modal": "^3.1.8",
     "react-motion": "^0.5.2",
