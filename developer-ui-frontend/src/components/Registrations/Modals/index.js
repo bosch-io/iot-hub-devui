@@ -69,7 +69,7 @@ const Modals = ({ setMainPanel }) => (
       )}
     />
     <Route
-      path={`/registrations/:selectedDeviceId`}
+      path={`/registrations/:selectedDeviceId/:registrationsSubMenu?/:authId?`}
       render={({ location, match }) => {
         const queryParams = queryString.parse(location.search);
         let renderedModal = null;

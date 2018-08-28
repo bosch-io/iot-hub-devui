@@ -10,7 +10,6 @@ import {
   CREDENTIAL_DELETED,
   CREDENTIALS_FETCHED
 } from "actions/actionTypes";
-import { selectCredentialIdsByDeviceId } from "reducers/selectors";
 import { calculateSecretId } from "utils";
 
 export const initialState = fromJS({
@@ -111,12 +110,13 @@ const credentialsReducer = (state = initialState, action = {}) => {
       });
     case INIT_EMPTY_CREDENTIAL:
       return state.withMutations(reducedState =>
-        reducedState
-          .update("allIds", ids => ids.push(action.authId))
-          .setIn(
-            ["byId", action.authId],
-            fromJS({ ...action.newCredential, firstInitTime: new Date().getTime() })
-          )
+        reducedState.update("allIds", ids => ids.push(action.authId)).setIn(
+          ["byId", action.authId],
+          fromJS({
+            ...action.newCredential,
+            firstInitTime: new Date().getTime()
+          })
+        )
       );
     case NEW_SECRET:
       const newSecretId = action.secret.secretId;

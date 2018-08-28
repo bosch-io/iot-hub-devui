@@ -3,7 +3,7 @@
  */
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 // Child Components
 import HoverTooltip from "components/common/HoverTooltip";
 import Spinner from "components/common/Spinner";
@@ -17,16 +17,16 @@ import DeleteIcon from "images/deleteIcon.svg";
 // Redux
 import { connect } from "react-redux";
 import { selectIsFetchingByDeviceId } from "reducers/selectors";
-// Redux Form
-import { formValueSelector } from "redux-form/immutable";
 
 class MainContentHeadlineWrapped extends Component {
   render() {
     const {
       mainPanelExpanded,
-      selectedDevice,
       isFetching,
-      setMainPanel
+      setMainPanel,
+      match: {
+        params: { registrationsSubMenu, selectedDeviceId, authId }
+      }
     } = this.props;
     const tooltipIdDeleteReg = "delete-reg-tt";
     return (
@@ -55,15 +55,17 @@ class MainContentHeadlineWrapped extends Component {
                   fill="#28353d"
                 />
               </svg>
-              <h2>{selectedDevice || <i>Please select a device</i>}</h2>
+              <h2>{selectedDeviceId || <i>Please select a device</i>}</h2>
               {isFetching && <Spinner type="bubbles" />}
             </span>
             <span id="action-buttons">
               <Link
-                to={`/registrations/${selectedDevice}?action=deleteReg`}
-                onClick={!selectedDevice ? e => e.preventDefault() : null}>
+                to={`/registrations/${selectedDeviceId}${
+                  registrationsSubMenu ? "/" + registrationsSubMenu : ""
+                }${authId ? "/" + authId : ""}?action=deleteReg`}
+                onClick={!selectedDeviceId ? e => e.preventDefault() : null}>
                 <DeleteIcon
-                  className={!selectedDevice ? "disabled" : null}
+                  className={!selectedDeviceId ? "disabled" : null}
                   data-tip
                   data-for={tooltipIdDeleteReg}
                 />
@@ -71,10 +73,10 @@ class MainContentHeadlineWrapped extends Component {
             </span>
           </div>
         </VelocityComponent>
-        {selectedDevice && (
+        {selectedDeviceId && (
           <HoverTooltip
             id={tooltipIdDeleteReg}
-            text={"Delete " + selectedDevice}
+            text={"Delete " + selectedDeviceId}
           />
         )}
       </Fragment>
@@ -82,19 +84,20 @@ class MainContentHeadlineWrapped extends Component {
   }
 }
 
-const MainContentHeadline = connect((state, ownProps) => ({
-  isFetching: selectIsFetchingByDeviceId(state, ownProps.selectedDevice),
-  selectedDevice: formValueSelector("registrationsTabListing")(
-    state,
-    "selectedDevice"
-  )
-}))(MainContentHeadlineWrapped);
+const MainContentHeadline = withRouter(
+  connect((state, ownProps) => ({
+    isFetching: selectIsFetchingByDeviceId(
+      state,
+      ownProps.match.params.selectedDeviceId
+    )
+  }))(MainContentHeadlineWrapped)
+);
 
 MainContentHeadlineWrapped.propTypes = {
   mainPanelExpanded: PropTypes.bool.isRequired,
   setMainPanel: PropTypes.func.isRequired,
-  selectedDevice: PropTypes.string,
-  isFetching: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 export default MainContentHeadline;

@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import ConfirmationModal, {
   ConfirmationModalHeader,
   ConfirmationModalBody,
@@ -53,7 +53,12 @@ class DeleteRegistrationModalWrapped extends Component {
   }
 
   render() {
-    const { deviceId } = this.props;
+    const {
+      deviceId,
+      match: {
+        params: { registrationsSubMenu, selectedDeviceId, authId }
+      }
+    } = this.props;
     const { isOpen } = this.state;
     return isOpen ? (
       <ConfirmationModal modalShown={isOpen} toggleModal={this.changeIsOpen}>
@@ -73,25 +78,32 @@ class DeleteRegistrationModalWrapped extends Component {
         />
       </ConfirmationModal>
     ) : (
-      <Redirect to="/registrations" />
+      <Redirect
+        to={`/registrations/${selectedDeviceId}${
+          registrationsSubMenu ? "/" + registrationsSubMenu : ""
+        }${authId ? "/" + authId : ""}`}
+      />
     );
   }
 }
 
-const DeleteRegistrationModal = connect(
-  null,
-  dispatch => ({
-    deleteReg: deviceId => dispatch(deleteRegistration(deviceId)),
-    deleteAllCredentialsOfDevice: deviceId =>
-      dispatch(deleteAllCredentialsOfDevice(deviceId)),
-    resetSelectedDevice: () => dispatch(reset("registrationsTabListing"))
-  })
-)(DeleteRegistrationModalWrapped);
+const DeleteRegistrationModal = withRouter(
+  connect(
+    null,
+    dispatch => ({
+      deleteReg: deviceId => dispatch(deleteRegistration(deviceId)),
+      deleteAllCredentialsOfDevice: deviceId =>
+        dispatch(deleteAllCredentialsOfDevice(deviceId)),
+      resetSelectedDevice: () => dispatch(reset("registrationsTabListing"))
+    })
+  )(DeleteRegistrationModalWrapped)
+);
 
 DeleteRegistrationModalWrapped.propTypes = {
   deviceId: PropTypes.string.isRequired,
   deleteReg: PropTypes.func.isRequired,
   deleteAllCredentialsOfDevice: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired,
   resetSelectedDevice: PropTypes.func.isRequired
 };
 
