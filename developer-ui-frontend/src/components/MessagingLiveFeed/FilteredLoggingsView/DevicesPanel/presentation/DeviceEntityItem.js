@@ -120,7 +120,9 @@ class DeviceEntityItem extends Component {
     } else {
       liCircleIcon = (
         <Link
-          to={`/registrations/additionalRegs/${this.props.deviceId}`}
+          to={`/registrations/?action=additionalRegs&deviceId=${
+            this.props.deviceId
+          }`}
           className="circle-icon additional-reg-icon">
           <AddIcon />
         </Link>

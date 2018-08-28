@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // Child Components
@@ -30,7 +30,7 @@ class MainContentHeadlineWrapped extends Component {
     } = this.props;
     const tooltipIdDeleteReg = "delete-reg-tt";
     return (
-      <React.Fragment key="mainPanelHeadline">
+      <Fragment>
         <VelocityComponent
           animation={{
             translateX: mainPanelExpanded ? "0%" : "+100%"
@@ -60,7 +60,7 @@ class MainContentHeadlineWrapped extends Component {
             </span>
             <span id="action-buttons">
               <Link
-                to={`/registrations/${selectedDevice}/deleteRegistration`}
+                to={`/registrations/${selectedDevice}?action=deleteReg`}
                 onClick={!selectedDevice ? e => e.preventDefault() : null}>
                 <DeleteIcon
                   className={!selectedDevice ? "disabled" : null}
@@ -77,7 +77,7 @@ class MainContentHeadlineWrapped extends Component {
             text={"Delete " + selectedDevice}
           />
         )}
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

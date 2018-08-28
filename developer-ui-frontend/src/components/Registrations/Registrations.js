@@ -6,7 +6,7 @@ import "styles/registrations.scss";
 // React
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, Route } from "react-router-dom";
 import { matchPath } from "react-router";
 // Redux
 import { connect } from "react-redux";
@@ -78,10 +78,14 @@ export class Registrations extends React.Component {
               mainPanelExpanded={mainPanelExpanded}
               setMainPanel={this.setMainPanel}
             />
-            <AddRegistrationButton
-              selectedDevice={selectedDevice}
-              hasCallout={numberOfDevices === 0}
-              setMainPanel={this.setMainPanel}
+            <Route
+              path="/registrations/:selectedDeviceId?/:registrationsSubMenu?/:authId?"
+              render={() => (
+                <AddRegistrationButton
+                  hasCallout={numberOfDevices === 0}
+                  setMainPanel={this.setMainPanel}
+                />
+              )}
             />
           </div>
         </BigCard>

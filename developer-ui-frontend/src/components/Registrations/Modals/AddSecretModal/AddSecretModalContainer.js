@@ -3,7 +3,7 @@
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import { default as AddSecretModalInner } from "./AddSecretModal";
 import PropTypes from "prop-types";
 import { reduxForm, formValueSelector } from "redux-form/immutable";
@@ -99,7 +99,8 @@ class AddSecretModalWrapped extends Component {
       pristine,
       submitting,
       invalid,
-      deviceId
+      deviceId,
+      match
     } = this.props;
     const { isOpen } = this.state;
     return isOpen ? (
@@ -116,7 +117,11 @@ class AddSecretModalWrapped extends Component {
         />
       </form>
     ) : (
-      <Redirect to={`/registrations/${deviceId}`} />
+      <Redirect
+        to={`/registrations/${deviceId}/credentials/${
+          match.params.selectedAuthId
+        }`}
+      />
     );
   }
 }
@@ -142,13 +147,15 @@ const mapStateToProps = (state, ownProps) => {
       selectCredentialById(state, ownProps.authId).get("type")
   };
 };
-AddSecretModal = connect(
-  mapStateToProps,
-  {
-    createNewSecret,
-    createNewCredential
-  }
-)(AddSecretModal);
+AddSecretModal = withRouter(
+  connect(
+    mapStateToProps,
+    {
+      createNewSecret,
+      createNewCredential
+    }
+  )(AddSecretModal)
+);
 
 AddSecretModalWrapped.propTypes = {
   authId: PropTypes.string,
@@ -158,7 +165,8 @@ AddSecretModalWrapped.propTypes = {
   createNewCredential: PropTypes.func.isRequired,
   selectedType: PropTypes.string,
   credentialType: PropTypes.string,
-  deviceId: PropTypes.string
+  deviceId: PropTypes.string,
+  match: PropTypes.object
 };
 
 export default AddSecretModal;

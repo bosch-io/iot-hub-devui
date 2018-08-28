@@ -30,7 +30,7 @@ class CredentialAccordionTabDropdownWrapped extends Component {
       {
         value: "Add Secret",
         icon: <AddPwSecretIcon />,
-        route: `/registrations/${props.selectedDevice}/${
+        route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
         }/additionalSecrets`,
         disabledHoverTooltipId: "addSecretDisabled"
@@ -38,7 +38,7 @@ class CredentialAccordionTabDropdownWrapped extends Component {
       {
         value: "Delete Secret",
         icon: <DeletePwSecretIcon />,
-        route: `/registrations/${props.selectedDevice}/${
+        route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
         }/deleteSecrets`,
         disabledHoverTooltipId: "deleteSecretDisabled"
@@ -46,7 +46,7 @@ class CredentialAccordionTabDropdownWrapped extends Component {
       {
         value: "Delete Credential",
         icon: <DeleteCredIcon />,
-        route: `/registrations/${props.selectedDevice}/${
+        route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
         }/deleteCredential`,
         disabledHoverTooltipId: "deleteCredentialDisabled"

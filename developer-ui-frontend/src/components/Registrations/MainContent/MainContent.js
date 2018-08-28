@@ -1,33 +1,20 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import MainContentHeadline from "./MainContentHeadline";
 import RegistrationInfoContent from "./RegInfoEditor/RegistrationInfoContent";
 import CredentialsInfoContent from "./CredentialsEditor/CredentialsInfoContent";
+import MainContentTabs from "./MainContentTabs";
 import { connect } from "react-redux";
-import { withRouter, Route } from "react-router-dom";
+import { withRouter, Route, Switch } from "react-router-dom";
 import { fetchCredentialsByDeviceId } from "actions/DataFetchActions";
 import { formValueSelector } from "redux-form/immutable";
-const tabNames = {
-  REG_INFO: {
-    id: "REG_INFO",
-    name: "Registration Info"
-  },
-  CREDENTIALS: {
-    id: "CREDENTIALS",
-    name: "Credentials"
-  }
-};
 
 class MainContentWrapped extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentlySelectedTab: tabNames.REG_INFO
-    };
-    this.handleTabClick = this.handleTabClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,38 +26,13 @@ class MainContentWrapped extends Component {
     }
   }
 
-  handleTabClick(newSelection) {
-    if (this.props.selectedDevice && newSelection === tabNames.CREDENTIALS) {
-      this.props.fetchCredentialsByDeviceId(this.props.selectedDevice);
-    }
-    this.setState({ currentlySelectedTab: newSelection });
-  }
-
   render() {
     const {
       mainPanelExpanded,
-      selectedDevice,
       setMainPanel,
-      style
+      style,
+      selectedDevice
     } = this.props;
-    const tabsDisabledClass = !selectedDevice ? "disabled " : "";
-    let renderedTabs = null;
-    if (
-      selectedDevice &&
-      this.state.currentlySelectedTab.id === tabNames.REG_INFO.id
-    ) {
-      renderedTabs = (
-        <RegistrationInfoContent selectedDevice={selectedDevice} />
-      );
-    } else if (
-      selectedDevice &&
-      this.state.currentlySelectedTab.id === tabNames.CREDENTIALS.id
-    ) {
-      renderedTabs = <CredentialsInfoContent selectedDevice={selectedDevice} />;
-    } else if (!selectedDevice) {
-      renderedTabs = <div className="no-content">No Device selected</div>;
-    }
-
     return (
       <Route
         path="/registrations/:selectedDeviceId?"
@@ -84,38 +46,47 @@ class MainContentWrapped extends Component {
                 mainPanelExpanded={mainPanelExpanded}
                 setMainPanel={setMainPanel}
               />
-              <ul id="tabs">
-                <li
-                  onClick={() => this.handleTabClick(tabNames.REG_INFO)}
-                  className={
-                    this.state.currentlySelectedTab.id === tabNames.REG_INFO.id
-                      ? tabsDisabledClass + "active"
-                      : tabsDisabledClass
-                  }>
-                  Registration Info
-                </li>
-                <li
-                  onClick={() => this.handleTabClick(tabNames.CREDENTIALS)}
-                  className={
-                    this.state.currentlySelectedTab.id ===
-                    tabNames.CREDENTIALS.id
-                      ? tabsDisabledClass + "active"
-                      : tabsDisabledClass
-                  }>
-                  Credentials
-                </li>
-              </ul>
+              <MainContentTabs
+                selectedDevice={selectedDevice}
+                fetchCredential={this.props.fetchCredentialsByDeviceId}
+              />
             </div>
             <div id="accordion-wrapper">
-              <div
-                id="tab-content-wrapper"
-                className={
-                  this.state.currentlySelectedTab.id === tabNames.REG_INFO.id
-                    ? "reg-mode"
-                    : null
-                }>
-                {renderedTabs}
-              </div>
+              <Switch>
+                <Route
+                  path="/registrations/:selectedDeviceId/:registrationsSubMenu"
+                  render={regProps => {
+                    let renderedRoute = null;
+                    if (
+                      regProps.match.params.registrationsSubMenu ===
+                      "credentials"
+                    ) {
+                      renderedRoute = (
+                        <CredentialsInfoContent
+                          selectedDevice={
+                            regProps.match.params.selectedDeviceId
+                          }
+                        />
+                      );
+                    } else {
+                      renderedRoute = (
+                        <RegistrationInfoContent
+                          selectedDevice={
+                            regProps.match.params.selectedDeviceId
+                          }
+                        />
+                      );
+                    }
+                    return <div id="tab-content-wrapper">{renderedRoute}</div>;
+                  }}
+                />
+                {/* fallback: a no-content div */}
+                <Route
+                  render={() => (
+                    <div className="no-content">No Device selected</div>
+                  )}
+                />
+              </Switch>
             </div>
           </div>
         )}

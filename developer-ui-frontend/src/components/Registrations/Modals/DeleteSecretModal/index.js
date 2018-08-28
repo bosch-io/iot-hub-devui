@@ -10,7 +10,7 @@ import {
   ConfigurationModalFooter,
   ConfigurationModalBody
 } from "components/common/dialogModals";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import DeleteSecretLogo from "images/deletePwSecretIcon.svg";
 import { connect } from "react-redux";
 import { deleteSecret } from "actions/CredentialActions";
@@ -45,7 +45,7 @@ class DeleteSecretModalWrapped extends React.Component {
   }
 
   render() {
-    const { authId, handleSubmit, secrets } = this.props;
+    const { authId, handleSubmit, secrets, match } = this.props;
     const { isOpen } = this.state;
     const subjectTitle = "Delete a Secret from ";
     return isOpen ? (
@@ -79,7 +79,11 @@ class DeleteSecretModalWrapped extends React.Component {
         </ConfigurationModal>
       </form>
     ) : (
-      <Redirect to="/registrations" />
+      <Redirect
+        to={`/registrations/${match.params.selectedDeviceId}/credentials/${
+          match.params.selectedAuthId
+        }`}
+      />
     );
   }
 }
@@ -96,19 +100,22 @@ const mapStateToProps = (state, ownProps) => {
     secrets
   };
 };
-DeleteSecretModal = connect(
-  mapStateToProps,
-  {
-    deleteSecret
-  }
-)(toJS(DeleteSecretModal));
+DeleteSecretModal = withRouter(
+  connect(
+    mapStateToProps,
+    {
+      deleteSecret
+    }
+  )(toJS(DeleteSecretModal))
+);
 
 DeleteSecretModalWrapped.propTypes = {
   authId: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   deviceId: PropTypes.string,
   secrets: PropTypes.array.isRequired,
-  deleteSecret: PropTypes.func.isRequired
+  deleteSecret: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 export default DeleteSecretModal;

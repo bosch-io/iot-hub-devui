@@ -12,7 +12,7 @@ import "styles/flyOutButton.scss";
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import HoverTooltip from "components/common/HoverTooltip";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 // SVG Imports
 import AddIcon from "images/addIcon.svg";
 
@@ -35,12 +35,16 @@ class AddRegistrationButton extends React.Component {
   }
 
   render() {
-    const { hasCallout, selectedDevice } = this.props;
+    const { hasCallout, match } = this.props;
+    const selectedDevice = match.params.selectedDeviceId;
+    const selectedSubMenu = match.params.registrationsSubMenu;
     const tooltipIdFirstReg = "first-reg";
     return (
       <Fragment>
         <Link
-          to={`/registrations/${selectedDevice}/additionalRegs`}
+          to={`/registrations/${selectedDevice}${
+            selectedSubMenu ? "/" + selectedSubMenu : ""
+          }?action=additionalRegs`}
           id="flyout-btn-fixed-container"
           data-tip
           data-for={tooltipIdFirstReg}>
@@ -67,7 +71,8 @@ class AddRegistrationButton extends React.Component {
 
 AddRegistrationButton.propTypes = {
   hasCallout: PropTypes.bool.isRequired,
-  selectedDevice: PropTypes.string
+  selectedDevice: PropTypes.string,
+  match: PropTypes.object.isRequired
 };
 
-export default AddRegistrationButton;
+export default withRouter(AddRegistrationButton);

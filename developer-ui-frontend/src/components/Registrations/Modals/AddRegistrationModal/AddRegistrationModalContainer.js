@@ -103,6 +103,9 @@ class AddRegistrationModalContainer extends React.Component {
       // Select the newly created device in the mainContent part of the
       // registrations tab (expand it)
       this.props.changeCurrentlySelectedDevice(this.state.newDeviceId);
+      this.props.history.push(
+        `/registrations/${this.state.newDeviceId}/registration`
+      );
       this.props.setMainPanel(true);
     }
   }
@@ -113,6 +116,7 @@ class AddRegistrationModalContainer extends React.Component {
       type,
       tenant,
       selectedDevice,
+      match,
       ...others
     } = this.props;
     const { isOpen } = this.state;
@@ -165,7 +169,13 @@ class AddRegistrationModalContainer extends React.Component {
         </ConfigurationModal>
       </form>
     ) : (
-      <Redirect to={`/registrations/${selectedDevice}/`} />
+      <Redirect
+        to={`/registrations/${selectedDevice ? selectedDevice + "/" : ""}${
+          match.params.registrationsSubMenu
+            ? match.params.registrationsSubMenu
+            : ""
+        }`}
+      />
     );
   }
 }
@@ -179,7 +189,9 @@ AddRegistrationModalContainer.propTypes = {
   setMainPanel: PropTypes.func.isRequired,
   fetchingRegistrations: PropTypes.array.isRequired,
   availableDevices: PropTypes.array,
-  selectedDevice: PropTypes.string
+  selectedDevice: PropTypes.string,
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

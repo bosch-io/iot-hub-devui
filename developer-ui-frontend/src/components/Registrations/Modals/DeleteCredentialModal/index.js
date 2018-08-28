@@ -8,7 +8,7 @@ import ConfirmationModal, {
   ConfirmationModalBody,
   ConfirmationModalFooter
 } from "components/common/dialogModals/ConfirmationModal";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { deleteCredential } from "actions/CredentialActions";
 
@@ -32,7 +32,7 @@ class DeleteCredentialModalWrapped extends Component {
   }
 
   render() {
-    const { authId } = this.props;
+    const { authId, match } = this.props;
     const { isOpen } = this.state;
     return isOpen ? (
       <ConfirmationModal modalShown={isOpen} toggleModal={this.changeIsOpen}>
@@ -47,20 +47,25 @@ class DeleteCredentialModalWrapped extends Component {
         />
       </ConfirmationModal>
     ) : (
-      <Redirect to="/registrations" />
+      <Redirect
+        to={`/registrations/${match.params.selectedDeviceId}/credentials/`}
+      />
     );
   }
 }
 
-const DeleteCredentialModal = connect(
-  null,
-  { deleteCredential }
-)(DeleteCredentialModalWrapped);
+const DeleteCredentialModal = withRouter(
+  connect(
+    null,
+    { deleteCredential }
+  )(DeleteCredentialModalWrapped)
+);
 
 DeleteCredentialModalWrapped.propTypes = {
   authId: PropTypes.string.isRequired,
   deviceId: PropTypes.string.isRequired,
-  deleteCredential: PropTypes.func.isRequired
+  deleteCredential: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 export default DeleteCredentialModal;

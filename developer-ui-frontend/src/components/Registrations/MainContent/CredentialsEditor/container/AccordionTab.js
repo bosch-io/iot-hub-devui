@@ -49,7 +49,7 @@ const AccordionTabWrapped = ({
           <Fragment>
             {credential.get("firstInitTime") && (
               <Link
-                to={`/registrations/${selectedDevice}/${credential.get(
+                to={`/registrations/${selectedDevice}/credentials/${credential.get(
                   "auth-id"
                 )}/additionalSecrets`}>
                 <AddSecretIcon

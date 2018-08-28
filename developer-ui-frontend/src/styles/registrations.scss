@@ -211,11 +211,13 @@
       display: block;
       margin: 0;
       padding: 0;
-      color: $disabled_font_color;
       text-transform: uppercase;
 
-      li {
+      a {
         cursor: pointer;
+        outline: none;
+        text-decoration: none;
+        color: $disabled_font_color;
         z-index: 1;
         list-style: none;
         padding: 1rem;
@@ -237,7 +239,7 @@
         }
       }
 
-      li.active {
+      a.active {
         color: $accent_green;
         &:before {
           height: 0.2rem;
