@@ -157,7 +157,7 @@ export function updateRegistrationInfo(deviceId, info, enableChange) {
       .put(`${RESTSERVER_URL}/registration/${tenant}/${deviceId}`, info)
       .then(({ data }) => {
         dispatch(updatedRegistrationInfo(deviceId, info));
-        enableChange && dispatch(changedEnabled(deviceId, info.get("enabled")));
+        enableChange && dispatch(changedEnabled(deviceId, info.enabled));
       })
       .catch(err => {
         dispatch(updatingRegistrationInfoFailed(deviceId, info));

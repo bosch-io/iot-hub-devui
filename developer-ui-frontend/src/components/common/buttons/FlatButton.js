@@ -19,6 +19,8 @@ const FlatBtn = Button.extend`
   color: ${props => getThemeColor(props)};
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+
   a {
     text-decoration: none;
     color: inherit;

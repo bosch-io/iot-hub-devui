@@ -8,7 +8,7 @@ import styled from "styled-components";
 import CaretDown from "images/caretDownIcon.svg";
 
 const ClickProxy = styled.span`
-  cursor: pointer;
+  ${props => !props.sticky && "cursor: pointer"};
   display: inline-flex;
   position: absolute;
   width: 100%;
@@ -88,7 +88,7 @@ const AccordionSectionHeader = ({
 }) => (
   <div>
     <HeaderContainer expanded={expanded} {...other}>
-      <ClickProxy onClick={toggleExpanded} />
+      <ClickProxy onClick={toggleExpanded} sticky={sticky} />
       <TitleContainer>
         {icon ? <TitleIcon icon={icon} /> : null}
         {title}

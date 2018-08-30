@@ -10,14 +10,11 @@ import AccordionSection, {
   AccordionSectionHeader,
   AccordionSectionBody
 } from "components/common/Accordion/AccordionSection";
-import Spinner from "components/common/Spinner";
+import JsonView from "components/common/JsonView";
 import HoverTooltip from "components/common/HoverTooltip";
 // Redux
 import { selectIsFetchingByAuthId } from "reducers/selectors";
 import { connect } from "react-redux";
-// Code Syntax Highlighting for the modal view (Prism.js)
-import Prism from "prismjs";
-import Parser from "html-react-parser";
 // SVG Imports
 import CredentialIcon from "images/pwCredentialIcon.svg";
 import AddSecretIcon from "images/addPwSecretIcon.svg";
@@ -68,21 +65,10 @@ const AccordionTabWrapped = ({
         )}
       </AccordionSectionHeader>
       <AccordionSectionBody>
-        <div id="info-console">
-          {isFetching && (
-            <span className="fetching-overlay">
-              <Spinner type="bubbles" />
-            </span>
-          )}
-          <pre>
-            {Parser(
-              Prism.highlight(
-                JSON.stringify(displayedCredential.toJS(), null, 2),
-                Prism.languages.json
-              )
-            )}
-          </pre>
-        </div>
+        <JsonView
+          regInfo={displayedCredential.toJS()}
+          isFetching={isFetching}
+        />
       </AccordionSectionBody>
     </AccordionSection>
   );

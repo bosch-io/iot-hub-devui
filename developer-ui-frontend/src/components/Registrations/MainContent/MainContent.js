@@ -62,9 +62,9 @@ class MainContentWrapped extends Component {
                 setMainPanel={setMainPanel}
               />
               <MainContentTabs
-                credentialsTabLocked={
+                credentialsTabLocked={Boolean(
                   selectedDevice && isConnected && tenantFetched
-                }
+                )}
                 fetchCredential={this.props.fetchCredentialsByDeviceId}
               />
             </div>

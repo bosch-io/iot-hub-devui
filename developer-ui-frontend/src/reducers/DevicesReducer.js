@@ -17,7 +17,7 @@ import {
   REG_DELETED,
   NEW_CREDENTIAL,
   REMOVE_ALL_LOGS,
-  UPDATE_REG_INFO,
+  UPDATED_REG_INFO,
   ENABLED_CHANGED,
   INIT_EMPTY_CREDENTIAL,
   CREDENTIAL_DELETED,
@@ -128,7 +128,7 @@ const devicesReducer = (state = initialState, action = {}) => {
           .deleteIn(["byId", action.deviceId])
           .update("allIds", ids => ids.filter(id => id !== action.deviceId))
       );
-    case UPDATE_REG_INFO:
+    case UPDATED_REG_INFO:
       return state.setIn(
         ["byId", action.deviceId, "registrationInfo"],
         fromJS(action.info)

@@ -3,56 +3,77 @@
  */
 import React, { Component } from "react";
 import { JsonEditor as Editor } from "jsoneditor-react";
+import styled from "styled-components";
+import { FlatButton } from "components/common/buttons";
+import PropTypes from "prop-types";
 import ace from "brace";
 import "styles/jsonEditor.scss";
 import "brace/mode/json";
 // import "brace/theme/tomorrow_night_blue";
 import "./customAceTheme";
 
-const exampleJson = {
-  widget: {
-    debug: "on",
-    window: {
-      title: "Sample Konfabulator Widget",
-      name: "main_window",
-      width: 500,
-      height: 500
-    },
-    image: {
-      src: "Images/Sun.png",
-      name: "sun1",
-      hOffset: 250,
-      vOffset: 250,
-      alignment: "center"
-    },
-    text: {
-      data: "Click Here",
-      size: 36,
-      style: "bold",
-      name: "text1",
-      hOffset: 250,
-      vOffset: 100,
-      alignment: "center",
-      onMouseUp: "sun1.opacity = (sun1.opacity / 100) * 90;"
-    }
-  }
-};
+const FixedBtnsContainer = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin: 1rem;
+`;
 
-export default class JsonEditor extends Component {
+const EditorBtn = styled(FlatButton)`
+  font-weight: 600;
+  font-size: 1.3rem;
+  padding: 0.5rem;
+  ${props => props.cancel && `color: #848d9e`};
+`;
+
+class JsonEditor extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      currentJson: props.value
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    this.setState({ currentJson: e });
   }
 
   render() {
+    const { editorConfig, onSubmit, onCancel } = this.props;
+    const { currentJson } = this.state;
     return (
-      <Editor
-        value={exampleJson}
-        search={false}
-        navigationBar={false}
-        ace={ace}
-        mode="code"
-        theme="ace/theme/prism_duo_tone"
-      />
+      <div className="jsoneditor-container">
+        <Editor
+          {...editorConfig}
+          value={currentJson}
+          onChange={this.handleChange}
+          search={false}
+          navigationBar={false}
+          ace={ace}
+          mode="code"
+          theme="ace/theme/prism_duo_tone"
+        />
+        <FixedBtnsContainer>
+          <EditorBtn cancel onClick={onCancel}>
+            CANCEL
+          </EditorBtn>
+          <EditorBtn secondary onClick={() => onSubmit(this.state.currentJson)}>
+            SAVE
+          </EditorBtn>
+        </FixedBtnsContainer>
+      </div>
     );
   }
 }
+
+JsonEditor.propTypes = {
+  value: PropTypes.object.isRequired,
+  editorConfig: PropTypes.object,
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired
+};
+
+export default JsonEditor;

@@ -1,3 +1,4 @@
+/* eslint-disable */
 ace.define(
   "ace/theme/prism_duo_tone",
   ["require", "exports", "module", "ace/lib/dom"],
@@ -20,6 +21,9 @@ ace.define(
   .prism-duo-tone .ace_constant.ace_other,\
   .prism-duo-tone .ace_cursor {\
   color: #FFFFFF\
+  }\
+  .prism-duo-tone .ace_content {\
+    padding: 0 6px;\
   }\
   .prism-duo-tone .ace_marker-layer .ace_selection {\
   background: #003F8E\
