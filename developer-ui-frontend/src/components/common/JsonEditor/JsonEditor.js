@@ -77,7 +77,7 @@ JsonEditor.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   style: PropTypes.object.isRequired,
-  className: PropTypes.object
+  className: PropTypes.string
 };
 
 export default JsonEditor;
