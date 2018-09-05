@@ -42,10 +42,12 @@ class JsonEditor extends Component {
   }
 
   render() {
-    const { editorConfig, onSubmit, onCancel } = this.props;
+    const { editorConfig, onSubmit, onCancel, style, className } = this.props;
     const { currentJson } = this.state;
     return (
-      <div className="jsoneditor-container">
+      <div
+        className={`jsoneditor-container ${className ? className : ""}`}
+        style={style}>
         <Editor
           {...editorConfig}
           value={currentJson}
@@ -73,7 +75,9 @@ JsonEditor.propTypes = {
   value: PropTypes.object.isRequired,
   editorConfig: PropTypes.object,
   onSubmit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  style: PropTypes.object.isRequired,
+  className: PropTypes.object
 };
 
 export default JsonEditor;

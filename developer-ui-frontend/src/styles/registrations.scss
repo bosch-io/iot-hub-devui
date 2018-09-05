@@ -276,6 +276,7 @@
         width: 100%;
 
         .accordion-tab {
+          background-color: $code_background;
           .accordion-tab-header {
             a {
               outline: none;

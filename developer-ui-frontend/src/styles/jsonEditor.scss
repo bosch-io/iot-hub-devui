@@ -35,20 +35,22 @@ div.jsoneditor .jsoneditor-search input {
   border: inherit;
 }
 
-.jsoneditor {
-  background-color: $code_background;
-  margin-top: -15px; // gets overwritten by forwards slideDown animation
-  animation: slideDown 0.2s ease-out;
-  animation-fill-mode: forwards;
+/* Add css transitions */
 
-  @keyframes slideDown {
-    0% {
-      margin-top: -15px;
+.jsoneditor-container {
+  &.leaving {
+    .jsoneditor-menu {
+      animation: fade-out 0.2s ease-out forwards;
     }
-    100% {
-      margin-top: 0;
+
+    .jsoneditor-outer {
+      animation: slide-out 0.4s ease-out forwards;
     }
   }
+}
+
+.jsoneditor {
+  background-color: $code_background;
 }
 
 div.jsoneditor .jsoneditor-search input:focus {
@@ -266,21 +268,12 @@ div.jsoneditor-outer {
   width: 100%;
   height: 100%;
   margin: -40px 0 0 0;
-  margin-left: -41px; // gets overwritten by forwards slideIn animation
+  margin-left: -41px; // gets overwritten by forwards slide-in animation
   padding: 40px 0 0 0;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  animation: slideIn 0.4s ease-out 0.1s normal forwards;
-
-  @keyframes slideIn {
-    0% {
-      margin-left: -41px;
-    }
-    100% {
-      margin-left: 0;
-    }
-  }
+  animation: slide-in 0.4s ease-out 0.1s normal forwards;
 }
 
 div.jsoneditor-outer.has-nav-bar {
@@ -879,6 +872,7 @@ div.jsoneditor-menu {
   background-color: $accent_color;
   display: flex;
   align-items: center;
+  animation: fade-in 0.2s ease-out forwards;
 }
 
 div.jsoneditor-menu > button,
@@ -1182,7 +1176,44 @@ div.jsoneditor-navigation-bar.nav-bar-empty:after {
   box-sizing: border-box;
   font-family: "Roboto Mono", monospace !important;
   font-size: 13px;
+  line-height: 20px !important;
   .ace_scrollbar {
     @include customScrollbar(8px, rgba(255, 255, 255, 0.1), 10px, transparent);
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    margin-left: -41px;
+  }
+  100% {
+    margin-left: 0;
+  }
+}
+
+@keyframes slide-out {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -41px;
   }
 }
