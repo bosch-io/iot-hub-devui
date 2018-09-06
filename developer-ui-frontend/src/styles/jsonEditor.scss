@@ -45,6 +45,10 @@ div.jsoneditor .jsoneditor-search input {
 
     .jsoneditor-outer {
       animation: slide-out 0.4s ease-out forwards;
+      .ace_scrollbar {
+        animation: none !important;
+        opacity: 0 !important;
+      }
     }
   }
 }
@@ -268,7 +272,7 @@ div.jsoneditor-outer {
   width: 100%;
   height: 100%;
   margin: -40px 0 0 0;
-  margin-left: -41px; // gets overwritten by forwards slide-in animation
+  margin-left: -49px; // gets overwritten by forwards slide-in animation
   padding: 40px 0 0 0;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -1179,6 +1183,8 @@ div.jsoneditor-navigation-bar.nav-bar-empty:after {
   line-height: 20px !important;
   .ace_scrollbar {
     @include customScrollbar(8px, rgba(255, 255, 255, 0.1), 10px, transparent);
+    opacity: 0; // gets overwritten
+    animation: fade-in 0.3s ease-out 0.4s forwards;
   }
 }
 
@@ -1205,7 +1211,7 @@ div.jsoneditor-navigation-bar.nav-bar-empty:after {
     margin-left: -41px;
   }
   100% {
-    margin-left: 0;
+    margin-left: 0px;
   }
 }
 

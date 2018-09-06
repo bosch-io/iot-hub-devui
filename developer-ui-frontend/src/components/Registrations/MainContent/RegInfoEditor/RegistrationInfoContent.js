@@ -33,18 +33,6 @@ class RegistrationInfoContentWrapped extends Component {
     this.state = {
       menuExpanded: false
     };
-    this.menuOptions = [
-      {
-        value: "Configure Gateway",
-        icon: <GatewayIcon />,
-        route: `/registrations/${props.deviceId}/registration/addGateway`
-      },
-      {
-        value: "Edit Raw",
-        icon: <CodeIcon />,
-        route: `/registrations/${props.deviceId}/registration/raw`
-      }
-    ];
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
@@ -53,9 +41,21 @@ class RegistrationInfoContentWrapped extends Component {
   }
 
   render() {
-    const { regInfo, isFetching } = this.props;
+    const { regInfo, isFetching, deviceId } = this.props;
     const { menuExpanded } = this.state;
     const menuBtnId = "registrations-menu-btn";
+    const menuOptions = [
+      {
+        value: "Configure Gateway",
+        icon: <GatewayIcon />,
+        route: `/registrations/${deviceId}/registration/addGateway`
+      },
+      {
+        value: "Edit Raw",
+        icon: <CodeIcon />,
+        route: `/registrations/${deviceId}/registration/raw`
+      }
+    ];
     return (
       <Accordion>
         <AccordionSection className="accordion-tab" sticky>
@@ -72,7 +72,7 @@ class RegistrationInfoContentWrapped extends Component {
               open={menuExpanded}
               toggleOpen={this.toggleMenu}
               ancorId={menuBtnId}>
-              {this.menuOptions.map((option, index) => (
+              {menuOptions.map((option, index) => (
                 <TooltipMenuOption key={index} {...option} />
               ))}
             </TooltipMenu>

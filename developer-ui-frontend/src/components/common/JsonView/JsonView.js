@@ -9,8 +9,6 @@ import Measure from "react-measure";
 import JsonEditor from "./JsonEditor";
 import JsonReadOnlyView from "./JsonReadOnlyView";
 
-/* eslint-disable react/no-multi-comp */
-
 class JsonView extends Component {
   constructor(props) {
     super(props);
