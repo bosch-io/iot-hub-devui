@@ -15,7 +15,7 @@ export const ListEntry = styled.li`
   -ms-flex-pack: justify;
   justify-content: space-between;
 `;
-// Create a context to expose state that is global to the whole componenent (asField, name, leadingCheckbox)
+// Create a context to expose state that is global to the whole component (asField, name, leadingCheckbox)
 // to all children
 const ChecklistContext = React.createContext();
 // Also create a HOC as simple API to wrap the children

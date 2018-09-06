@@ -1,63 +1,131 @@
-import React from "react";
+/*
+ * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
+ */
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
-// Child Components
-import Spinner from "components/common/Spinner";
-// Code Syntax Highlighting for the modal view (Prism.js)
-import Prism from "prismjs";
-import Parser from "html-react-parser";
+import { TransitionMotion, Motion, spring, presets } from "react-motion";
+import Measure from "react-measure";
+// Child Components only for Type Checking not for actual rendering
+import JsonEditor from "./JsonEditor";
+import JsonReadOnlyView from "./JsonReadOnlyView";
 
-const CodeContainer = styled.div`
-  tab-size: 4;
-  position: relative;
-  width: 100%;
-  font-size: 1.3rem;
-  border: 0.2rem solid #2a2a2a;
-  background-color: ${props => props.theme.codeBackground};
-  color: #c0c0c0;
-  box-sizing: border-box;
-  padding: 1rem;
-  outline: none;
-  border-radius: 2px;
-  resize: none;
-  transition: color 0.5s;
+/* eslint-disable react/no-multi-comp */
 
-  pre {
-    font-family: "Roboto Mono", monospace !important;
+class JsonView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      height: -1,
+      editorTransition: "none" // "none" | "leaving" | "entering"
+    };
   }
-`;
 
-const LoaderOverlay = styled.span`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.19);
-`;
-
-const JsonView = ({ regInfo, isFetching }) => (
-  <CodeContainer className="info-console" className="reg-mode">
-    {isFetching && (
-      <LoaderOverlay className="fetching-overlay">
-        <Spinner type="bubbles" />
-      </LoaderOverlay>
-    )}
-    <pre>
-      {Parser(
-        Prism.highlight(JSON.stringify(regInfo, null, 2), Prism.languages.json)
-      )}
-    </pre>
-  </CodeContainer>
-);
+  render() {
+    const { editorTransition, height } = this.state;
+    const { value, inEditingMode, isFetching, children } = this.props;
+    const childrenArr = React.Children.toArray(children);
+    const JsonEditorChild = childrenArr.find(
+      child => child.type === JsonEditor
+    );
+    const JsonReadOnlyChild = childrenArr.find(
+      child => child.type === JsonReadOnlyView
+    );
+    return (
+      <Measure
+        scroll
+        onResize={contentRect => {
+          this.setState({ height: contentRect.scroll.height });
+        }}>
+        {({ measureRef }) => (
+          <Motion
+            style={{
+              height: spring(height, presets.noWobble)
+            }}
+            defaultStyle={{ height: 0 }}>
+            {interpolatingStyle => (
+              <div style={interpolatingStyle}>
+                <div className="measuring-container" ref={measureRef}>
+                  <TransitionMotion
+                    willLeave={() => {
+                      editorTransition !== "leaving" &&
+                        this.setState({ editorTransition: "leaving" });
+                      return { y: spring(15) };
+                    }}
+                    willEnter={() => {
+                      this.setState({
+                        editorTransition: "entering"
+                      });
+                      return { y: 15 };
+                    }}
+                    didLeave={() =>
+                      this.setState({
+                        editorTransition: "none"
+                      })
+                    }
+                    config={{ stiffness: 360, damping: 30 }}
+                    styles={
+                      inEditingMode
+                        ? [{ key: "editor", style: { y: spring(0) } }]
+                        : []
+                    }>
+                    {interpolatedStyles => (
+                      <Fragment>
+                        {interpolatedStyles.map(config =>
+                          React.cloneElement(JsonEditorChild, {
+                            style: {
+                              transform: `translateY(${-1 * config.style.y}px)`
+                            },
+                            className:
+                              editorTransition !== "none"
+                                ? editorTransition
+                                : null,
+                            ...this.props
+                          })
+                        )}
+                        {editorTransition === "none" &&
+                          !inEditingMode &&
+                          React.cloneElement(JsonReadOnlyChild, {
+                            value,
+                            isFetching
+                          })}
+                      </Fragment>
+                    )}
+                  </TransitionMotion>
+                </div>
+              </div>
+            )}
+          </Motion>
+        )}
+      </Measure>
+    );
+  }
+}
 
 JsonView.propTypes = {
-  regInfo: PropTypes.object.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  value: PropTypes.object.isRequired,
+  isFetching: PropTypes.bool,
+  inEditingMode: PropTypes.bool,
+  children: (props, propName, componentName) => {
+    const childs = props[propName];
+    const childTypes = childs.map(c => c.type);
+    const expectedTypes = [JsonReadOnlyView, JsonEditor];
+    const expectedTypesVariant = [JsonEditor, JsonReadOnlyView];
+    // Only accept two children of the appropriate type
+    if (
+      React.Children.count(childs) !== 2 ||
+      !(
+        childTypes.every((type, index) => type === expectedTypes[index]) ||
+        childTypes.every((type, index) => type === expectedTypesVariant[index])
+      )
+    ) {
+      return new Error(
+        `"${componentName}" should have two children of the following types: ${expectedTypes.join(
+          "`, `"
+        )}.`
+      );
+    }
+    return null;
+  }
 };
 
 export default JsonView;

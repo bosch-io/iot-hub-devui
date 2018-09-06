@@ -10,7 +10,7 @@ import AccordionSection, {
   AccordionSectionHeader,
   AccordionSectionBody
 } from "components/common/Accordion/AccordionSection";
-import JsonView from "components/common/JsonView";
+import { JsonReadOnlyView as JsonView } from "components/common/JsonView";
 import HoverTooltip from "components/common/HoverTooltip";
 // Redux
 import { selectIsFetchingByAuthId } from "reducers/selectors";
@@ -65,10 +65,7 @@ const AccordionTabWrapped = ({
         )}
       </AccordionSectionHeader>
       <AccordionSectionBody>
-        <JsonView
-          regInfo={displayedCredential.toJS()}
-          isFetching={isFetching}
-        />
+        <JsonView value={displayedCredential.toJS()} isFetching={isFetching} />
       </AccordionSectionBody>
     </AccordionSection>
   );

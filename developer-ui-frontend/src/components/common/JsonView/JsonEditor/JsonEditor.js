@@ -72,11 +72,11 @@ class JsonEditor extends Component {
 }
 
 JsonEditor.propTypes = {
-  value: PropTypes.object.isRequired,
+  value: PropTypes.object,
   editorConfig: PropTypes.object,
-  onSubmit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  style: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func,
+  onCancel: PropTypes.func,
+  style: PropTypes.object,
   className: PropTypes.string
 };
 
