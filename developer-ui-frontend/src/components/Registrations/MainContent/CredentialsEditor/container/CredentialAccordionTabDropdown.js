@@ -48,8 +48,7 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         icon: <DeleteCredIcon />,
         route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
-        }/deleteCredential`,
-        disabledHoverTooltipId: "deleteCredentialDisabled"
+        }/deleteCredential`
       }
     ];
     this.toggleDropdownMenu = this.toggleDropdownMenu.bind(this);
@@ -66,7 +65,7 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         isDisabled = numberOfSecrets <= 1;
         break;
       case "Delete Credential":
-        isDisabled = numberOfCredentials <= 1;
+        isDisabled = numberOfCredentials <= 0;
         break;
       default:
         return new Error("Unknown dropdown category");
@@ -80,9 +79,6 @@ class CredentialAccordionTabDropdownWrapped extends Component {
     switch (categoryName) {
       case "Delete Secret":
         text = "You must have at least one secret in a credential";
-        break;
-      case "Delete Credential":
-        text = "You must have at least one credential in a registration";
         break;
       default:
         return new Error("Unknown Credential Dropdown Category");
@@ -111,7 +107,8 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         <TooltipMenu
           open={isOpened}
           toggleOpen={this.toggleDropdownMenu}
-          ancorId={menuBtnId}>
+          ancorId={menuBtnId}
+        >
           {this.menuOptions.map((option, index) => (
             <TooltipMenuOption
               key={index}
