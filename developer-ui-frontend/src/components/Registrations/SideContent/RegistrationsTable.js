@@ -28,16 +28,8 @@ class RegistrationsTableWrapped extends Component {
     if (!item) {
       newPathArr = pathArr.slice(0, 2);
     } else {
-      if (pathArr.length > 3) {
-        newPathArr = [
-          ...pathArr.slice(0, 2),
-          item,
-          ...pathArr.slice(3, pathArr.length)
-        ];
-      } else if (pathArr.length <= 3) {
-        // Redirect to the Registration Info tab per default
-        newPathArr = [...pathArr.slice(0, 2), item, "registration"];
-      }
+      // Redirect to the Registration Info tab per default
+      newPathArr = [...pathArr.slice(0, 2), item, "registration"];
     }
     return newPathArr.join("/");
   }

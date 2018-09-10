@@ -44,11 +44,17 @@ div.jsoneditor .jsoneditor-search input {
     }
 
     .jsoneditor-outer {
-      animation: slide-out 0.4s ease-out forwards;
+      margin-left: 0; // gets overwritten by the slide-out animation
       .ace_scrollbar {
         animation: none !important;
         opacity: 0 !important;
       }
+    }
+    &.two-digit-length .jsoneditor-outer {
+      animation: slide-out-long 0.4s ease-out 0.1s normal forwards;
+    }
+    &:not(.two-digit-length) .jsoneditor-outer {
+      animation: slide-out-short 0.4s ease-out 0.1s normal forwards;
     }
   }
 }
@@ -266,18 +272,28 @@ div.jsoneditor-tree table.jsoneditor-tree {
   width: 100%;
   margin: 0;
 }
-
-div.jsoneditor-outer {
-  position: static;
-  width: 100%;
-  height: 100%;
-  margin: -40px 0 0 0;
-  margin-left: -49px; // gets overwritten by forwards slide-in animation
-  padding: 40px 0 0 0;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  animation: slide-in 0.4s ease-out 0.1s normal forwards;
+div.jsoneditor-container {
+  div.jsoneditor-outer {
+    position: static;
+    width: 100%;
+    height: 100%;
+    margin: -40px 0 0 0;
+    margin-left: -41px; // gets overwritten by forwards slide-in animation
+    padding: 40px 0 0 0;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  &.two-digit-length {
+    div.jsoneditor-outer {
+      animation: slide-in-long 0.4s ease-out 0.1s normal forwards;
+    }
+  }
+  &:not(.two-digit-length) {
+    div.jsoneditor-outer {
+      animation: slide-in-short 0.4s ease-out 0.1s normal forwards;
+    }
+  }
 }
 
 div.jsoneditor-outer.has-nav-bar {
@@ -290,10 +306,10 @@ div.jsoneditor-outer.has-status-bar {
   padding: 35px 0 26px 0;
 }
 
-textarea.jsoneditor-text,
-.ace-jsoneditor {
-  min-height: 150px;
-}
+// textarea.jsoneditor-text,
+// .ace-jsoneditor {
+//   min-height: 150px;
+// }
 
 div.jsoneditor-tree {
   width: 100%;
@@ -1173,7 +1189,6 @@ div.jsoneditor-navigation-bar.nav-bar-empty:after {
   margin-left: 5px;
 }
 .ace_editor {
-  min-height: 150px;
   border: 0.2rem solid #2a2a2a;
   border-top: none;
   border-bottom: none;
@@ -1205,8 +1220,8 @@ div.jsoneditor-navigation-bar.nav-bar-empty:after {
     opacity: 1;
   }
 }
-
-@keyframes slide-in {
+// Entering Animation of the Code Lines (only applicable to max 1 digit (<=9 lines)
+@keyframes slide-in-short {
   0% {
     margin-left: -41px;
   }
@@ -1214,12 +1229,31 @@ div.jsoneditor-navigation-bar.nav-bar-empty:after {
     margin-left: 0px;
   }
 }
-
-@keyframes slide-out {
+// Leaving Animation of the Code Lines (only applicable to max 1 digit (<=9 lines)
+@keyframes slide-out-short {
   0% {
     margin-left: 0;
   }
   100% {
     margin-left: -41px;
+  }
+}
+
+// Entering Animation of the Code Lines (only applicable to max 2 digits (<=99 lines)
+@keyframes slide-in-long {
+  0% {
+    margin-left: -49px;
+  }
+  100% {
+    margin-left: 0px;
+  }
+}
+// Leaving Animation of the Code Lines (only applicable to max 2 digits (<=99 lines)
+@keyframes slide-out-long {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -49px;
   }
 }

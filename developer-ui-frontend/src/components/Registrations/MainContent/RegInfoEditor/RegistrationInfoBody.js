@@ -52,6 +52,7 @@ class RegistrationInfoBodyWrapped extends Component {
               onCancel={this.redirectToReadOnly}
               onSubmit={this.handleEditorSave}
               editorConfig={{ statusBar: false }}
+              dynamicHeight
             />
           </JsonView>
         )}

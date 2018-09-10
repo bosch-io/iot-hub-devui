@@ -80,8 +80,7 @@ pre[class*="language-"] {
 .token.tag,
 .token.operator,
 .token.number {
-  color: #c0c0c0;
-  font-weight: 600;
+  color: $accent_blue;
 }
 
 .token.property,

@@ -41,7 +41,7 @@ class JsonView extends Component {
             }}
             defaultStyle={{ height: 0 }}>
             {interpolatingStyle => (
-              <div style={interpolatingStyle}>
+              <div style={{ ...interpolatingStyle, overflow: "hidden" }}>
                 <div className="measuring-container" ref={measureRef}>
                   <TransitionMotion
                     willLeave={() => {
@@ -73,10 +73,16 @@ class JsonView extends Component {
                             style: {
                               transform: `translateY(${-1 * config.style.y}px)`
                             },
-                            className:
+                            className: `${
                               editorTransition !== "none"
                                 ? editorTransition
-                                : null,
+                                : ""
+                            } ${
+                              JSON.stringify(value, null, 2).split(/\r\n|\r|\n/)
+                                .length > 9
+                                ? "two-digit-length"
+                                : ""
+                            }`,
                             ...this.props
                           })
                         )}
