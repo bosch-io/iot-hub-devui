@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import { JsonEditor as Editor } from "jsoneditor-react";
 import styled from "styled-components";
+import { Prompt, withRouter } from "react-router-dom";
 import { FlatButton } from "components/common/buttons";
 import PropTypes from "prop-types";
 import ace from "brace";
@@ -67,13 +68,22 @@ class JsonEditor extends Component {
       onCancel,
       style,
       className,
-      dynamicHeight
+      dynamicHeight,
+      value
     } = this.props;
     const { currentJson } = this.state;
     return (
       <div
         className={`jsoneditor-container ${className ? className : ""}`}
         style={style}>
+        <Prompt
+          when={currentJson !== value}
+          message={location =>
+            location.state && location.state.withChangesSaved
+              ? true
+              : "Are you shure you want to quit the Editor? Changes will be discarded"
+          }
+        />
         <Editor
           {...editorConfig}
           value={currentJson}
@@ -105,7 +115,8 @@ JsonEditor.propTypes = {
   onCancel: PropTypes.func,
   style: PropTypes.object,
   className: PropTypes.string,
-  dynamicHeight: PropTypes.bool
+  dynamicHeight: PropTypes.bool,
+  location: PropTypes.object.isRequired
 };
 
-export default JsonEditor;
+export default withRouter(JsonEditor);

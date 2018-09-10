@@ -21,10 +21,11 @@ class RegistrationInfoBodyWrapped extends Component {
     this.redirectToReadOnly = this.redirectToReadOnly.bind(this);
   }
 
-  redirectToReadOnly() {
+  redirectToReadOnly(withChangesSaved) {
     const { history, match } = this.props;
     history.push(
-      `/registrations/${match.params.selectedDeviceId}/registration`
+      `/registrations/${match.params.selectedDeviceId}/registration`,
+      { fromRaw: true, withChangesSaved }
     );
   }
 
@@ -34,7 +35,7 @@ class RegistrationInfoBodyWrapped extends Component {
     const enabledChanged = info.enabled !== regInfo;
     this.props
       .updateRegistrationInfo(deviceId, info, enabledChanged)
-      .then(this.redirectToReadOnly);
+      .then(() => this.redirectToReadOnly(true));
   }
 
   render() {
@@ -49,7 +50,7 @@ class RegistrationInfoBodyWrapped extends Component {
             inEditingMode={match.params.regInfoSubMenu === "raw"}>
             <JsonReadOnlyView />
             <JsonEditor
-              onCancel={this.redirectToReadOnly}
+              onCancel={() => this.redirectToReadOnly(false)}
               onSubmit={this.handleEditorSave}
               editorConfig={{ statusBar: false }}
               dynamicHeight

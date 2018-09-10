@@ -4,6 +4,7 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { TransitionMotion, Motion, spring, presets } from "react-motion";
+import { withRouter } from "react-router-dom";
 import Measure from "react-measure";
 // Child Components only for Type Checking not for actual rendering
 import JsonEditor from "./JsonEditor";
@@ -20,7 +21,7 @@ class JsonView extends Component {
 
   render() {
     const { editorTransition, height } = this.state;
-    const { value, inEditingMode, isFetching, children } = this.props;
+    const { value, inEditingMode, isFetching, children, location } = this.props;
     const childrenArr = React.Children.toArray(children);
     const JsonEditorChild = childrenArr.find(
       child => child.type === JsonEditor
@@ -47,7 +48,9 @@ class JsonView extends Component {
                     willLeave={() => {
                       editorTransition !== "leaving" &&
                         this.setState({ editorTransition: "leaving" });
-                      return { y: spring(15) };
+                      return location.state && location.state.fromRaw
+                        ? { y: spring(15) }
+                        : { y: 15 };
                     }}
                     willEnter={() => {
                       this.setState({
@@ -109,6 +112,7 @@ JsonView.propTypes = {
   value: PropTypes.object.isRequired,
   isFetching: PropTypes.bool,
   inEditingMode: PropTypes.bool,
+  location: PropTypes.object.isRequired,
   children: (props, propName, componentName) => {
     const childs = props[propName];
     const childTypes = childs.map(c => c.type);
@@ -132,4 +136,4 @@ JsonView.propTypes = {
   }
 };
 
-export default JsonView;
+export default withRouter(JsonView);
