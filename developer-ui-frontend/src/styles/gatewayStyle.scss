@@ -1,0 +1,32 @@
+@import "_globalVars.scss";
+@import "_mixins.scss";
+
+.script {
+  height: 60vh;
+}
+
+.mainContent {
+  display: inline-block;
+  position: absolute;
+}
+
+.paragraph {
+  margin-top: 10rem;
+}
+
+.elementsAlign {
+  display: inline-grid;
+  width: 100%;
+}
+
+.table {
+  position: relative;
+  font-size: 1.2rem;
+  height: 20vh;
+  width: 100%;
+  display: inline-block;
+}
+
+.header {
+  font-size: 1rem;
+}
