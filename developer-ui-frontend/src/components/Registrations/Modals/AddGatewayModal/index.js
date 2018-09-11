@@ -9,10 +9,6 @@ import { connect } from "react-redux";
 import { selectAllDevices } from "reducers/selectors";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
-import ChecklistSelect, {
-  ChecklistSelectHeader,
-  ChecklistOptionEntries
-} from "components/common/ChecklistSelect";
 import {
   ConfigurationModal,
   ConfigurationModalHeader,
@@ -21,16 +17,32 @@ import {
 } from "components/common/dialogModals";
 import GatewayIcon from "images/gatewayIcon.svg";
 import { SearchbarM } from "components/common/textInputs";
+import GatewaySelectionList from "./presentation/GatewaySelectionList";
 import "styles/gatewayStyle.scss";
 
 class AddGatewayModalWrapped extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: true
+      isOpen: true,
+      deviceData: props.gatewayDevices.map(device => ({
+        deviceId: device,
+        selected: false
+      }))
     };
     this.changeIsOpen = this.changeIsOpen.bind(this);
     this.confirm = this.confirm.bind(this);
+    this.changeSelected = this.changeSelected.bind(this);
+    this.submit = this.submit.bind(this);
+  }
+
+  submit(values) {
+    console.log("It works with values" + values);
+    this.changeIsOpen(false);
+  }
+
+  changeSelected(id) {
+    console.log("The selected device is: " + id);
   }
 
   changeIsOpen(opened) {
@@ -39,13 +51,14 @@ class AddGatewayModalWrapped extends Component {
 
   confirm() {}
   render() {
-    const { deviceData, deviceId, gatewaySearch } = this.props;
-    const { isOpen } = this.state;
+    const { handleSubmit, deviceId, gatewaySearch } = this.props;
+    const { deviceData, isOpen } = this.state;
     return isOpen ? (
       <ConfigurationModal
         className="script"
         modalShown={isOpen}
         toggleModal={this.changeIsOpen}
+        changeIsOpen={this.changeIsOpen}
       >
         <ConfigurationModalHeader
           icon={<GatewayIcon />}
@@ -68,26 +81,16 @@ class AddGatewayModalWrapped extends Component {
               autoComplete="off"
               asField
             />
-            <form onSubmit={e => e.preventDefault()}>
-              <ChecklistSelect name="selectedDevice">
-                <div className="header">
-                  <ChecklistSelectHeader textTitle="ID" />
-                </div>
-                <div className="table">
-                  <ChecklistOptionEntries
-                    data={deviceData.map(entry => ({
-                      text: entry.deviceId,
-                      checked: entry.selected
-                    }))}
-                    filterText={gatewaySearch}
-                  />
-                </div>
-              </ChecklistSelect>
-            </form>
+            <GatewaySelectionList
+              searchText={gatewaySearch}
+              deviceData={deviceData}
+              changeSelected={this.changeSelected}
+              onCheckboxClick={this.changeSelected}
+            />
           </div>
         </ConfigurationModalBody>
         <ConfigurationModalFooter
-          confirm={this.confirm}
+          confirm={handleSubmit(this.submit)}
           submitType="submit"
           toggleModal={this.changeIsOpen}
         />
@@ -98,14 +101,16 @@ class AddGatewayModalWrapped extends Component {
   }
 }
 
+const selector = formValueSelector("gatewayTab");
+
 const mapStateToProps = state => {
-  const selector = formValueSelector("gatewayTab");
-  const devices = selectAllDevices(state);
+  const gatewaySearch = selector(state, "gatewaySearchText");
+  const gatewayDevices = selectAllDevices(state).map(device =>
+    device.get("deviceId")
+  );
   return {
-    gatewaySearch: selector(state, "gatewaySearchText"),
-    deviceData: devices.map(device => ({
-      deviceId: device.get("deviceId")
-    }))
+    gatewaySearch,
+    gatewayDevices
   };
 };
 
@@ -118,10 +123,9 @@ AddGatewayModalContainer = withRouter(
 );
 
 AddGatewayModalWrapped.propTypes = {
-  deviceData: PropTypes.arrayOf(
-    PropTypes.shape({ deviceId: PropTypes.string, enabled: PropTypes.bool })
-  ),
+  handleSubmit: PropTypes.func,
   gatewaySearch: PropTypes.string,
+  gatewayDevices: PropTypes.array.isRequired,
   deviceId: PropTypes.string.isRequired
 };
 

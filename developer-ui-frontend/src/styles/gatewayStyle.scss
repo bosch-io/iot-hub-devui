@@ -25,6 +25,10 @@
   height: 20vh;
   width: 100%;
   display: inline-block;
+
+  #table-content {
+    @include customScrollbar(8px, rgba(0, 0, 0, 0.4), 10px, transparent);
+  }
 }
 
 .header {
