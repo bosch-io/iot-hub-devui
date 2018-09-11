@@ -4,7 +4,8 @@
 import React, { Component } from "react";
 import { JsonEditor as Editor } from "jsoneditor-react";
 import styled from "styled-components";
-import { Prompt, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import Prompt from "components/helpers/Prompt";
 import { FlatButton } from "components/common/buttons";
 import PropTypes from "prop-types";
 import ace from "brace";
