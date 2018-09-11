@@ -17,6 +17,7 @@ import TooltipMenu, { TooltipMenuOption } from "components/common/TooltipMenu";
 import MoreIcon from "images/moreIcon.svg";
 import DeleteCredIcon from "images/deletePwCredentialIcon.svg";
 import DeletePwSecretIcon from "images/deletePwSecretIcon.svg";
+import CodeIcon from "images/codeIcon.svg";
 import AddPwSecretIcon from "images/addPwSecretIcon.svg";
 
 class CredentialAccordionTabDropdownWrapped extends Component {
@@ -48,7 +49,15 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         icon: <DeleteCredIcon />,
         route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
-        }/deleteCredential`
+        }/deleteCredential`,
+        disabledHoverTooltipId: "deleteCredentialDisabled"
+      },
+      {
+        value: "Edit Raw",
+        icon: <CodeIcon />,
+        route: `/registrations/${props.selectedDevice}/credentials/${
+          props.authId
+        }/raw`
       }
     ];
     this.toggleDropdownMenu = this.toggleDropdownMenu.bind(this);
@@ -59,13 +68,14 @@ class CredentialAccordionTabDropdownWrapped extends Component {
     let isDisabled = null;
     switch (category) {
       case "Add Secret":
+      case "Edit Raw":
         isDisabled = false;
         break;
       case "Delete Secret":
         isDisabled = numberOfSecrets <= 1;
         break;
       case "Delete Credential":
-        isDisabled = numberOfCredentials <= 0;
+        isDisabled = numberOfCredentials <= 1;
         break;
       default:
         return new Error("Unknown dropdown category");
@@ -79,6 +89,9 @@ class CredentialAccordionTabDropdownWrapped extends Component {
     switch (categoryName) {
       case "Delete Secret":
         text = "You must have at least one secret in a credential";
+        break;
+      case "Delete Credential":
+        text = "You must have at least one credential in a registration";
         break;
       default:
         return new Error("Unknown Credential Dropdown Category");
@@ -107,8 +120,7 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         <TooltipMenu
           open={isOpened}
           toggleOpen={this.toggleDropdownMenu}
-          ancorId={menuBtnId}
-        >
+          ancorId={menuBtnId}>
           {this.menuOptions.map((option, index) => (
             <TooltipMenuOption
               key={index}

@@ -4,6 +4,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
+import { Route, withRouter } from "react-router-dom";
 // Child Components
 import Accordion from "components/common/Accordion";
 import AccordionTab from "./container/AccordionTab";
@@ -29,25 +30,54 @@ class CredentialsInfoContentWrapped extends Component {
     this.state = {
       idIsOpened: initialOpenedId
     };
+    if (initialOpenedId) {
+      props.history.push(
+        `/registrations/${props.selectedDevice}/credentials/${initialOpenedId}`
+      );
+    }
     this.triggerErrorMessage = this.triggerErrorMessage.bind(this);
     this.toggleIsOpened = this.toggleIsOpened.bind(this);
+    this.useParamIdAsOpened = this.useParamIdAsOpened.bind(this);
+  }
+
+  componentDidMount() {
+    this.useParamIdAsOpened();
   }
 
   componentWillReceiveProps(nextProps) {
+    // Use the credential specified in the authId URL Parameter if the credentials
+    // got loaded for the first time
+    if (
+      this.props.match.params &&
+      this.props.match.params.authId &&
+      nextProps.match.params &&
+      nextProps.match.params.authId &&
+      nextProps.match.params.authId === this.props.match.params.authId &&
+      nextProps.uninitializedCreds.size === 0 &&
+      this.props.credentials.size === 0 &&
+      nextProps.credentials.size > 0
+    ) {
+      this.useParamIdAsOpened();
+    }
     // Open the first credential if:
     // - the selectedDevice has changed or
-    // - the uninitialized credential got initialized or
-    // - credentials got loaded the first time
-    if (
+    // - the uninitialized credential got initialized
+    else if (
       (this.props.selectedDevice !== nextProps.selectedDevice ||
         this.props.uninitializedCreds.size > 0 ||
         (this.props.credentials.size === 0 &&
           nextProps.credentials.size > 0)) &&
       nextProps.uninitializedCreds.size === 0
     ) {
+      const firstCredential = nextProps.credentials.getIn([0, "auth-id"]);
       this.setState({
-        idIsOpened: nextProps.credentials.getIn([0, "auth-id"])
+        idIsOpened: firstCredential
       });
+      nextProps.history.push(
+        `/registrations/${
+          nextProps.selectedDevice
+        }/credentials/${firstCredential}`
+      );
     }
     // If there is a new uninitialized credential, open it
     else if (
@@ -55,19 +85,40 @@ class CredentialsInfoContentWrapped extends Component {
       nextProps.uninitializedCreds.size !== this.props.uninitializedCreds.size
     ) {
       // Open the last uninitialized credential
+      const lastUninitCredential = nextProps.uninitializedCreds.getIn([
+        -1,
+        "auth-id"
+      ]);
       this.setState({
-        idIsOpened: nextProps.uninitializedCreds.getIn([-1, "auth-id"])
+        idIsOpened: lastUninitCredential
       });
+      nextProps.history.push(
+        `/registrations/${
+          nextProps.selectedDevice
+        }/credentials/${lastUninitCredential}`
+      );
+    }
+  }
+  useParamIdAsOpened() {
+    const {
+      match: { params }
+    } = this.props;
+    const authIdParam = params.authId;
+    if (authIdParam) {
+      this.setState({ idIsOpened: authIdParam });
     }
   }
 
   toggleIsOpened(authId) {
+    const { selectedDevice, history } = this.props;
     if (this.state.idIsOpened === authId) {
       this.setState({ idIsOpened: null });
+      history.push(`/registrations/${selectedDevice}/credentials`);
     } else {
       this.setState({
         idIsOpened: authId
       });
+      history.push(`/registrations/${selectedDevice}/credentials/${authId}`);
     }
   }
   triggerErrorMessage(message) {
@@ -80,12 +131,17 @@ class CredentialsInfoContentWrapped extends Component {
     return (
       <Accordion>
         {credentials.map(credential => (
-          <AccordionTab
+          <Route
             key={credential.get("auth-id")}
-            credential={credential}
-            selectedDevice={selectedDevice}
-            idIsOpened={idIsOpened}
-            toggleIsOpened={this.toggleIsOpened}
+            path={`/registrations/${selectedDevice}/credentials/:authId?/:credentialSubMenu?`}
+            render={() => (
+              <AccordionTab
+                credential={credential}
+                selectedDevice={selectedDevice}
+                idIsOpened={idIsOpened}
+                toggleIsOpened={this.toggleIsOpened}
+              />
+            )}
           />
         ))}
         <AddCredentialTab
@@ -104,19 +160,23 @@ const mapStateToProps = (state, ownProps) => ({
   uninitializedCreds: selectUninitializedCredentials(state)
 });
 
-const CredentialsInfoContent = connect(
-  mapStateToProps,
-  {
-    initializeEmptyCredential,
-    addCustomNotification
-  }
-)(CredentialsInfoContentWrapped);
+const CredentialsInfoContent = withRouter(
+  connect(
+    mapStateToProps,
+    {
+      initializeEmptyCredential,
+      addCustomNotification
+    }
+  )(CredentialsInfoContentWrapped)
+);
 
 CredentialsInfoContentWrapped.propTypes = {
   credentials: ImmutablePropTypes.list,
   uninitializedCreds: ImmutablePropTypes.list,
   initializeEmptyCredential: PropTypes.func.isRequired,
   addCustomNotification: PropTypes.func.isRequired,
-  selectedDevice: PropTypes.string
+  selectedDevice: PropTypes.string,
+  match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 export default CredentialsInfoContent;
