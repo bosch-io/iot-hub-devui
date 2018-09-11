@@ -27,18 +27,10 @@ class AddGatewayModalWrapped extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      footerOptionChecked: true,
       isOpen: true
     };
     this.changeIsOpen = this.changeIsOpen.bind(this);
-    this.onCheckboxClick = this.onCheckboxClick.bind(this);
     this.confirm = this.confirm.bind(this);
-  }
-
-  onCheckboxClick() {
-    this.setState(state => ({
-      footerOptionChecked: !state.footerOptionChecked
-    }));
   }
 
   changeIsOpen(opened) {
