@@ -56,9 +56,9 @@ const SubmitSvg = styled(SubmitIcon)`
 `;
 
 const RoundOutlineButton = props => {
-  const { children, icon, submitAnimation, ...other } = props;
+  const { children, icon, submitAnimation, primary, ...other } = props;
   return (
-    <RoundOutlineBtn {...props}>
+    <RoundOutlineBtn primary={primary ? 1 : 0} {...props}>
       <span>
         {children} {icon ? <Icon {...props} /> : null}{" "}
         {submitAnimation && <SubmitSvg className="submit-icon" {...other} />}
