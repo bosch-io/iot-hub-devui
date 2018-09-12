@@ -37,12 +37,30 @@ class AddGatewayModalWrapped extends Component {
   }
 
   submit(values) {
-    console.log("It works with values" + values);
+    const { deviceId } = this.props;
+    console.log(
+      "It works with values " + values + " for the device " + deviceId
+    );
+    console.log(values._root.entries[0][1]);
     this.changeIsOpen(false);
   }
 
   changeSelected(id) {
     console.log("The selected device is: " + id);
+    const deviceIndex = this.state.deviceData.findIndex(
+      device => device.deviceId === id
+    );
+    this.setState(state => {
+      const changedEntry = Object.assign({}, state.deviceData[deviceIndex]);
+      changedEntry.selected = !changedEntry.selected;
+      return {
+        deviceData: [
+          ...state.deviceData.slice(0, deviceIndex),
+          changedEntry,
+          ...state.deviceData.slice(deviceIndex + 1, state.deviceData.length)
+        ]
+      };
+    });
   }
 
   changeIsOpen(opened) {
@@ -85,7 +103,6 @@ class AddGatewayModalWrapped extends Component {
               searchText={gatewaySearch}
               deviceData={deviceData}
               changeSelected={this.changeSelected}
-              onCheckboxClick={this.changeSelected}
             />
           </div>
         </ConfigurationModalBody>

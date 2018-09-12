@@ -26,11 +26,17 @@
   width: 100%;
   display: inline-block;
 
-  #table-content {
-    @include customScrollbar(8px, rgba(0, 0, 0, 0.4), 10px, transparent);
+  select {
+    position: absolute;
+    visibility: hidden;
   }
 }
 
 .header {
+  height: 3rem;
   font-size: 1rem;
+
+  ul {
+    height: 2rem;
+  }
 }

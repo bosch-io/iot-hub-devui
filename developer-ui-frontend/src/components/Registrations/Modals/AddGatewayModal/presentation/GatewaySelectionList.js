@@ -11,22 +11,25 @@ import "styles/gatewayStyle.scss";
 
 const GatewaySelectionList = ({ searchText, deviceData, changeSelected }) => (
   <ChecklistSelect
-    asField
-    className="table"
     name="selectedDevice"
     leadingCheckbox
+    className="table"
+    asField
   >
     <div className="header">
       <ChecklistSelectHeader textTitle="ID" />
     </div>
     <ChecklistOptionEntries
+      className="entries"
       data={deviceData.map(entry => ({
         text: entry.deviceId,
         checked: entry.selected
       }))}
       filterText={searchText}
       onClick={changeSelected}
-      onCheckboxClick={changeSelected}
+      onCheckboxClick={() => {
+        /* Left out (the checkbox gets selected onClick */
+      }}
     />
   </ChecklistSelect>
 );
