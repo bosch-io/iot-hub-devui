@@ -8,6 +8,7 @@ import {
   CREATING_SECRET,
   NEW_SECRET,
   CREATING_SECRET_FAILED,
+  NOT_ALLOWED_CREATING_SECRET,
   INIT_EMPTY_CREDENTIAL,
   DELETING_SECRET,
   SECRET_DELETED,
@@ -29,6 +30,7 @@ import { RESTSERVER_URL } from "_APP_CONSTANTS";
 import { mapCredentialParams, mapSecretParams } from "utils";
 import axios from "axios";
 import _ from "lodash";
+import { selectSecretsByCredentialId } from "reducers/selectors";
 
 export function creatingSecret(authId, secret) {
   return {
@@ -54,8 +56,18 @@ export function creatingSecretFailed(authId, secret) {
   };
 }
 
+export function notAllowedCreatingSecret(authId, secret) {
+  return {
+    type: NOT_ALLOWED_CREATING_SECRET,
+    authId,
+    secret
+  };
+}
+
 export function createNewSecret(deviceId, authId, secretType, secretId, data) {
   return (dispatch, getState) => {
+    const numberOfSecrets = selectSecretsByCredentialId(getState(), deviceId)
+      .size;
     // 1. Create a new Secret Object as it's stored in the Redux Store
     const newSecret = mapSecretParams(secretId, authId, secretType, data);
     // 2. Flatten the normalized form and add the secret to the secrets array of the credential
@@ -70,14 +82,20 @@ export function createNewSecret(deviceId, authId, secretType, secretId, data) {
     const requestBody = { ...modifiedCredential, "device-id": deviceId };
     // 4. Start the regular XHR handling with the updated credential as PUT request
     const tenant = getState().getIn(["settings", "tenant"]);
-    dispatch(creatingSecret(authId, newSecret));
-    return axios
-      .put(`${RESTSERVER_URL}/credentials/${tenant}`, requestBody)
-      .then(() => dispatch(newSecretCreated(authId, newSecret)))
-      .catch(err => {
-        dispatch(creatingSecretFailed(authId, newSecret));
-        console.error(err);
-      });
+
+    if (numberOfSecrets > 9) {
+      dispatch(notAllowedCreatingSecret(authId, newSecret));
+    } else {
+      dispatch(creatingSecret(authId, newSecret));
+      return axios
+        .put(`${RESTSERVER_URL}/credentials/${tenant}`, requestBody)
+        .then(() => dispatch(newSecretCreated(authId, newSecret)))
+        .catch(err => {
+          dispatch(creatingSecretFailed(authId, newSecret));
+          console.error(err);
+        });
+    }
+    return 1;
   };
 }
 

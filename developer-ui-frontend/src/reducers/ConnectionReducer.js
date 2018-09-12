@@ -105,6 +105,7 @@ const connectionReducer = (state = initialState, action = {}) => {
         return ids.push(action.authId);
       });
     case actionTypes.NEW_SECRET:
+    case actionTypes.NOT_ALLOWED_CREATING_SECRET:
     case actionTypes.CREATING_SECRET_FAILED:
     case actionTypes.NEW_CREDENTIAL:
     case actionTypes.CREATING_CREDENTIAL_FAILED:

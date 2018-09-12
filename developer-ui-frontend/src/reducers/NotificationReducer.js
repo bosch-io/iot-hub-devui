@@ -131,6 +131,17 @@ const notificationReducer = (state = initialState, action = {}) => {
           .set("level", "error")
       );
     }
+    case actionTypes.NOT_ALLOWED_CREATING_SECRET: {
+      const authIdShort = action.authId.substring(-5) + "...";
+      return state.withMutations(reducedState =>
+        reducedState
+          .set(
+            "message",
+            `Could not add secret to ${authIdShort}. You can only add 10 secres.`
+          )
+          .set("level", "error")
+      );
+    }
     case actionTypes.SECRET_DELETED:
       return state.withMutations(reducedState =>
         reducedState
