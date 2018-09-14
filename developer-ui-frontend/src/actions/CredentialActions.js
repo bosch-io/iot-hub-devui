@@ -272,7 +272,7 @@ export function deleteSecret(deviceId, authId, secretId) {
     const modifiedCredential = currentCredential
       .update(
         "secrets",
-        secrets => secrets.filter(secret => !secret.equals(deletedSecret)) // Uses efficient deep Object Comparison (Immutable.js Maps)
+        secrets => secrets.filter(secret => secret.equals(deletedSecret)) // Uses efficient deep Object Comparison (Immutable.js Maps)
       )
       .toJS();
     const tenant = getState().getIn(["settings", "tenant"]);
