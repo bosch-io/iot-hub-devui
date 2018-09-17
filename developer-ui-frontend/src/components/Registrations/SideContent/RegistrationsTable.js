@@ -57,6 +57,7 @@ class RegistrationsTableWrapped extends Component {
         />
         <ChecklistSelect
           useSwitches
+          highlightSelected
           asField
           name="selectedDevice"
           className="reg-listing">

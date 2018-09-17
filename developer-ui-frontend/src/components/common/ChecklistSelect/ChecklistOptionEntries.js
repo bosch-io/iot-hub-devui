@@ -21,7 +21,7 @@ const ListEntries = styled.ul`
     display: none;
   }
 
-  .reg-item:nth-child(even) li {
+  .item:nth-child(even) li {
     background: #f5f5f5;
   }
 `;
@@ -67,10 +67,14 @@ class ChecklistOptionEntries extends Component {
       name,
       asField,
       useSwitches,
-      leadingCheckbox
+      leadingCheckbox,
+      highlightSelected
     } = this.props;
+    const currentSelection = this.selectRef
+      ? this.selectRef.getRenderedComponent().value
+      : null;
     return (
-      <ListEntries>
+      <ListEntries className="content">
         {asField && (
           <Field
             name={name}
@@ -99,8 +103,10 @@ class ChecklistOptionEntries extends Component {
                 {interpStyles.map(({ data: { text, checked }, style, key }) => (
                   <ChecklistOptionEntry
                     leadingCheckbox={leadingCheckbox}
+                    highlightSelected={highlightSelected}
                     text={text}
                     checked={checked}
+                    selected={text === currentSelection}
                     key={key}
                     style={style}
                     onClick={() => {
@@ -144,8 +150,8 @@ ChecklistOptionEntries.propTypes = {
   leadingCheckbox: PropTypes.bool,
   /* Provided through the ChecklistContext */
   useSwitches: PropTypes.bool,
-  selectedOption: PropTypes.string,
-  changeSelectedOption: PropTypes.func
+  changeSelectedOption: PropTypes.func,
+  highlightSelected: PropTypes.bool
 };
 
 export default ChecklistOptionEntries;

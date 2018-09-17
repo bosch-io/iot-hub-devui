@@ -8,7 +8,7 @@ import { ListEntry, withChecklistContext } from "./ChecklistSelect";
 
 const Header = styled.ul`
   display: flex;
-  margin: 0;
+  margin: 0 1%;
   height: 3.5rem;
   justify-content: space-between;
   align-items: center;
@@ -35,7 +35,7 @@ class ChecklistSelectHeader extends Component {
   render() {
     const { textTitle, checkedTitle, leadingCheckbox } = this.props;
     return (
-      <Header leadingCheckbox={leadingCheckbox}>
+      <Header className="header" leadingCheckbox={leadingCheckbox}>
         <HeaderElement>{textTitle}</HeaderElement>
         {checkedTitle && <HeaderElement>{checkedTitle}</HeaderElement>}
       </Header>

@@ -7,6 +7,10 @@ import styled from "styled-components";
 import Checkbox from "../Checkbox";
 import SwitchCheckbox from "../SwitchCheckbox";
 
+const OptionEntryContainer = styled.div`
+  margin: 0 1%;
+`;
+
 const OptionEntry = styled.li`
   cursor: pointer;
   list-style: none;
@@ -14,10 +18,17 @@ const OptionEntry = styled.li`
   display: flex;
   align-items: center;
   padding: 0.7rem 1.4rem;
+  transition: box-shadow 0.15s ease-out, margin 0.15s ease-out;
   justify-content: ${props =>
     props.leadingCheckbox ? `flex-start` : `space-between`};
 
   ${props =>
+    props.highlightSelected &&
+    props.selected &&
+    `
+    box-shadow:  0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.15);
+    margin: 0 0.05%;
+  `} ${props =>
     props.leadingCheckbox &&
     `
     .pretty {
@@ -63,11 +74,19 @@ const ChecklistOptionEntry = ({
   style,
   leadingCheckbox,
   useSwitches,
+  selected,
+  highlightSelected,
   ...others
 }) => (
-  <div style={style} className="reg-item" onClick={onClick} {...others}>
+  <OptionEntryContainer
+    style={style}
+    className="item"
+    onClick={onClick}
+    {...others}>
     <OptionEntry
       leadingCheckbox={leadingCheckbox}
+      highlightSelected={highlightSelected}
+      selected={selected}
       checked={checked}
       useSwitches={useSwitches}>
       <span>{text}</span>
@@ -77,7 +96,7 @@ const ChecklistOptionEntry = ({
         <Checkbox checked={checked} onCheckboxClick={onCheckboxClick} />
       )}
     </OptionEntry>
-  </div>
+  </OptionEntryContainer>
 );
 
 ChecklistOptionEntry.propTypes = {
@@ -87,7 +106,9 @@ ChecklistOptionEntry.propTypes = {
   onCheckboxClick: PropTypes.func.isRequired,
   style: PropTypes.object,
   leadingCheckbox: PropTypes.bool,
-  useSwitches: PropTypes.bool
+  useSwitches: PropTypes.bool,
+  selected: PropTypes.string,
+  highlightSelected: PropTypes.bool
 };
 
 export default ChecklistOptionEntry;

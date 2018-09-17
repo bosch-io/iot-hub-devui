@@ -21,7 +21,14 @@ const ChecklistContext = React.createContext();
 // Also create a HOC as simple API to wrap the children
 export const withChecklistContext = WrappedComponent => props => (
   <ChecklistContext.Consumer>
-    {({ asField, name, leadingCheckbox, useLeadingCheckbox, useSwitches }) => (
+    {({
+      asField,
+      name,
+      leadingCheckbox,
+      useLeadingCheckbox,
+      useSwitches,
+      highlightSelected
+    }) => (
       <WrappedComponent
         {...props}
         asField={asField}
@@ -29,6 +36,7 @@ export const withChecklistContext = WrappedComponent => props => (
         leadingCheckbox={leadingCheckbox}
         useLeadingCheckbox={useLeadingCheckbox}
         useSwitches={useSwitches}
+        highlightSelected={highlightSelected}
       />
     )}
   </ChecklistContext.Consumer>
@@ -50,7 +58,7 @@ export default class ChecklistSelect extends Component {
     };
   }
   render() {
-    const { asField, children, name } = this.props;
+    const { asField, children, name, highlightSelected } = this.props;
     const { leadingCheckbox, useSwitches } = this.state;
     return (
       <ChecklistContext.Provider
@@ -59,7 +67,8 @@ export default class ChecklistSelect extends Component {
           name,
           leadingCheckbox,
           useLeadingCheckbox: () => this.setState({ leadingCheckbox: true }),
-          useSwitches
+          useSwitches,
+          highlightSelected
         }}>
         <ChecklistSelectStyled {...this.props}>
           {children}
@@ -77,5 +86,6 @@ ChecklistSelect.propTypes = {
   asField: PropTypes.bool,
   name: PropTypes.string,
   leadingCheckbox: PropTypes.bool,
-  useSwitches: PropTypes.bool
+  useSwitches: PropTypes.bool,
+  highlightSelected: PropTypes.bool
 };

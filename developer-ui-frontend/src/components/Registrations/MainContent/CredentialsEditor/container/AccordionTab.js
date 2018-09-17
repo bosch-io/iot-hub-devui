@@ -18,6 +18,7 @@ import JsonView, {
 import HoverTooltip from "components/common/HoverTooltip";
 // Redux
 import { selectIsFetchingByAuthId } from "reducers/selectors";
+import { updateCredentialInfo } from "actions/CredentialActions";
 import { connect } from "react-redux";
 // SVG Imports
 import CredentialIcon from "images/pwCredentialIcon.svg";

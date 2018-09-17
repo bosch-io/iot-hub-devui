@@ -14,7 +14,10 @@ import {
   DELETING_SECRET_FAILED,
   DELETING_CREDENTIAL,
   CREDENTIAL_DELETED,
-  DELETING_CREDENTIAL_FAILED
+  DELETING_CREDENTIAL_FAILED,
+  UPDATING_CRED_INFO,
+  UPDATED_CRED_INFO,
+  UPDATING_CRED_INFO_FAILED
 } from "./actionTypes";
 import {
   selectCredentialById,
@@ -73,6 +76,73 @@ export function createNewSecret(deviceId, authId, secretType, secretId, data) {
       .then(() => dispatch(newSecretCreated(authId, newSecret)))
       .catch(err => {
         dispatch(creatingSecretFailed(authId, newSecret));
+        console.error(err);
+      });
+  };
+}
+
+export function updatingCredentialInfo(authId, enabled, data) {
+  return {
+    type: UPDATING_CRED_INFO,
+    authId,
+    enabled,
+    data
+  };
+}
+
+export function updatedCredentialInfo(authId, enabled, data) {
+  return {
+    type: UPDATED_CRED_INFO,
+    authId,
+    enabled,
+    data
+  };
+}
+
+export function updatingCredentialInfoFailed(authId, enabled, data) {
+  return {
+    type: UPDATING_CRED_INFO_FAILED,
+    authId,
+    enabled,
+    data
+  };
+}
+
+export function updateCredentialInfo(data) {
+  return (dispatch, getState) => {
+    // Destructure the received data and extract the optional fields from the required fields
+    const {
+      "device-id": deviceId,
+      type,
+      "auth-id": authId,
+      enabled,
+      secrets,
+      ...optional
+    } = data;
+    // Flatten the normalized form and delete the current credential info
+    const modifiedCredential = selectCredentialById(getState(), authId).toJS();
+    modifiedCredential.secrets = modifiedCredential.secrets.map(id =>
+      selectSecretById(getState(), id)
+        .delete("secretId")
+        .toJS()
+    );
+    delete modifiedCredential.credentialInfo;
+    // edit the mutable credential Informations (enabled and the optional data)
+    if (enabled !== undefined) modifiedCredential.enabled = enabled;
+    // Add the required fields to match the API schema
+    const requestBody = {
+      "device-id": deviceId,
+      ...modifiedCredential,
+      ...optional
+    };
+    // Start the regular XHR handling with the updated credential as PUT request
+    const tenant = getState().getIn(["settings", "tenant"]);
+    dispatch(updatingCredentialInfo(authId, enabled, optional));
+    return axios
+      .put(`${RESTSERVER_URL}/credentials/${tenant}`, requestBody)
+      .then(() => dispatch(updatedCredentialInfo(authId, enabled, optional)))
+      .catch(err => {
+        dispatch(updatingCredentialInfoFailed(authId, enabled, optional));
         console.error(err);
       });
   };

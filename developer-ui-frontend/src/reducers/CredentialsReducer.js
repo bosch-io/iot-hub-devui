@@ -8,7 +8,8 @@ import {
   INIT_EMPTY_CREDENTIAL,
   SECRET_DELETED,
   CREDENTIAL_DELETED,
-  CREDENTIALS_FETCHED
+  CREDENTIALS_FETCHED,
+  UPDATED_CRED_INFO
 } from "actions/actionTypes";
 import { calculateSecretId } from "utils";
 
@@ -117,6 +118,12 @@ const credentialsReducer = (state = initialState, action = {}) => {
             firstInitTime: new Date().getTime()
           })
         )
+      );
+    case UPDATED_CRED_INFO:
+      return state.withMutations(reducedState =>
+        reducedState
+          .setIn(["byId", action.authId, "enabled"], action.enabled)
+          .setIn(["byId", action.authId, "credentialInfo"], fromJS(action.data))
       );
     case NEW_SECRET:
       const newSecretId = action.secret.secretId;
