@@ -62,35 +62,36 @@ export class Registrations extends React.Component {
 
   render() {
     const { mainPanelExpanded } = this.state;
-    const { numberOfDevices, selectedDevice } = this.props;
+    const { numberOfDevices } = this.props;
     return (
-      <Fragment>
-        <BigCard
-          title="Manage Device Registrations"
-          id="registrations-form-container"
-          className={mainPanelExpanded ? "expanded" : null}>
-          <div id="form-content">
-            <SideContent
-              mainPanelExpanded={mainPanelExpanded}
-              setMainPanel={this.setMainPanel}
-            />
-            <MainContent
-              mainPanelExpanded={mainPanelExpanded}
-              setMainPanel={this.setMainPanel}
-            />
-            <Route
-              path="/registrations/:selectedDeviceId?/:registrationsSubMenu?/:authId?"
-              render={() => (
+      <Route
+        path="/registrations/:selectedDeviceId?/:registrationsSubMenu?/:authId?"
+        render={() => (
+          <Fragment>
+            <BigCard
+              title="Manage Device Registrations"
+              id="registrations-form-container"
+              className={mainPanelExpanded ? "expanded" : null}>
+              <div id="form-content">
+                <SideContent
+                  mainPanelExpanded={mainPanelExpanded}
+                  setMainPanel={this.setMainPanel}
+                />
+                <MainContent
+                  mainPanelExpanded={mainPanelExpanded}
+                  setMainPanel={this.setMainPanel}
+                />
+
                 <AddRegistrationButton
                   hasCallout={numberOfDevices === 0}
                   setMainPanel={this.setMainPanel}
                 />
-              )}
-            />
-          </div>
-        </BigCard>
-        <Modals setMainPanel={this.setMainPanel} />
-      </Fragment>
+              </div>
+            </BigCard>
+            <Modals setMainPanel={this.setMainPanel} />
+          </Fragment>
+        )}
+      />
     );
   }
 }

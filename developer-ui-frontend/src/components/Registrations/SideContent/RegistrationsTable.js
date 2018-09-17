@@ -80,7 +80,7 @@ class RegistrationsTableWrapped extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector("registrationsTabListing");
   const devices = selectAllDevices(state);
   return {
@@ -88,7 +88,10 @@ const mapStateToProps = state => {
     deviceData: devices.map(device => ({
       deviceId: device.get("deviceId"),
       enabled: device.getIn(["registrationInfo", "enabled"])
-    }))
+    })),
+    initialValues: {
+      selectedDevice: ownProps.match.params.selectedDeviceId || null
+    }
   };
 };
 
