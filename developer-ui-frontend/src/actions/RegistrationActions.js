@@ -133,11 +133,10 @@ export function updatingRegistrationInfoFailed(deviceId, info) {
   };
 }
 
-export function changedEnabled(deviceId, enabled) {
+export function changedEnabled(deviceId) {
   return {
     type: ENABLED_CHANGED,
-    deviceId,
-    enabled
+    deviceId
   };
 }
 
@@ -157,7 +156,7 @@ export function updateRegistrationInfo(deviceId, info, enableChange) {
       .put(`${RESTSERVER_URL}/registration/${tenant}/${deviceId}`, info)
       .then(({ data }) => {
         dispatch(updatedRegistrationInfo(deviceId, info));
-        enableChange && dispatch(changedEnabled(deviceId, info.enabled));
+        enableChange && dispatch(changedEnabled(deviceId));
       })
       .catch(err => {
         dispatch(updatingRegistrationInfoFailed(deviceId, info));

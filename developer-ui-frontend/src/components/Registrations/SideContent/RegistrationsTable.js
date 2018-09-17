@@ -40,7 +40,10 @@ class RegistrationsTableWrapped extends Component {
     this.props.history.push(newPath);
   }
 
-  handleCheckboxClick(deviceId, enabled) {
+  handleCheckboxClick(deviceId) {
+    const { deviceData } = this.props;
+    const enabled = deviceData.find(device => device.deviceId === deviceId)
+      .enabled;
     this.props.changeEnabled(deviceId, !enabled);
   }
 
@@ -69,7 +72,7 @@ class RegistrationsTableWrapped extends Component {
             }))}
             filterText={registrySearchValue}
             onClick={item => this.handleItemClick(item)}
-            onCheckboxClick={this.handleCheckboxClick}
+            onCheckboxClick={item => this.handleCheckboxClick(item)}
           />
         </ChecklistSelect>
       </form>

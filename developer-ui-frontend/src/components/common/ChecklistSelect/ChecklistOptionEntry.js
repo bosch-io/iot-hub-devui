@@ -107,7 +107,7 @@ ChecklistOptionEntry.propTypes = {
   style: PropTypes.object,
   leadingCheckbox: PropTypes.bool,
   useSwitches: PropTypes.bool,
-  selected: PropTypes.string,
+  selected: PropTypes.bool,
   highlightSelected: PropTypes.bool
 };
 

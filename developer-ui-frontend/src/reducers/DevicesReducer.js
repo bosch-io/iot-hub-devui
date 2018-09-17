@@ -18,7 +18,6 @@ import {
   NEW_CREDENTIAL,
   REMOVE_ALL_LOGS,
   UPDATED_REG_INFO,
-  ENABLED_CHANGED,
   INIT_EMPTY_CREDENTIAL,
   CREDENTIAL_DELETED,
   CREDENTIALS_FETCHED
@@ -132,11 +131,6 @@ const devicesReducer = (state = initialState, action = {}) => {
       return state.setIn(
         ["byId", action.deviceId, "registrationInfo"],
         fromJS(action.info)
-      );
-    case ENABLED_CHANGED:
-      return state.setIn(
-        ["byId", action.deviceId, "registrationInfo", "enabled"],
-        action.enabled
       );
     case NEW_CREDENTIAL:
     case INIT_EMPTY_CREDENTIAL:
