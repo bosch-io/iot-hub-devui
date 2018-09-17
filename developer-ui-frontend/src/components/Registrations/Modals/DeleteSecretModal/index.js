@@ -65,8 +65,8 @@ class DeleteSecretModalWrapped extends React.Component {
               <label htmlFor="secretSelect">Secret Id</label>
               <Field name="secretSelect" component="select">
                 <option disabled>Select a Secret...</option>
-                {secrets.map(secret => (
-                  <option key={Math.random()} value={secret.secretId}>
+                {secrets.map((secret, index) => (
+                  <option key={secret.secretId + index} value={secret.secretId}>
                     {secret.secretId}
                   </option>
                 ))}
