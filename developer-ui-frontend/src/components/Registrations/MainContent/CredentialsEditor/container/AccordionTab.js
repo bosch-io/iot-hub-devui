@@ -18,7 +18,6 @@ import JsonView, {
 import HoverTooltip from "components/common/HoverTooltip";
 // Redux
 import { selectIsFetchingByAuthId } from "reducers/selectors";
-import { updateCredentialInfo } from "actions/CredentialActions";
 import { connect } from "react-redux";
 // SVG Imports
 import CredentialIcon from "images/pwCredentialIcon.svg";
@@ -27,26 +26,6 @@ import AddSecretIcon from "images/addPwSecretIcon.svg";
 class AccordionTabWrapped extends Component {
   constructor(props) {
     super(props);
-    this.redirectToReadOnly = this.redirectToReadOnly.bind(this);
-    this.handleEditorSave = this.handleEditorSave.bind(this);
-  }
-
-  redirectToReadOnly(withChangesSaved) {
-    const { history, credential, selectedDevice } = this.props;
-    history.push(
-      `/registrations/${selectedDevice}/credentials/${credential.get(
-        "auth-id"
-      )}`,
-      { fromRaw: true, withChangesSaved }
-    );
-  }
-
-  handleEditorSave(newInfo) {
-    new Promise(resolve =>
-      setTimeout(() => {
-        resolve();
-      }, 50)
-    ).then(() => this.redirectToReadOnly(true));
   }
 
   render() {
@@ -102,11 +81,14 @@ class AccordionTabWrapped extends Component {
               <JsonView
                 value={displayedCredential.toJS()}
                 isFetching={isFetching}
-                inEditingMode={match.params.credentialSubMenu === "raw"}>
+                inEditingMode={
+                  false /* match.params.credentialSubMenu === "raw"*/
+                }>
                 <JsonReadOnlyView />
+                {/* Raw Edit Functionality is currently not implemented for Credentials */}
                 <JsonEditor
-                  onCancel={() => this.redirectToReadOnly(false)}
-                  onSubmit={this.handleEditorSave}
+                  onCancel={() => {}}
+                  onSubmit={() => {}}
                   editorConfig={{ statusBar: false }}
                   dynamicHeight
                 />

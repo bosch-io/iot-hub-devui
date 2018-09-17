@@ -22,7 +22,7 @@ const ListEntries = styled.ul`
   }
 
   .item:nth-child(even) li {
-    background: #f5f5f5;
+    background: rgba(0, 0, 0, 0.04);
   }
 `;
 

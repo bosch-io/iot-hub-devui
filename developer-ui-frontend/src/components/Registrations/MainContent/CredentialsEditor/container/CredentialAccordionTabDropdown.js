@@ -17,7 +17,6 @@ import TooltipMenu, { TooltipMenuOption } from "components/common/TooltipMenu";
 import MoreIcon from "images/moreIcon.svg";
 import DeleteCredIcon from "images/deletePwCredentialIcon.svg";
 import DeletePwSecretIcon from "images/deletePwSecretIcon.svg";
-import CodeIcon from "images/codeIcon.svg";
 import AddPwSecretIcon from "images/addPwSecretIcon.svg";
 
 class CredentialAccordionTabDropdownWrapped extends Component {
@@ -51,13 +50,6 @@ class CredentialAccordionTabDropdownWrapped extends Component {
           props.authId
         }/deleteCredential`,
         disabledHoverTooltipId: "deleteCredentialDisabled"
-      },
-      {
-        value: "Edit Raw",
-        icon: <CodeIcon />,
-        route: `/registrations/${props.selectedDevice}/credentials/${
-          props.authId
-        }/raw`
       }
     ];
     this.toggleDropdownMenu = this.toggleDropdownMenu.bind(this);
@@ -68,9 +60,6 @@ class CredentialAccordionTabDropdownWrapped extends Component {
     let isDisabled = null;
     switch (category) {
       case "Add Secret":
-      case "Edit Raw":
-        isDisabled = false;
-        break;
       case "Delete Secret":
         isDisabled = numberOfSecrets <= 1;
         break;
