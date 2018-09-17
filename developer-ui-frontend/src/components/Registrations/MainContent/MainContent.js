@@ -25,17 +25,14 @@ class MainContentWrapped extends Component {
     // ...If the device selection has changed
     // ...If the tenant information got fetched
     // ...If the connection is (re-)established
-    if (
-      (nextProps.selectedDevice &&
-        this.props.selectedDevice !== nextProps.selectedDevice &&
-        nextProps.isConnected) ||
-      (nextProps.tenantFetched && !this.props.tenantFetched) ||
-      (nextProps.isConnected &&
-        nextProps.tenantFetched &&
-        !this.props.isConnected &&
-        nextProps.selectedDevice)
-    ) {
-      this.props.fetchCredentialsByDeviceId(nextProps.selectedDevice);
+    if (nextProps.selectedDevice && nextProps.isConnected) {
+      if (
+        this.props.selectedDevice !== nextProps.selectedDevice ||
+        (nextProps.tenantFetched && !this.props.tenantFetched) ||
+        (nextProps.isConnected && !this.props.isConnected)
+      ) {
+        this.props.fetchCredentialsByDeviceId(nextProps.selectedDevice);
+      }
     }
   }
 

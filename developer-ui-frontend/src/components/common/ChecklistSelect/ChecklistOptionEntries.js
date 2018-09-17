@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { TransitionMotion } from "react-motion";
@@ -85,11 +85,14 @@ class ChecklistOptionEntries extends Component {
               }
             }}
             withRef>
-            {data.map((entry, index) => (
-              <option key={"DropdownEntry" + index} value={entry.text}>
-                {entry.text}
-              </option>
-            ))}
+            <Fragment>
+              <option value="" />
+              {data.map((entry, index) => (
+                <option key={"DropdownEntry" + index} value={entry.text}>
+                  {entry.text}
+                </option>
+              ))}
+            </Fragment>
           </Field>
         )}
         <TransitionMotion
