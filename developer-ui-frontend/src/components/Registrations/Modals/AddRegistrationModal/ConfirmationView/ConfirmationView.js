@@ -75,35 +75,35 @@ export default class ConfirmationView extends Component {
                 height: checkmarkAnimationFinished ? spring(79.612) : 0
               }
             }
-          ]}>
+          ]}
+        >
           {interpStyles => (
             <span
               key={interpStyles[0].key}
               style={{
                 maxHeight: `${interpStyles[0].style.height}%`,
                 overflowY: shiftingAnimationFinished ? "auto" : "hidden"
-              }}>
+              }}
+            >
               <p>You can now send messages from your device</p>
               <div className="modal-body-content">
-                <LoginInformation
-                  authId={newAuthId}
-                  tenant={tenant}
-                  pw={newPw}
-                  shiftingAnimationFinished={shiftingAnimationFinished}
-                />
+                <DetailsInformation deviceId={newDeviceId} authId={newAuthId} />
                 <ExpandLink
                   expanded={this.state.detailsExpanded}
                   toggle={() =>
                     this.setState(state => ({
                       detailsExpanded: !state.detailsExpanded
                     }))
-                  }>
+                  }
+                >
                   Details
                 </ExpandLink>
                 {detailsExpanded && (
-                  <DetailsInformation
-                    deviceId={newDeviceId}
+                  <LoginInformation
                     authId={newAuthId}
+                    tenant={tenant}
+                    pw={newPw}
+                    shiftingAnimationFinished={shiftingAnimationFinished}
                   />
                 )}
               </div>
@@ -111,7 +111,8 @@ export default class ConfirmationView extends Component {
                 type="button"
                 id="ok-btn"
                 secondary
-                onClick={() => changeIsOpen(false)}>
+                onClick={() => changeIsOpen(false)}
+              >
                 OK
               </RoundOutlineButton>
             </span>

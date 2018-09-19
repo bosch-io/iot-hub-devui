@@ -6,6 +6,8 @@ import { StaggeredMotion, spring } from "react-motion";
 import PropTypes from "prop-types";
 import { TextCopyField } from "components/common/textInputs";
 
+const httpEndpoint = "https://http.bosch-iot-hub.com/telemetry";
+
 const LoginInformation = ({
   authId,
   tenant,
@@ -28,7 +30,8 @@ const LoginInformation = ({
                   : 0
               };
         })
-      }>
+      }
+    >
       {interpolatingStyles => (
         <div className="new-device-info">
           {[
@@ -48,6 +51,19 @@ const LoginInformation = ({
               style={{ opacity: interpolatingStyles[1].opacity }}
             />
           ]}
+          <h5>Send Data</h5>
+          <p>
+            For a full list of adapters, please consult the{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://docs.bosch-iot-hub.com/protocoladapters.html"
+            >
+              Bosch IoT Hub documentation
+            </a>
+          </p>
+          <p>e.g. to send HTTP telemetry, POST some data to this endpoint:</p>
+          <TextCopyField name="httpEndpoint" copyText={httpEndpoint} />
         </div>
       )}
     </StaggeredMotion>
