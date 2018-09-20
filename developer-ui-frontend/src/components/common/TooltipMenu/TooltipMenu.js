@@ -4,7 +4,7 @@
 import React, { Children, cloneElement, Component, Fragment } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import enhanceWithClickOutside from "react-click-outside";
 import ReactTooltip from "react-tooltip";
 import HoverTooltip from "components/common/HoverTooltip";
@@ -36,6 +36,8 @@ const Container = styled.div`
     ${props =>
       props.open
         ? `
+        animation: ${keyframes`from{opacity: 0; transform: rotate(135deg) translateY(1rem);} to{opacity: 1; transform: rotate(135deg) translateY(0)}`}
+    0.3s;
         transform: rotate(135deg) translateY(0rem);
         opacity: 1;
       }`
@@ -45,6 +47,10 @@ const Container = styled.div`
 `;
 
 const MenuContainer = styled.div`
+  ${props =>
+    props.open &&
+    `animation: ${keyframes`from{opacity: 0; transform: translateY(-1rem);} to{opacity: 1; transform: translateY(0)}`}
+    0.3s`};
   transition: transform 0.3s, opacity 0.3s;
   position: absolute;
   background: #fff;
@@ -77,11 +83,10 @@ const MenuContainer = styled.div`
 `;
 
 class MenuContainerEnhanced extends Component {
-  handleClickOutside(e) {
+  handleClickOutside() {
     const { open, toggleOpen } = this.props;
     if (open) {
       toggleOpen();
-      e.stopPropagation();
     }
   }
   render() {
