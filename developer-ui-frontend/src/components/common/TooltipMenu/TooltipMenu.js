@@ -1,12 +1,13 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React, { Children, cloneElement, Component } from "react";
+import React, { Children, cloneElement, Component, Fragment } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import enhanceWithClickOutside from "react-click-outside";
 import ReactTooltip from "react-tooltip";
+import HoverTooltip from "components/common/HoverTooltip";
 
 /* eslint-disable react/no-multi-comp */
 const Container = styled.div`
@@ -120,7 +121,7 @@ class TooltipMenu extends Component {
   componentDidMount() {
     this.ButtonAncor = document.getElementById(this.props.ancorId);
     this.MenuPortal = document.getElementById("menu-portal");
-    ReactTooltip.rebuild();
+    // ReactTooltip.rebuild();
   }
 
   render() {
@@ -145,8 +146,23 @@ class TooltipMenu extends Component {
             open={open}>
             <MenuOptionsList>
               {/* Spread the props to all children */}
-              {Children.map(children, child =>
-                cloneElement(child, { open, toggleOpen })
+              {Children.map(
+                children,
+                child =>
+                  child.props.disabled ? (
+                    <Fragment>
+                      {cloneElement(child, { open, toggleOpen })}
+                      <HoverTooltip
+                        key={child.props.disabledHoverTooltipId}
+                        id={child.props.disabledHoverTooltipId}
+                        text={child.props.disabledText}
+                        effect="float"
+                        delayShow={0}
+                      />
+                    </Fragment>
+                  ) : (
+                    cloneElement(child, { open, toggleOpen })
+                  )
               )}
             </MenuOptionsList>
           </MenuContainerEnhanced>

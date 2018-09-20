@@ -11,8 +11,8 @@ import {
   selectCredentialIdsByDeviceId
 } from "reducers/selectors";
 // Child Components
-import HoverTooltip from "components/common/HoverTooltip";
 import TooltipMenu, { TooltipMenuOption } from "components/common/TooltipMenu";
+import HoverTooltip from "components/common/HoverTooltip";
 // SVG Imports
 import MoreIcon from "images/moreIcon.svg";
 import DeleteCredIcon from "images/deletePwCredentialIcon.svg";
@@ -33,7 +33,8 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
         }/additionalSecrets`,
-        disabledHoverTooltipId: "addSecretDisabled"
+        disabledHoverTooltipId: "addSecretDisabled",
+        disabledText: "You can not have more than 10 secrets in a credential"
       },
       {
         value: "Delete Secret",
@@ -41,7 +42,8 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
         }/deleteSecrets`,
-        disabledHoverTooltipId: "deleteSecretDisabled"
+        disabledHoverTooltipId: "deleteSecretDisabled",
+        disabledText: "You must have at least one secret in a credential"
       },
       {
         value: "Delete Credential",
@@ -49,7 +51,8 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         route: `/registrations/${props.selectedDevice}/credentials/${
           props.authId
         }/deleteCredential`,
-        disabledHoverTooltipId: "deleteCredentialDisabled"
+        disabledHoverTooltipId: "deleteCredentialDisabled",
+        disabledText: "There are no credentials for this device"
       }
     ];
     this.toggleDropdownMenu = this.toggleDropdownMenu.bind(this);
@@ -66,32 +69,12 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         isDisabled = numberOfSecrets <= 1;
         break;
       case "Delete Credential":
-        isDisabled = numberOfCredentials <= 1;
+        isDisabled = numberOfCredentials === 0;
         break;
       default:
         return new Error("Unknown dropdown category");
     }
-
     return isDisabled;
-  }
-
-  getDisabledText(categoryName) {
-    let text = "";
-    switch (categoryName) {
-      case "Add Secret":
-        text = "You can not have more than 10 secrets in a credential";
-        break;
-      case "Delete Secret":
-        text = "You must have at least one secret in a credential";
-        break;
-      case "Delete Credential":
-        text = "You must have at least one credential in a registration";
-        break;
-      default:
-        return new Error("Unknown Credential Dropdown Category");
-    }
-
-    return text;
   }
 
   toggleDropdownMenu() {
@@ -126,17 +109,6 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         {!isOpened && (
           <HoverTooltip id={tooltipIdOptions} text="Edit Credential" />
         )}
-        {this.menuOptions
-          .filter(option => this.getIsDisabled(option.value))
-          .map(option => (
-            <HoverTooltip
-              key={option.disabledHoverTooltipId}
-              id={option.disabledHoverTooltipId}
-              text={this.getDisabledText(option.value)}
-              effect="float"
-              delayShow={0}
-            />
-          ))}
       </div>
     );
   }
