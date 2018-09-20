@@ -60,6 +60,8 @@ class CredentialAccordionTabDropdownWrapped extends Component {
     let isDisabled = null;
     switch (category) {
       case "Add Secret":
+        isDisabled = numberOfSecrets >= 10;
+        break;
       case "Delete Secret":
         isDisabled = numberOfSecrets <= 1;
         break;
@@ -76,6 +78,9 @@ class CredentialAccordionTabDropdownWrapped extends Component {
   getDisabledText(categoryName) {
     let text = "";
     switch (categoryName) {
+      case "Add Secret":
+        text = "You can not have more than 10 secrets in a credential";
+        break;
       case "Delete Secret":
         text = "You must have at least one secret in a credential";
         break;
