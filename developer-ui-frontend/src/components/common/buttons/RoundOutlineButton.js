@@ -26,6 +26,7 @@ const RoundOutlineBtn = OutlineBtn.extend`
   }
 
   &:hover {
+    border-style: unset;
     svg.submit-icon {
       transform: translateX(0.5em);
       path {
@@ -35,6 +36,7 @@ const RoundOutlineBtn = OutlineBtn.extend`
   }
   &:disabled {
     &:hover {
+      border-style: solid;
       svg.submit-icon {
         transform: translateX(0);
         path {
