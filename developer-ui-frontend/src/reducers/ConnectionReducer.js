@@ -64,6 +64,9 @@ const connectionReducer = (state = initialState, action = {}) => {
       return state.setIn(["fetchInProgress", "tenant"], false);
     case actionTypes.CREATING_REG:
     case actionTypes.DELETING_REG:
+    case actionTypes.CONFIGURING_GATEWAY:
+    case actionTypes.CONFIGURING_GATEWAY_FAILED:
+    case actionTypes.SETTING_VIA_PROPERTY:
     case actionTypes.UPDATING_REG_INFO:
     case actionTypes.CHANGING_ENABLED:
       return state.updateIn(
@@ -79,6 +82,8 @@ const connectionReducer = (state = initialState, action = {}) => {
     case actionTypes.CREATING_REG_FAILED:
     case actionTypes.NEW_REG:
     case actionTypes.REG_DELETED:
+    case actionTypes.SETTED_VIA_PROPERTY:
+    case actionTypes.CONFIGURED_GATEWAY:
     case actionTypes.DELETING_REG_FAILED:
     case actionTypes.UPDATED_REG_INFO:
     case actionTypes.UPDATING_REG_INFO_FAILED:

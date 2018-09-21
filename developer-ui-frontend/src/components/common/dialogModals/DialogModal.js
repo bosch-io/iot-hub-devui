@@ -99,7 +99,8 @@ export const DialogModalFooter = ({
       <RoundOutlineButton
         primary
         disabled={Boolean(submitBlocked)}
-        onClick={confirm}>
+        onClick={confirm}
+      >
         Delete
       </RoundOutlineButton>
     );
@@ -110,7 +111,8 @@ export const DialogModalFooter = ({
         disabled={Boolean(submitBlocked)}
         submitAnimation
         onClick={confirm}
-        type="submit">
+        type="submit"
+      >
         Submit
       </FlatButton>
     );

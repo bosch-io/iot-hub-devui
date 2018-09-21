@@ -12,12 +12,85 @@ import {
   DELETING_REG,
   DELETING_REG_FAILED,
   CHANGING_ENABLED,
-  ENABLED_CHANGED
+  ENABLED_CHANGED,
+  CONFIGURING_GATEWAY,
+  CONFIGURED_GATEWAY,
+  CONFIGURING_GATEWAY_FAILED,
+  SETTED_VIA_PROPERTY,
+  SETTING_VIA_PROPERTY
 } from "actions/actionTypes";
 import { selectRegistrationInfo } from "reducers/selectors";
 import { createNewCredential } from "./CredentialActions";
 import { RESTSERVER_URL } from "_APP_CONSTANTS";
 import axios from "axios";
+
+export function configuringNewGateway(deviceId, info) {
+  return {
+    type: CONFIGURING_GATEWAY,
+    deviceId,
+    info
+  };
+}
+
+export function newGatewayConfigured(deviceId, info) {
+  return {
+    type: CONFIGURED_GATEWAY,
+    deviceId,
+    info
+  };
+}
+
+export function configuringNewGatewayFailed(deviceId, info) {
+  return {
+    type: CONFIGURING_GATEWAY_FAILED,
+    deviceId,
+    info
+  };
+}
+
+export function settingViaProperty(deviceId, gatewayId) {
+  return {
+    type: SETTING_VIA_PROPERTY,
+    deviceId,
+    gatewayId
+  };
+}
+
+export function settedViaProperty(deviceId, gatewayId) {
+  return {
+    type: SETTED_VIA_PROPERTY,
+    deviceId,
+    gatewayId
+  };
+}
+
+export function newGatewayConfiguration(deviceId, info, gatewayId) {
+  return (dispatch, getState) => {
+    const tenant = getState().getIn(["settings", "tenant"]);
+    dispatch(configuringNewGateway(deviceId, info));
+    return axios
+      .put(`${RESTSERVER_URL}/registration/${tenant}/${deviceId}`, info)
+      .then(({ data }) => {
+        dispatch(newGatewayConfigured(deviceId, info));
+        gatewayId && dispatch(settedViaProperty(deviceId, info.get("via")));
+      })
+      .catch(err => {
+        dispatch(configuringNewGatewayFailed(deviceId, info));
+        console.error(err);
+      });
+  };
+}
+
+export function setViaProperty(deviceId, gatewayId) {
+  return (dispatch, getState) => {
+    dispatch(settingViaProperty(deviceId, gatewayId));
+    const info = selectRegistrationInfo(getState(), deviceId).set(
+      "via",
+      gatewayId.get("via")
+    );
+    return dispatch(newGatewayConfiguration(deviceId, info, gatewayId));
+  };
+}
 
 export function createdNewRegistration(device, configuredSubscribed) {
   return {

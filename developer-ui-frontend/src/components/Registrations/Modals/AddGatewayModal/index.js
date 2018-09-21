@@ -19,6 +19,7 @@ import GatewayIcon from "images/gatewayIcon.svg";
 import { SearchbarM } from "components/common/textInputs";
 import GatewaySelectionList from "./presentation/GatewaySelectionList";
 import "styles/gatewayStyle.scss";
+import { setViaProperty } from "actions/RegistrationActions";
 
 class AddGatewayModalWrapped extends Component {
   constructor(props) {
@@ -38,15 +39,11 @@ class AddGatewayModalWrapped extends Component {
 
   submit(values) {
     const { deviceId } = this.props;
-    console.log(
-      "It works with values " + values + " for the device " + deviceId
-    );
-    console.log(values._root.entries[0][1]);
+    this.props.setViaProperty(deviceId, values);
     this.changeIsOpen(false);
   }
 
   changeSelected(id) {
-    console.log("The selected device is: " + id);
     const deviceIndex = this.state.deviceData.findIndex(
       device => device.deviceId === id
     );
@@ -118,16 +115,12 @@ class AddGatewayModalWrapped extends Component {
   }
 }
 
-const selector = formValueSelector("gatewayTab");
-
 const mapStateToProps = state => {
-  const gatewaySearch = selector(state, "gatewaySearchText");
-  const gatewayDevices = selectAllDevices(state).map(device =>
-    device.get("deviceId")
-  );
+  const selector = formValueSelector("gatewayTab");
+  const gateways = selectAllDevices(state);
   return {
-    gatewaySearch,
-    gatewayDevices
+    gatewaySearch: selector(state, "gatewaySearchText"),
+    gatewayDevices: gateways.map(device => device.get("deviceId"))
   };
 };
 
@@ -136,14 +129,20 @@ let AddGatewayModalContainer = reduxForm({
 })(AddGatewayModalWrapped);
 
 AddGatewayModalContainer = withRouter(
-  connect(mapStateToProps)(toJS(AddGatewayModalContainer))
+  connect(
+    mapStateToProps,
+    {
+      setViaProperty
+    }
+  )(toJS(AddGatewayModalContainer))
 );
 
 AddGatewayModalWrapped.propTypes = {
   handleSubmit: PropTypes.func,
   gatewaySearch: PropTypes.string,
   gatewayDevices: PropTypes.array.isRequired,
-  deviceId: PropTypes.string.isRequired
+  deviceId: PropTypes.string.isRequired,
+  setViaProperty: PropTypes.func.isRequired
 };
 
 const AddGateway = AddGatewayModalContainer;

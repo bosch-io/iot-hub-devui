@@ -13,6 +13,7 @@ import {
   ADDING_SUB,
   EVENTBUS_DISCONNECTED,
   NEW_REG,
+  CONFIGURED_GATEWAY,
   REGISTRATIONS_FETCHED,
   REG_DELETED,
   NEW_CREDENTIAL,
@@ -121,6 +122,13 @@ const devicesReducer = (state = initialState, action = {}) => {
           .setIn(["byId", action.device.deviceId], newReg)
           .update("allIds", ids => ids.push(newReg.get("deviceId")).sort())
       );
+    case CONFIGURED_GATEWAY: {
+      const gatewayProperty = action.info;
+      return state.setIn(
+        ["byId", action.deviceId, "registrationInfo", "via"],
+        gatewayProperty.get("via")
+      );
+    }
     case REG_DELETED:
       return state.withMutations(reducedState =>
         reducedState

@@ -131,7 +131,8 @@ export default class ConfirmationModal extends Component {
         isOpen={modalShown}
         closeTimeoutMS={150}
         contentLabel="Confirmation Modal"
-        ariaHideApp={false}>
+        ariaHideApp={false}
+      >
         {isPresetVersion ? (
           <Fragment>
             <ConfirmationModalHeader subject={subject} subTitle={subTitle} />

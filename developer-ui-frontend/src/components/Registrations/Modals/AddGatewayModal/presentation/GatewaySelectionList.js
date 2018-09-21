@@ -3,35 +3,27 @@
  */
 import React from "react";
 import PropTypes from "prop-types";
-import ChecklistSelect, {
-  ChecklistSelectHeader,
-  ChecklistOptionEntries
-} from "components/common/ChecklistSelect";
+import ListSelect, {
+  ListSelectHeader,
+  ListOptionEntries
+} from "components/common/ListSelect";
 import "styles/gatewayStyle.scss";
 
 const GatewaySelectionList = ({ searchText, deviceData, changeSelected }) => (
-  <ChecklistSelect
-    name="selectedDevice"
-    leadingCheckbox
-    className="table"
-    asField
-  >
+  <ListSelect name="via" className="table" asField>
     <div className="header">
-      <ChecklistSelectHeader textTitle="ID" />
+      <ListSelectHeader textTitle="ID" />
     </div>
-    <ChecklistOptionEntries
+    <ListOptionEntries
       className="entries"
       data={deviceData.map(entry => ({
         text: entry.deviceId,
-        checked: entry.selected
+        selected: entry.selected
       }))}
       filterText={searchText}
       onClick={changeSelected}
-      onCheckboxClick={() => {
-        /* Left out (the checkbox gets selected onClick */
-      }}
     />
-  </ChecklistSelect>
+  </ListSelect>
 );
 GatewaySelectionList.defaultProps = {
   searchText: ""

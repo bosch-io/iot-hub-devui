@@ -21,16 +21,24 @@ class DeleteRegistrationModalWrapped extends Component {
     super(props);
     this.state = {
       footerOptionChecked: true,
+      footerOptionCheckedSecond: true,
       isOpen: true
     };
     this.changeIsOpen = this.changeIsOpen.bind(this);
     this.onCheckboxClick = this.onCheckboxClick.bind(this);
+    this.onCheckboxClickSecond = this.onCheckboxClickSecond.bind(this);
     this.confirm = this.confirm.bind(this);
   }
 
   onCheckboxClick() {
     this.setState(state => ({
       footerOptionChecked: !state.footerOptionChecked
+    }));
+  }
+
+  onCheckboxClickSecond() {
+    this.setState(state => ({
+      footerOptionCheckedSecond: !state.footerOptionCheckedSecond
     }));
   }
 
@@ -44,6 +52,13 @@ class DeleteRegistrationModalWrapped extends Component {
     const rememberedSelection = deviceId;
     resetSelectedDevice(); // Clear selection
     if (this.state.footerOptionChecked) {
+      this.props
+        .deleteAllCredentialsOfDevice(rememberedSelection)
+        .then(() => deleteReg(rememberedSelection));
+    } else {
+      deleteReg(rememberedSelection);
+    }
+    if (this.state.footerOptionCheckedSecond) {
       this.props
         .deleteAllCredentialsOfDevice(rememberedSelection)
         .then(() => deleteReg(rememberedSelection));
