@@ -81,10 +81,11 @@ class AddGatewayModalWrapped extends Component {
         />
         <ConfigurationModalBody className="mainContent">
           <p className="paragraph">
-            A short descirption of what the gateway device is. Maybe with a link
-            to the [documentantion]. Lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-            et dolore magna aliquyam erat, sed diam voluptua.
+            If this device does not have a direct connection to the Bosch IoT Hub (e.g. because it is not IP-enabled), messages can still be sent to the Bosch IoT Hub via a gateway device.
+            The gateway device receives the message and forwards it to the IoT Hub.
+          </p>
+          <p className="paragraph">
+            Further information can be found in the <a href="https://docs.bosch-iot-hub.com/general-concepts/gatewaymode.html" target="_blank">Gateway mode documentation.</a>
           </p>
           <div className="elementsAlign">
             <SearchbarM
