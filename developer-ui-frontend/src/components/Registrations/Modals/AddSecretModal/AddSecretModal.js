@@ -16,6 +16,7 @@ import {
 import { TextField } from "components/common/textInputs";
 // SVG Imports
 import AddSecretLogo from "images/addPwSecretIcon.svg";
+import { Dropdown } from "components/common/dropdown";
 
 const AddSecretModal = ({
   isOpen,
@@ -38,21 +39,27 @@ const AddSecretModal = ({
       <ConfigurationModalBody className="configuration-modal-content">
         <div className="dropdown-input">
           <label htmlFor="secretType">Type</label>
-          <Field name="secretType" component="select">
-            <option value="Hashed Password">Hashed Password</option>
-            <option value="Certificate" disabled>
-              Certificate
-            </option>
-          </Field>
+          <Field
+            name="secretType"
+            component={Dropdown}
+            items={[
+              { value: "Hashed Password", id: 1 },
+              { value: "Certificate", id: 2 }
+            ]}
+          />
         </div>
         {selectedType === "Hashed Password" && (
           <div className="dropdown-input">
-            <label htmlFor="hashAlgorithm">{"Hash Algorithm"}</label>
-            <Field name="hashAlgorithm" component="select">
-              <option>SHA-512</option>
-              <option>SHA-256</option>
-              <option>SHA-1</option>
-            </Field>
+            <label htmlFor="hashAlgorithm">Hash Algorithm</label>
+            <Field
+              name="hashAlgorithm"
+              component={Dropdown}
+              items={[
+                { value: "SHA-512", id: 1 },
+                { value: "SHA-256", id: 2 },
+                { value: "SHA-1", id: 3 }
+              ]}
+            />
           </div>
         )}
         <TextField asField name="password" type="password" label="Password" />

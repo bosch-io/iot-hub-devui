@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import { deleteSecret } from "actions/CredentialActions";
 import { selectSecretsByCredentialId } from "reducers/selectors";
 import { toJS } from "components/helpers/to-js";
+import { Dropdown } from "components/common/dropdown";
 // TODO: Enable Certificates Option
 
 const validate = values => {
@@ -52,7 +53,8 @@ class DeleteSecretModalWrapped extends React.Component {
       <form onSubmit={handleSubmit(this.submit.bind(this))}>
         <ConfigurationModal
           modalShown={isOpen}
-          changeIsOpen={this.changeIsOpen}>
+          changeIsOpen={this.changeIsOpen}
+        >
           <ConfigurationModalHeader
             subject={subjectTitle}
             subTitle={authId}
@@ -61,14 +63,14 @@ class DeleteSecretModalWrapped extends React.Component {
           <ConfigurationModalBody className="configuration-modal-content">
             <div className="dropdown-input">
               <label htmlFor="secretSelect">Secret Id</label>
-              <Field name="secretSelect" component="select">
-                <option disabled>Select a Secret...</option>
-                {secrets.map(secret => (
-                  <option key={secret.secretId} value={secret.secretId}>
-                    {secret.secretId}
-                  </option>
-                ))}
-              </Field>
+              <Field
+                name="secretSelect"
+                component={Dropdown}
+                items={secrets.map((secret, index) => ({
+                  value: secret.secretId,
+                  id: index
+                }))}
+              />
             </div>
           </ConfigurationModalBody>
           <ConfigurationModalFooter
