@@ -2,27 +2,27 @@
 @import "_mixins.scss";
 
 .script {
-  height: 60vh;
+  height: 70vh;
 }
 
 .mainContent {
+  position: relative;
   display: inline-block;
-  position: absolute;
 }
 
 .paragraph {
-  margin-top: 10rem;
+  display: inline-block;
 }
 
 .elementsAlign {
-  display: inline-grid;
+  display: inline-block;
   width: 100%;
 }
 
 .table {
   position: relative;
   font-size: 1.2rem;
-  height: 20vh;
+  height: 30vh;
   width: 100%;
   display: inline-block;
 
