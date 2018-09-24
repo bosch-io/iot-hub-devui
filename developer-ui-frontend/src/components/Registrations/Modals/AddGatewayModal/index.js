@@ -80,13 +80,23 @@ class AddGatewayModalWrapped extends Component {
           subject={"Configure Gateway for " + deviceId}
         />
         <ConfigurationModalBody className="mainContent">
-          <p className="paragraph">
-            If this device does not have a direct connection to the Bosch IoT Hub (e.g. because it is not IP-enabled), messages can still be sent to the Bosch IoT Hub via a gateway device.
-            The gateway device receives the message and forwards it to the IoT Hub.
-          </p>
-          <p className="paragraph">
-            Further information can be found in the <a href="https://docs.bosch-iot-hub.com/general-concepts/gatewaymode.html" target="_blank">Gateway mode documentation.</a>
-          </p>
+          <div className="paragraph">
+            <p>
+              If this device does not have a direct connection to the Bosch IoT
+              Hub (e.g. because it is not IP-enabled), messages can still be
+              sent to the Bosch IoT Hub via a gateway device. The gateway device
+              receives the message and forwards it to the IoT Hub.
+            </p>
+            <p>
+              Further information can be found in the{" "}
+              <a
+                href="https://docs.bosch-iot-hub.com/general-concepts/gatewaymode.html"
+                target="_blank"
+              >
+                Gateway mode documentation.
+              </a>
+            </p>
+          </div>
           <div className="elementsAlign">
             <SearchbarM
               className="search"
