@@ -27,10 +27,10 @@ export const HYPERLINK_MINLENGTH = 85;
 
 export const RESTSERVER_URL =
   process.env.NODE_ENV === "production"
-    ? "http://localhost:8080/hubdev/api"
+    ? "/hubdev/api"
     : "http://localhost:8080/hubdev/api";
 
 export const WSSERVER_URL =
   process.env.NODE_ENV === "production"
-    ? "http://localhost:8080/hubdev/eventbus"
+    ? "/hubdev/eventbus"
     : "http://localhost:8080/hubdev/eventbus";
