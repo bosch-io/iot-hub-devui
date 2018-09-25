@@ -2,41 +2,37 @@
 @import "_mixins.scss";
 
 .script {
-  height: 70vh;
+  height: 70vh !important;
 }
 
-.mainContent {
+.main-content {
   position: relative;
   display: inline-block;
 }
 
-.paragraph {
-  display: inline-block;
-}
-
-.elementsAlign {
+.elements-align {
   display: inline-block;
   width: 100%;
 }
 
 .table {
-  position: relative;
-  font-size: 1.2rem;
-  height: 30vh;
-  width: 100%;
-  display: inline-block;
+  position: relative !important;
+  font-size: 1.2rem !important;
+  height: 30vh !important;
+  width: 100% !important;
+  display: inline-block !important;
 
   select {
-    position: absolute;
-    visibility: hidden;
+    position: absolute !important;
+    visibility: hidden !important;
   }
 }
 
 .header {
-  height: 3rem;
-  font-size: 1rem;
+  height: 3rem !important;
+  font-size: 1rem !important;
 
   ul {
-    height: 2rem;
+    height: 2rem !important;
   }
 }

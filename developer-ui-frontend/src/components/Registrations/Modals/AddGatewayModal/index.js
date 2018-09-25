@@ -79,8 +79,8 @@ class AddGatewayModalWrapped extends Component {
           icon={<GatewayIcon />}
           subject={"Configure Gateway for " + deviceId}
         />
-        <ConfigurationModalBody className="mainContent">
-          <div className="paragraph">
+        <ConfigurationModalBody>
+          <div className="main-content">
             <p>
               If this device does not have a direct connection to the Bosch IoT
               Hub (e.g. because it is not IP-enabled), messages can still be
@@ -96,22 +96,22 @@ class AddGatewayModalWrapped extends Component {
                 Gateway mode documentation.
               </a>
             </p>
-          </div>
-          <div className="elementsAlign">
-            <SearchbarM
-              className="search"
-              id="search_content"
-              name="gatewaySearchText"
-              type="text"
-              placeholder="Search for device"
-              autoComplete="off"
-              asField
-            />
-            <GatewaySelectionList
-              searchText={gatewaySearch}
-              deviceData={deviceData}
-              changeSelected={this.changeSelected}
-            />
+            <div className="elements-align">
+              <SearchbarM
+                className="search"
+                id="search_content"
+                name="gatewaySearchText"
+                type="text"
+                placeholder="Search for device"
+                autoComplete="off"
+                asField
+              />
+              <GatewaySelectionList
+                searchText={gatewaySearch}
+                deviceData={deviceData}
+                changeSelected={this.changeSelected}
+              />
+            </div>
           </div>
         </ConfigurationModalBody>
         <ConfigurationModalFooter
