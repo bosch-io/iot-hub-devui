@@ -1,16 +1,16 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import "styles/dropdown.scss";
 import ArrowDropdown from "images/arrow-dropdown.svg";
+import { Field } from "redux-form/immutable";
 
-class Dropdown extends React.Component {
+class DropdownC extends Component {
   constructor(props) {
     super(props);
-    console.log(props.items);
     this.state = {
       ...this.props,
       items: this.props.items || [],
@@ -19,6 +19,7 @@ class Dropdown extends React.Component {
       isOpened: false
     };
     this.dropDown = this.dropDown.bind(this);
+    this.selectedItem = this.selectedItem.bind(this);
   }
 
   dropDown() {
@@ -32,11 +33,10 @@ class Dropdown extends React.Component {
       selectedItem: item,
       showItems: false
     });
-    console.log(item);
   }
 
   render() {
-    const { headerTitle } = this.state;
+    const { input } = this.props;
     return (
       <div className="select-box--wrapper">
         <div className="select-box--toggle" onClick={this.dropDown}>
@@ -52,8 +52,8 @@ class Dropdown extends React.Component {
           />
         </div>
         <div className="select-box--main">
-          <div className="dd-header-title">{headerTitle}</div>
           <div
+            {...input}
             className="select-box--items"
             style={{
               display: this.state.showItems ? "inline-block" : "none",
@@ -63,11 +63,7 @@ class Dropdown extends React.Component {
             }}
           >
             {this.state.items.map(item => (
-              <div
-                key={item.id}
-                onClick={() => this.selectedItem(item)}
-                className={this.state.selectedItem === item ? "selected" : ""}
-              >
+              <div key={item.id} onClick={() => this.selectedItem(item)}>
                 {item.value}
               </div>
             ))}
@@ -78,9 +74,21 @@ class Dropdown extends React.Component {
   }
 }
 
-Dropdown.propTypes = {
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/prop-types */
+const Dropdown = ({ items, name }) => (
+  <Field
+    name={name}
+    component={({ input: { ...inputStuff } }) => (
+      <DropdownC {...inputStuff} items={items} />
+    )}
+  />
+);
+
+DropdownC.propTypes = {
   items: PropTypes.array,
-  selectedItem: PropTypes.array
+  selectedItem: PropTypes.array,
+  input: PropTypes.object
 };
 
 export default Dropdown;

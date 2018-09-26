@@ -46,6 +46,7 @@ class AddSecretModalWrapped extends Component {
   }
 
   submit(values) {
+    console.log("hashAlgorithm " + values);
     const {
       authId,
       deviceId,
