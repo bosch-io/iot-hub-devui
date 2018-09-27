@@ -13,7 +13,6 @@
   padding: 0;
   font-weight: 400;
   align-items: center;
-  box-sizing: border-box;
 }
 
 .select-box--arrow {
@@ -62,7 +61,7 @@
   padding: 6px;
   padding-left: 20px;
   padding-right: 30px;
-  width: 90%;
+  width: 300px;
 
   &:hover {
     background: white;
