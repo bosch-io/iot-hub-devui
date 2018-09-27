@@ -39,7 +39,8 @@ const AddSecretModal = ({
       <ConfigurationModalBody className="configuration-modal-content">
         <div className="dropdown-input">
           <label htmlFor="secretType">Type</label>
-          <Dropdown
+          <Field
+            component={Dropdown}
             name="secretType"
             items={[
               { value: "Hashed Password", id: 1 },
@@ -50,7 +51,8 @@ const AddSecretModal = ({
         {selectedType === "Hashed Password" && (
           <div className="dropdown-input">
             <label htmlFor="hashAlgorithm">Hash Algorithm</label>
-            <Dropdown
+            <Field
+              component={Dropdown}
               name="hashAlgorithm"
               items={[
                 { value: "SHA-512", id: 1 },

@@ -8,7 +8,7 @@ import "styles/dropdown.scss";
 import ArrowDropdown from "images/arrow-dropdown.svg";
 import { Field } from "redux-form/immutable";
 
-class DropdownC extends Component {
+class Dropdown extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,7 +53,6 @@ class DropdownC extends Component {
         </div>
         <div className="select-box--main">
           <div
-            {...input}
             className="select-box--items"
             style={{
               display: this.state.showItems ? "inline-block" : "none",
@@ -63,9 +62,14 @@ class DropdownC extends Component {
             }}
           >
             {this.state.items.map(item => (
-              <div key={item.id} onClick={() => this.selectedItem(item)}>
-                {item.value}
-              </div>
+              <input
+                {...input}
+                style={{ cursor: "pointer" }}
+                key={item.id}
+                onClick={() => this.selectedItem(item)}
+                value={item.value}
+                readOnly
+              />
             ))}
           </div>
         </div>
@@ -76,16 +80,16 @@ class DropdownC extends Component {
 
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/prop-types */
-const Dropdown = ({ items, name }) => (
-  <Field
-    name={name}
-    component={({ input: { ...inputStuff } }) => (
-      <DropdownC {...inputStuff} items={items} />
-    )}
-  />
-);
+// const Dropdown = ({ items, name }) => (
+//   <Field
+//     name={name}
+//     component={({ input: { ...inputStuff } }) => (
+//       <DropdownC {...inputStuff} items={items} />
+//     )}
+//   />
+// );
 
-DropdownC.propTypes = {
+Dropdown.propTypes = {
   items: PropTypes.array,
   selectedItem: PropTypes.array,
   input: PropTypes.object
