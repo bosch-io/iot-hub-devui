@@ -63,9 +63,14 @@
   padding-right: 30px;
   width: 300px;
 
-  &:hover {
+  &:hover:enabled {
     background: white;
     background-color: rgba(57, 98, 132, 0.1) !important;
     border: 1px solid #25a3cc;
+  }
+
+  &:disabled {
+    cursor: not-allowed !important;
+    color: #dddd;
   }
 }

@@ -44,7 +44,7 @@ const AddSecretModal = ({
             name="secretType"
             items={[
               { value: "Hashed Password", id: 1 },
-              { value: "Certificate", id: 2 }
+              { value: "Certificate", id: 2, disabled: true }
             ]}
           />
         </div>

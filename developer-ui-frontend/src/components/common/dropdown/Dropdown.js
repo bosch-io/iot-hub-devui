@@ -36,7 +36,7 @@ class Dropdown extends Component {
   }
 
   render() {
-    const { input } = this.props;
+    const { input, disabled } = this.props;
     return (
       <div className="select-box--wrapper">
         <div className="select-box--toggle" onClick={this.dropDown}>
@@ -64,6 +64,7 @@ class Dropdown extends Component {
             {this.state.items.map(item => (
               <input
                 {...input}
+                disabled={item.disabled ? 1 : 0}
                 style={{ cursor: "pointer" }}
                 key={item.id}
                 onClick={() => this.selectedItem(item)}
@@ -90,6 +91,7 @@ class Dropdown extends Component {
 // );
 
 Dropdown.propTypes = {
+  disabled: PropTypes.bool,
   items: PropTypes.array,
   selectedItem: PropTypes.array,
   input: PropTypes.object
