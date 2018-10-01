@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 
 import "styles/dropdown.scss";
 import ArrowDropdown from "images/arrow-dropdown.svg";
-import { Field } from "redux-form/immutable";
 
 class Dropdown extends Component {
   constructor(props) {
@@ -36,7 +35,7 @@ class Dropdown extends Component {
   }
 
   render() {
-    const { input, disabled } = this.props;
+    const { input } = this.props;
     return (
       <div className="select-box--wrapper">
         <div className="select-box--toggle" onClick={this.dropDown}>
