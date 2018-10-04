@@ -82,7 +82,7 @@ class JsonEditor extends Component {
           message={location =>
             location.state && location.state.withChangesSaved
               ? true
-              : "Are you shure you want to quit the Editor? Changes will be discarded"
+              : "Are you sure you want to quit the Editor? Changes will be discarded"
           }
         />
         <Editor
