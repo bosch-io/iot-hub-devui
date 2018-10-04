@@ -73,6 +73,8 @@ The following table gives an overview about the in this project used design asse
 | /developer-ui-frontend/src/images/codeIcon.svg | Code | [Apache License 2.0][1] | [Material.io][2]|
 | /developer-ui-frontend/src/images/arrow-dropdown.svg | Code | [Apache License 2.0][1] | [Material.io][2]|
 | /devui.png | Key Visual | [Bosch SI Example Code License][5]| Own Creation
+| /developer-ui-frontend/src/images/jsoneditor-icons.svg | jsoneditor-icons | [Apache License 2.0][8] | [JSON Editor][8]|
+| /developer-ui-frontend/src/images/fixBugIcon.svg | _edited from bug\_report and build_ | [Apache License 2.0][1] | [Material.io][2]|
 
 [1]: https://github.com/google/material-design-icons/blob/master/LICENSE
 [2]: https://material.io/icons/
@@ -81,3 +83,4 @@ The following table gives an overview about the in this project used design asse
 [5]: License.txt
 [6]: https://unsplash.com/license
 [7]: https://unsplash.com/photos/VDFOnAwdVjg
+[8]: https://github.com/josdejong/jsoneditor
