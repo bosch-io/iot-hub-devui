@@ -78,17 +78,6 @@ class Dropdown extends Component {
   }
 }
 
-/* eslint-disable react/no-multi-comp */
-/* eslint-disable react/prop-types */
-// const Dropdown = ({ items, name }) => (
-//   <Field
-//     name={name}
-//     component={({ input: { ...inputStuff } }) => (
-//       <DropdownC {...inputStuff} items={items} />
-//     )}
-//   />
-// );
-
 Dropdown.propTypes = {
   disabled: PropTypes.bool,
   items: PropTypes.array,

@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import { TextCopyField } from "components/common/textInputs";
 
 const httpEndpoint = "https://http.bosch-iot-hub.com/telemetry";
-const mqttEndpoint = "mqtt.bosch-iot-hub.com/telemetry";
 
 const LoginInformation = ({
   authId,
@@ -65,8 +64,6 @@ const LoginInformation = ({
           </p>
           <p>e.g. to send HTTP telemetry, POST some data to this endpoint:</p>
           <TextCopyField name="httpEndpoint" copyText={httpEndpoint} />
-          <p>e.g. to send MQTT telemetry, POST some data to this endpoint:</p>
-          <TextCopyField name="mqttEndpoint" copyText={mqttEndpoint} />
         </div>
       )}
     </StaggeredMotion>
