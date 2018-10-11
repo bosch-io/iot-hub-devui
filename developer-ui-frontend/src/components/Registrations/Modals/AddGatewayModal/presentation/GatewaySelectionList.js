@@ -3,17 +3,11 @@
  */
 import React from "react";
 import PropTypes from "prop-types";
-import ListSelect, {
-  ListSelectHeader,
-  ListOptionEntries
-} from "components/common/ListSelect";
-import "styles/gatewayStyle.scss";
+import ListSelect, { ListOptionEntries } from "components/common/ListSelect";
+import "styles/gateway.scss";
 
 const GatewaySelectionList = ({ searchText, deviceData, changeSelected }) => (
   <ListSelect name="via" className="table" asField>
-    <div className="header">
-      <ListSelectHeader textTitle="ID" />
-    </div>
     <ListOptionEntries
       className="entries"
       data={deviceData.map(entry => ({

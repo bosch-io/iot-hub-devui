@@ -16,9 +16,9 @@ const OptionEntry = styled.li`
   ${props =>
     props.selected &&
     `
-    background-color: #25a3cc !important;
-    font-weight: bold;
-     `} span {
+    box-shadow:  0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.15);
+    margin: 0 0.05%;
+  `} span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

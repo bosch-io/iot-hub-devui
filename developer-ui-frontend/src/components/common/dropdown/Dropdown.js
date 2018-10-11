@@ -3,9 +3,31 @@
  */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
+import enhanceWithClickOutside from "react-click-outside";
+import DropdownMenu from "./DropdownMenu";
+import DropdownCurrentSelection from "./DropdownSelection";
 
-import "styles/dropdown.scss";
-import ArrowDropdown from "images/arrow-dropdown.svg";
+const DropdownOuter = styled.div`
+  position: relative;
+  height: 3rem;
+`;
+
+const DropdownWrapper = styled.div`
+  position: relative;
+  transition: box-shadow 0.3s ease-out;
+  display: inline-flex;
+  flex-direction: column;
+  cursor: pointer;
+  user-select: none;
+
+  ${props =>
+    props.showItems &&
+    `
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.08),
+      0 1px 1px 0 rgba(0, 0, 0, 0.16);
+    z-index: 4;`};
+`;
 
 class Dropdown extends Component {
   constructor(props) {
@@ -14,66 +36,49 @@ class Dropdown extends Component {
       ...this.props,
       items: this.props.items || [],
       selectedItem: this.props.items[0] || this.props.selectedItem,
-      showItems: false,
-      isOpened: false
+      showItems: false
     };
-    this.dropDown = this.dropDown.bind(this);
-    this.selectedItem = this.selectedItem.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.selectItem = this.selectItem.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
-  dropDown() {
+  toggleDropdown() {
     this.setState(prevState => ({
       showItems: !prevState.showItems
     }));
   }
 
-  selectedItem(item) {
+  selectItem(item) {
     this.setState({
       selectedItem: item,
       showItems: false
     });
   }
 
+  handleClickOutside() {
+    this.setState({ showItems: false });
+  }
+
   render() {
-    const { input } = this.props;
+    const { input, items } = this.props;
+    const { selectedItem, showItems } = this.state;
     return (
-      <div className="select-box--wrapper">
-        <div className="select-box--toggle" onClick={this.dropDown}>
-          <div className="select-box--selected-item">
-            {this.state.selectedItem && this.state.selectedItem.value}
-          </div>
-          <ArrowDropdown
-            className={`${
-              this.state.showItems
-                ? "select-box--arrow-rotated"
-                : "select-box--arrow"
-            }`}
+      <DropdownOuter>
+        <DropdownWrapper showItems={showItems}>
+          <DropdownCurrentSelection
+            toggle={this.toggleDropdown}
+            selected={selectedItem}
+            isOpen={showItems}
           />
-        </div>
-        <div className="select-box--main">
-          <div
-            className="select-box--items"
-            style={{
-              display: this.state.showItems ? "inline-block" : "none",
-              background: "white",
-              position: "relative",
-              zIndex: "2"
-            }}
-          >
-            {this.state.items.map(item => (
-              <input
-                {...input}
-                disabled={item.disabled ? 1 : 0}
-                style={{ cursor: "pointer" }}
-                key={item.id}
-                onClick={() => this.selectedItem(item)}
-                value={item.value}
-                readOnly
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+          <DropdownMenu
+            show={showItems}
+            items={items}
+            selectItem={this.selectItem}
+            onClickOutside={showItems ? this.handleClickOutside : null}
+          />
+        </DropdownWrapper>
+      </DropdownOuter>
     );
   }
 }
@@ -85,4 +90,4 @@ Dropdown.propTypes = {
   input: PropTypes.object
 };
 
-export default Dropdown;
+export default enhanceWithClickOutside(Dropdown);

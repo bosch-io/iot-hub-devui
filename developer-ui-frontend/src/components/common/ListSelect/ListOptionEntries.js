@@ -11,10 +11,10 @@ import { Field } from "redux-form/immutable";
 import * as transition from "animations/checklistSelectTransitions";
 
 const ListEntries = styled.ul`
-  height: calc(100% - 4.9rem);
   padding: 0;
   overflow-y: auto;
   margin: 0;
+  height: 100%;
 
   select,
   option {
@@ -22,7 +22,7 @@ const ListEntries = styled.ul`
   }
 
   .reg-item:nth-child(even) li {
-    background: #f5f5f5;
+    background: rgba(0, 0, 0, 0.04);
   }
 `;
 
@@ -64,9 +64,9 @@ class ListOptionEntries extends Component {
   }
 
   render() {
-    const { data, onClick, name, asField } = this.props;
+    const { data, onClick, name, asField, className } = this.props;
     return (
-      <ListEntries>
+      <ListEntries className={className}>
         {asField && (
           <Field
             name={name}
@@ -76,8 +76,7 @@ class ListOptionEntries extends Component {
                 this.selectRef = sel;
               }
             }}
-            withRef
-          >
+            withRef>
             {data.map((entry, index) => (
               <option key={"DropdownEntry" + index} value={entry.text}>
                 {entry.text}
@@ -89,8 +88,7 @@ class ListOptionEntries extends Component {
           defaultStyles={transition.getDefaultStyles(data)}
           styles={this.getStyles.bind(this)()}
           willLeave={transition.willLeave}
-          willEnter={transition.willEnter}
-        >
+          willEnter={transition.willEnter}>
           {interpStyles => {
             return (
               <div>
@@ -128,7 +126,8 @@ ListOptionEntries.propTypes = {
   asField: PropTypes.bool,
   name: PropTypes.string,
   selectedOption: PropTypes.string,
-  changeSelectedOption: PropTypes.func
+  changeSelectedOption: PropTypes.func,
+  className: PropTypes.string
 };
 
 export default ListOptionEntries;

@@ -10,12 +10,13 @@ import {
   ConfigurationModalFooter,
   ConfigurationModalBody
 } from "components/common/dialogModals";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import DeleteSecretLogo from "images/deletePwSecretIcon.svg";
 import { connect } from "react-redux";
 import { deleteSecret } from "actions/CredentialActions";
 import { selectSecretsByCredentialId } from "reducers/selectors";
 import { toJS } from "components/helpers/to-js";
+import Dropdown from "components/common/Dropdown";
 // TODO: Enable Certificates Option
 
 const validate = values => {
@@ -45,15 +46,14 @@ class DeleteSecretModalWrapped extends React.Component {
   }
 
   render() {
-    const { authId, handleSubmit, secrets } = this.props;
+    const { authId, handleSubmit, secrets, match } = this.props;
     const { isOpen } = this.state;
     const subjectTitle = "Delete a Secret from ";
     return isOpen ? (
       <form onSubmit={handleSubmit(this.submit.bind(this))}>
         <ConfigurationModal
           modalShown={isOpen}
-          changeIsOpen={this.changeIsOpen}
-        >
+          changeIsOpen={this.changeIsOpen}>
           <ConfigurationModalHeader
             subject={subjectTitle}
             subTitle={authId}
@@ -63,14 +63,14 @@ class DeleteSecretModalWrapped extends React.Component {
           <ConfigurationModalBody className="configuration-modal-content">
             <div className="dropdown-input">
               <label htmlFor="secretSelect">Secret Id</label>
-              <Field name="secretSelect" component="select">
-                <option disabled>Select a Secret...</option>
-                {secrets.map((secret, index) => (
-                  <option key={secret.secretId + index} value={secret.secretId}>
-                    {secret.secretId}
-                  </option>
-                ))}
-              </Field>
+              <Field
+                name="secretSelect"
+                component={Dropdown}
+                items={secrets.map((secret, index) => ({
+                  value: secret.secretId,
+                  id: secret.secretId + index
+                }))}
+              />
             </div>
           </ConfigurationModalBody>
           <ConfigurationModalFooter
@@ -81,7 +81,11 @@ class DeleteSecretModalWrapped extends React.Component {
         </ConfigurationModal>
       </form>
     ) : (
-      <Redirect to="/registrations" />
+      <Redirect
+        to={`/registrations/${match.params.selectedDeviceId}/credentials/${
+          match.params.selectedAuthId
+        }`}
+      />
     );
   }
 }
@@ -98,19 +102,22 @@ const mapStateToProps = (state, ownProps) => {
     secrets
   };
 };
-DeleteSecretModal = connect(
-  mapStateToProps,
-  {
-    deleteSecret
-  }
-)(toJS(DeleteSecretModal));
+DeleteSecretModal = withRouter(
+  connect(
+    mapStateToProps,
+    {
+      deleteSecret
+    }
+  )(toJS(DeleteSecretModal))
+);
 
 DeleteSecretModalWrapped.propTypes = {
   authId: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   deviceId: PropTypes.string,
   secrets: PropTypes.array.isRequired,
-  deleteSecret: PropTypes.func.isRequired
+  deleteSecret: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
 };
 
 export default DeleteSecretModal;

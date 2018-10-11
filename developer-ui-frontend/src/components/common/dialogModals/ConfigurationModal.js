@@ -85,9 +85,16 @@ ConfigurationModalFooter.propTypes = {
 
 class ConfigurationModal extends Component {
   render() {
-    const { modalShown, changeIsOpen, children, ...other } = this.props;
+    const {
+      modalShown,
+      changeIsOpen,
+      children,
+      className,
+      ...other
+    } = this.props;
     return (
       <DialogModal
+        className={className}
         overlayClassName="confirmation-modal"
         isOpen={modalShown}
         closeTimeoutMS={150}
@@ -107,7 +114,8 @@ ConfigurationModal.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node)
-  ]).isRequired
+  ]).isRequired,
+  className: PropTypes.string
 };
 
 export default ConfigurationModal;

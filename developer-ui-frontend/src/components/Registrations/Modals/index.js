@@ -29,7 +29,7 @@ const Modals = ({ setMainPanel }) => (
       )}
     />
     <Route
-      path={`/registrations/:selectedDeviceId/addGateway`}
+      path={`/registrations/:selectedDeviceId/registration/addGateway`}
       render={({ match }) => (
         <AddGatewayModal deviceId={match.params.selectedDeviceId} />
       )}

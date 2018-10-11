@@ -1,0 +1,37 @@
+@import "_globalVars.scss";
+@import "_mixins.scss";
+
+.selection-form {
+  margin: 0 -0.5rem;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+.main-content {
+  .description-text {
+    margin-bottom: 3rem;
+    color: #4a4a4a;
+  }
+  .table {
+    position: relative !important;
+    font-size: 1.2rem !important;
+    height: 30vh !important;
+    width: 100% !important;
+    display: inline-block !important;
+    flex: 1;
+    background-color: #fff;
+
+    .reg-item {
+      margin: 0 0.5rem;
+    }
+
+    select {
+      position: absolute !important;
+      visibility: hidden !important;
+    }
+
+    .entries {
+      @include customScrollbar(8px, rgba(0, 0, 0, 0.1), 10px, transparent);
+    }
+  }
+}

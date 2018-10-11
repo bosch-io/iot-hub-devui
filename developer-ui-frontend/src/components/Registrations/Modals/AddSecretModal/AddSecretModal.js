@@ -16,7 +16,7 @@ import {
 import { TextField } from "components/common/textInputs";
 // SVG Imports
 import AddSecretLogo from "images/addPwSecretIcon.svg";
-import { Dropdown } from "components/common/dropdown";
+import Dropdown from "components/common/Dropdown";
 
 const AddSecretModal = ({
   isOpen,
