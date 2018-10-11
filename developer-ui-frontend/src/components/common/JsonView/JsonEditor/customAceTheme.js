@@ -1,3 +1,6 @@
+/*
+ * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
+ */
 /* eslint-disable */
 ace.define(
   "ace/theme/prism_duo_tone",
