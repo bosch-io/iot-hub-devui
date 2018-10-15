@@ -27,6 +27,10 @@ const RoundOutlineBtn = OutlineBtn.extend`
 
   &:hover {
     border-style: unset;
+    &:not(:disabled) {
+      padding: calc(0.65em + 0.125em) calc(1.1em + 0.125em)
+        calc(0.65em + 0.125em) calc(1.1em + 0.125em);
+    }
     svg.submit-icon {
       transform: translateX(0.5em);
       path {
