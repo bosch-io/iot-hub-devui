@@ -1,3 +1,6 @@
+/*
+ * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
+ */
 import styled from "styled-components";
 import React from "react";
 import PropTypes from "prop-types";
