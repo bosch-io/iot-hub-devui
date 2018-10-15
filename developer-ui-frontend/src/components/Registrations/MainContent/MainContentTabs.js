@@ -10,7 +10,7 @@ const MainContentTabs = withRouter(
     fetchCredential,
     credentialsTabLocked,
     match: {
-      params: { selectedDeviceId }
+      params: { selectedDeviceId, authId }
     }
   }) => (
     <ul id="tabs">
@@ -22,9 +22,13 @@ const MainContentTabs = withRouter(
       </NavLink>
       <NavLink
         activeClassName="active"
-        to={`/registrations/${selectedDeviceId}/credentials`}
+        to={`/registrations/${selectedDeviceId}/credentials${
+          authId ? "/" + authId : ""
+        }`}
         onClick={
-          !credentialsTabLocked ? () => fetchCredential(selectedDeviceId) : null
+          !credentialsTabLocked
+            ? () => fetchCredential(selectedDeviceId)
+            : e => e.preventDefault()
         }>
         Credentials
       </NavLink>

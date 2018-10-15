@@ -64,7 +64,7 @@ class MainContentWrapped extends Component {
               />
               <MainContentTabs
                 credentialsTabLocked={Boolean(
-                  selectedDevice && isConnected && tenantFetched
+                  !selectedDevice || !isConnected || !tenantFetched
                 )}
                 fetchCredential={this.props.fetchCredentialsByDeviceId}
               />
