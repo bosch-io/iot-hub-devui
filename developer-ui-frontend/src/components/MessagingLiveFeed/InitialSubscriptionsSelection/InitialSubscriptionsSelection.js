@@ -83,7 +83,6 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
   submit(values) {
     // Both errors and warnings must hold the values under the property of the specific <Field/> name
     const errors = {};
-    console.log(values);
     const selectedDevices = this.getSelectedEntries();
     if (selectedDevices.length === 0) {
       errors.registrySearch = "You have to subscribe to at least one device.";
@@ -122,8 +121,7 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
           </Fragment>
         }
         id="subConfigForm-container"
-        className={this.state.done ? "done" : ""}
-      >
+        className={this.state.done ? "done" : ""}>
         <form className="subConfigForm" onSubmit={handleSubmit(this.submit)}>
           <div id="registry-search-wrapper">
             <RegistrySearchbar
@@ -143,8 +141,7 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
             primary
             submitAnimation
             type="submit"
-            disabled={numberOfSubscribedDevices === 0}
-          >
+            disabled={numberOfSubscribedDevices === 0}>
             Start
           </RoundOutlineButton>
         </form>

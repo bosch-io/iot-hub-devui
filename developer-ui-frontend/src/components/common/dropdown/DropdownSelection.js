@@ -52,7 +52,7 @@ const DropdownCurrentSelection = ({ selected, toggle, isOpen }) => (
   <DropdownSelectBox isOpen={isOpen} onClick={toggle}>
     <DropdownSelectedValue>{selected && selected.value}</DropdownSelectedValue>
     <CaretContainer>
-      <Caret rotated={isOpen} />
+      <Caret rotated={isOpen ? 1 : 0} />
     </CaretContainer>
   </DropdownSelectBox>
 );

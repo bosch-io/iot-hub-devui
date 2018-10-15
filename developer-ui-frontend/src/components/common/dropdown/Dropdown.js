@@ -85,7 +85,9 @@ class Dropdown extends Component {
 
 Dropdown.propTypes = {
   disabled: PropTypes.bool,
-  items: PropTypes.array,
+  items: PropTypes.arrayOf(
+    PropTypes.shape({ id: PropTypes.number, value: PropTypes.string })
+  ),
   selectedItem: PropTypes.array,
   input: PropTypes.object
 };

@@ -85,7 +85,7 @@ class AddGatewayModalWrapped extends Component {
         <ConfigurationModalBody
           style={{
             padding: "0px 6rem",
-            background: "rgba(120, 144, 156, 0.45)"
+            background: "rgba(226, 226, 226, 0.45)"
           }}>
           <div className="main-content">
             <div className="description-text">

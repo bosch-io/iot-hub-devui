@@ -38,13 +38,14 @@ class AddRegistrationButton extends React.Component {
     const { hasCallout, match } = this.props;
     const selectedDevice = match.params.selectedDeviceId;
     const selectedSubMenu = match.params.registrationsSubMenu;
+    const selectedAuthId = match.params.authId;
     const tooltipIdFirstReg = "first-reg";
     return (
       <Fragment>
         <Link
           to={`/registrations/${selectedDevice}${
             selectedSubMenu ? "/" + selectedSubMenu : ""
-          }?action=additionalRegs`}
+          }${selectedAuthId ? "/" + selectedAuthId : ""}?action=additionalRegs`}
           id="flyout-btn-fixed-container"
           data-tip
           data-for={tooltipIdFirstReg}>
