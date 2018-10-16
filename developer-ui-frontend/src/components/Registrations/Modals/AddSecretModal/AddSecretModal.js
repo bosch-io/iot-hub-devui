@@ -55,9 +55,9 @@ const AddSecretModal = ({
               component={Dropdown}
               name="hashAlgorithm"
               items={[
-                { value: "SHA-512", id: 1 },
-                { value: "SHA-256", id: 2 },
-                { value: "SHA-1", id: 3 }
+                { value: "sha-512", id: 1 },
+                { value: "sha-256", id: 2 },
+                { value: "sha-1", id: 3 }
               ]}
             />
           </div>

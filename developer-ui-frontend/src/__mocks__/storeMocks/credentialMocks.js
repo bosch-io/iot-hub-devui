@@ -196,7 +196,7 @@ export const credentialsAfterFirstGet = fromJS({
       "newDevice-97fff113f84b4d91a208889d13236fa8-WnOldvb69rJO0Z7url47bd6JAOE=": {
         secretId:
           "newDevice-97fff113f84b4d91a208889d13236fa8-WnOldvb69rJO0Z7url47bd6JAOE=",
-        "hash-function": "SHA-512",
+        "hash-function": "sha-512",
         "pwd-hash":
           "b821b1b6e19c9223f00c67d1a140efa26c41d70de72b88b514712a269437446235fbe5170d80da071b6b7f738e070462ac4fc0786f1b47738ff064761c03befb"
       },
@@ -205,12 +205,12 @@ export const credentialsAfterFirstGet = fromJS({
           "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
         "pwd-hash":
           "QOnuX1H2FykBfS94voqoKfreuLXSZqXkzjYbxpx4N+TDACDLBMlGcms6I6NviFn1IOnOAOEzf0Wh+vslEnXbdw==",
-        "hash-function": "SHA-512"
+        "hash-function": "sha-512"
       },
       "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=": {
         secretId:
           "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=",
-        "hash-function": "SHA-512",
+        "hash-function": "sha-512",
         "pwd-hash":
           "YpD78SGHQaYypz2GkPp+qghndcfmVQx/Sk8a4EpNMkUwqEHSHiIL0k8cs57DJOyYxg6ydU47ltP4tI4YBWJ30g=="
       }
@@ -244,12 +244,12 @@ export const credentialsAfterDeletedCred = fromJS({
           "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
         "pwd-hash":
           "QOnuX1H2FykBfS94voqoKfreuLXSZqXkzjYbxpx4N+TDACDLBMlGcms6I6NviFn1IOnOAOEzf0Wh+vslEnXbdw==",
-        "hash-function": "SHA-512"
+        "hash-function": "sha-512"
       },
       "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=": {
         secretId:
           "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=",
-        "hash-function": "SHA-512",
+        "hash-function": "sha-512",
         "pwd-hash":
           "YpD78SGHQaYypz2GkPp+qghndcfmVQx/Sk8a4EpNMkUwqEHSHiIL0k8cs57DJOyYxg6ydU47ltP4tI4YBWJ30g=="
       }

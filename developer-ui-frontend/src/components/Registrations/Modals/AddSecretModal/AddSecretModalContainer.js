@@ -136,7 +136,7 @@ let AddSecretModal = reduxForm({
 const selector = formValueSelector("newSecret");
 const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: { secretType: "Hashed Password", hashAlgorithm: "SHA-512" },
+    initialValues: { secretType: "Hashed Password", hashAlgorithm: "sha-512" },
     selectedType: selector(state, "secretType"),
     firstInitialization:
       selectCredentialById(state, ownProps.authId) &&

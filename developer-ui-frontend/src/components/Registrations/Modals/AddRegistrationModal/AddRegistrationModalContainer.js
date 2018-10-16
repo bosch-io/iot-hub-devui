@@ -80,8 +80,8 @@ class AddRegistrationModalContainer extends React.Component {
         const newPw = values.get("password");
         const secretData = {
           password: newPw,
-          hashMethod: "SHA-512"
-        }; // SHA-512 is hard coded (preset)
+          hashMethod: "sha-512"
+        }; // sha-512 is hard coded (preset)
         this.props.createStandardPasswordRegistration(
           newDeviceId,
           newAuthId,
