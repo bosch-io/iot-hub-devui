@@ -52,6 +52,7 @@ public final class ApiProxyEndpoint implements HttpEndpoint {
         ProxyOptions proxyOptions = getProxyOptions();
         if(proxyOptions != null) {
             options.setProxyOptions(proxyOptions);
+            options.setVerifyHost(deviceRegistryConfig.isHostnameVerificationRequired());
         }
         client = WebClient.create(vertx, options);
     }

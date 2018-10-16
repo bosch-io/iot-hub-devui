@@ -8,6 +8,7 @@ public class DeviceRegistryClientProperties {
     private String url;
     private String username;
     private String password;
+    private boolean hostnameVerificationRequired = true;
 
     public String getUrl() {
         return url;
@@ -31,5 +32,13 @@ public class DeviceRegistryClientProperties {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isHostnameVerificationRequired() {
+        return hostnameVerificationRequired;
+    }
+
+    public void setHostnameVerificationRequired(final boolean hostnameVerificationRequired) {
+        this.hostnameVerificationRequired = hostnameVerificationRequired;
     }
 }
