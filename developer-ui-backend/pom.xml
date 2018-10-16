@@ -18,7 +18,7 @@
         <jackson.version>2.9.5</jackson.version>
         <proton.version>0.22.0</proton.version>
         <logback.version>1.2.3</logback.version>
-        <hono.version>0.6</hono.version>
+        <hono.version>0.8-M2</hono.version>
         <qpid-jms.version>0.21.0</qpid-jms.version>
         <vertx.health.port>8088</vertx.health.port>
         <vertx.health.path>/liveness</vertx.health.path>
