@@ -173,7 +173,7 @@ export const credentialsAfterFirstGet = fromJS({
       "auth-id": "newDevice-97fff113f84b4d91a208889d13236fa8",
       enabled: true,
       secrets: [
-        "newDevice-97fff113f84b4d91a208889d13236fa8-WnOldvb69rJO0Z7url47bd6JAOE="
+        "newDevice-97fff113f84b4d91a208889d13236fa8-vDUuwVzGTvVNZzVok28gimAZmQg="
       ]
     },
     "newDevice-f6ca6710e78043568ddf86b70bb4f010": {
@@ -182,8 +182,8 @@ export const credentialsAfterFirstGet = fromJS({
       "auth-id": "newDevice-f6ca6710e78043568ddf86b70bb4f010",
       enabled: true,
       secrets: [
-        "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
-        "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM="
+        "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=",
+        "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ="
       ]
     }
   },
@@ -193,32 +193,32 @@ export const credentialsAfterFirstGet = fromJS({
   ],
   secrets: {
     byId: {
-      "newDevice-97fff113f84b4d91a208889d13236fa8-WnOldvb69rJO0Z7url47bd6JAOE=": {
+      "newDevice-97fff113f84b4d91a208889d13236fa8-vDUuwVzGTvVNZzVok28gimAZmQg=": {
         secretId:
-          "newDevice-97fff113f84b4d91a208889d13236fa8-WnOldvb69rJO0Z7url47bd6JAOE=",
+          "newDevice-97fff113f84b4d91a208889d13236fa8-vDUuwVzGTvVNZzVok28gimAZmQg=",
         "hash-function": "sha-512",
         "pwd-hash":
           "b821b1b6e19c9223f00c67d1a140efa26c41d70de72b88b514712a269437446235fbe5170d80da071b6b7f738e070462ac4fc0786f1b47738ff064761c03befb"
       },
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=": {
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=": {
         secretId:
-          "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
+          "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=",
         "pwd-hash":
           "QOnuX1H2FykBfS94voqoKfreuLXSZqXkzjYbxpx4N+TDACDLBMlGcms6I6NviFn1IOnOAOEzf0Wh+vslEnXbdw==",
         "hash-function": "sha-512"
       },
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=": {
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ=": {
         secretId:
-          "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=",
+          "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ=",
         "hash-function": "sha-512",
         "pwd-hash":
           "YpD78SGHQaYypz2GkPp+qghndcfmVQx/Sk8a4EpNMkUwqEHSHiIL0k8cs57DJOyYxg6ydU47ltP4tI4YBWJ30g=="
       }
     },
     allIds: [
-      "newDevice-97fff113f84b4d91a208889d13236fa8-WnOldvb69rJO0Z7url47bd6JAOE=",
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM="
+      "newDevice-97fff113f84b4d91a208889d13236fa8-vDUuwVzGTvVNZzVok28gimAZmQg=",
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=",
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ="
     ]
   }
 });
@@ -231,32 +231,32 @@ export const credentialsAfterDeletedCred = fromJS({
       "auth-id": "newDevice-f6ca6710e78043568ddf86b70bb4f010",
       enabled: true,
       secrets: [
-        "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
-        "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM="
+        "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=",
+        "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ="
       ]
     }
   },
   allIds: ["newDevice-f6ca6710e78043568ddf86b70bb4f010"],
   secrets: {
     byId: {
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=": {
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=": {
         secretId:
-          "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
+          "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=",
         "pwd-hash":
           "QOnuX1H2FykBfS94voqoKfreuLXSZqXkzjYbxpx4N+TDACDLBMlGcms6I6NviFn1IOnOAOEzf0Wh+vslEnXbdw==",
         "hash-function": "sha-512"
       },
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=": {
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ=": {
         secretId:
-          "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM=",
+          "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ=",
         "hash-function": "sha-512",
         "pwd-hash":
           "YpD78SGHQaYypz2GkPp+qghndcfmVQx/Sk8a4EpNMkUwqEHSHiIL0k8cs57DJOyYxg6ydU47ltP4tI4YBWJ30g=="
       }
     },
     allIds: [
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-S8Vfl1A7sOnLRHG51JrBlU9pSys=",
-      "newDevice-f6ca6710e78043568ddf86b70bb4f010-BrMRGJOGcYME9RFlUghBJi7RBNM="
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-YRJcUBaw5IRyRP02Y5K3XF9aX1w=",
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-A1CZP43xxSViySDKW+u5q/z3KdQ="
     ]
   }
 });
