@@ -107,7 +107,7 @@ export const mapSecretParams = (secretId, authId, secretType, data) => {
     let pw = "";
     try {
       const method = hashMethod;
-      const hashObj = new jssha(method, "TEXT");
+      const hashObj = new jssha(method.toUpperCase(), "TEXT");
       hashObj.update(password);
       pw = hashObj.getHash("B64");
       newSecret = {
