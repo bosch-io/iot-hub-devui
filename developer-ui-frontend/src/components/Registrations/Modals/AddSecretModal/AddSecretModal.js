@@ -64,7 +64,7 @@ const AddSecretModal = ({
         )}
         <TextField asField name="password" type="password" label="Password" />
       </ConfigurationModalBody>
-      <AdvancedSection />
+
       <ConfigurationModalFooter
         submitType="submit"
         toggleModal={() => changeIsOpen(!isOpen)}
