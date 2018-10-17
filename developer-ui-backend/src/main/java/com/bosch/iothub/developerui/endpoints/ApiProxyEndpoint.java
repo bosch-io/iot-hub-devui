@@ -52,8 +52,18 @@ public final class ApiProxyEndpoint implements HttpEndpoint {
         ProxyOptions proxyOptions = getProxyOptions();
         if(proxyOptions != null) {
             options.setProxyOptions(proxyOptions);
-            options.setVerifyHost(deviceRegistryConfig.isHostnameVerificationRequired());
         }
+
+        if(!deviceRegistryConfig.isHostnameVerificationRequired()) {
+            LOG.warn("Hostname verification for rest calls is disabled! Use this setting only for development " +
+                    "purposes.");
+        }
+        else {
+            LOG.debug("Hostname verification is enabled!");
+        }
+
+        options.setTrustAll(!deviceRegistryConfig.isHostnameVerificationRequired());
+        options.setVerifyHost(deviceRegistryConfig.isHostnameVerificationRequired());
         client = WebClient.create(vertx, options);
     }
 
