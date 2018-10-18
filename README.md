@@ -29,6 +29,9 @@ The Hub Developer UI works best using the following system environment:
 * Google Chrome
 
 ## Usage
+* Download the current release from our github release page: [Releases](https://github.com/bsinno/iot-hub-devui/releases).
+Alternatively you can clone the repo and build the source code on your own. 
+
 * To use the Hub Developer UI you will need a Bosch IoT Hub Tenant. There is a free service plan offering available: [Bosch IoT Hub][1]
 
 * The configuration of the Hub Developer UI is performed in the `application.properties` file. Before you can use the Hub Developer UI you must configure your tenant credentials in this file.
