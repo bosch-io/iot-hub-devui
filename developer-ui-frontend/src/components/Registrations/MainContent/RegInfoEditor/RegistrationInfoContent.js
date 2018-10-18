@@ -4,13 +4,13 @@
 import React, { Component } from "react";
 import "styles/jsonEditor.scss";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 // Redux
 import { connect } from "react-redux";
 import {
   selectDeviceById,
   selectIsFetchingByDeviceId
 } from "reducers/selectors";
-import { updateRegistrationInfo } from "actions/RegistrationActions";
 import { addCustomNotification } from "actions/globalActions";
 // Child Components
 import Accordion from "components/common/Accordion";
@@ -18,12 +18,9 @@ import AccordionSection, {
   AccordionSectionBody,
   AccordionSectionHeader
 } from "components/common/Accordion/AccordionSection";
-import Spinner from "components/common/Spinner";
+import RegistrationInfoBody from "./RegistrationInfoBody";
 import TooltipMenu, { TooltipMenuOption } from "components/common/TooltipMenu";
 import HoverTooltip from "components/common/HoverTooltip";
-// Code Syntax Highlighting for the modal view (Prism.js)
-import Prism from "prismjs";
-import Parser from "html-react-parser";
 // SVG Imports
 import InfoIcon from "images/infoIcon.svg";
 import CodeIcon from "images/codeIcon.svg";
@@ -44,21 +41,21 @@ class RegistrationInfoContentWrapped extends Component {
   }
 
   render() {
-    this.menuOptions = [
+    const { regInfo, isFetching, deviceId } = this.props;
+    const { menuExpanded } = this.state;
+    const menuBtnId = "registrations-menu-btn";
+    const menuOptions = [
       {
         value: "Configure Gateway",
         icon: <GatewayIcon />,
-        route: `/registrations/${this.props.deviceId}/addGateway/`
+        route: `/registrations/${deviceId}/registration/addGateway`
       },
       {
         value: "Edit Raw",
         icon: <CodeIcon />,
-        route: `/registrations/${this.props.deviceId}/raw/`
+        route: `/registrations/${deviceId}/registration/raw`
       }
     ];
-    const { regInfo } = this.props;
-    const { menuExpanded } = this.state;
-    const menuBtnId = "registrations-menu-btn";
     return (
       <Accordion>
         <AccordionSection className="accordion-tab" sticky>
@@ -77,27 +74,13 @@ class RegistrationInfoContentWrapped extends Component {
               toggleOpen={this.toggleMenu}
               ancorId={menuBtnId}
             >
-              {this.menuOptions.map((option, index) => (
+              {menuOptions.map((option, index) => (
                 <TooltipMenuOption key={index} {...option} />
               ))}
             </TooltipMenu>
           </AccordionSectionHeader>
           <AccordionSectionBody>
-            <div id="info-console" className="reg-mode">
-              {this.props.isFetching && (
-                <span className="fetching-overlay">
-                  <Spinner type="bubbles" />
-                </span>
-              )}
-              <pre>
-                {Parser(
-                  Prism.highlight(
-                    JSON.stringify(regInfo, null, 2),
-                    Prism.languages.json
-                  )
-                )}
-              </pre>
-            </div>
+            <RegistrationInfoBody regInfo={regInfo} isFetching={isFetching} />
           </AccordionSectionBody>
         </AccordionSection>
         {!menuExpanded && (
@@ -108,11 +91,16 @@ class RegistrationInfoContentWrapped extends Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const regInfo = ownProps.selectedDevice
-    ? selectDeviceById(state, ownProps.selectedDevice)
+  let regInfo = ownProps.selectedDevice;
+  if (selectDeviceById(state, regInfo)) {
+    if (regInfo) {
+      regInfo = selectDeviceById(state, ownProps.selectedDevice)
         .get("registrationInfo")
-        .toJS()
-    : null;
+        .toJS();
+    } else {
+      regInfo = null;
+    }
+  }
   const deviceId = ownProps.selectedDevice;
   return {
     regInfo: Object.assign({ "device-id": deviceId }, regInfo),
@@ -121,20 +109,19 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 const mapDispatchToProps = dispatch => ({
-  updateRegInfo: (deviceId, info) =>
-    dispatch(updateRegistrationInfo(deviceId, info)),
   triggerNotification: (text, level) =>
     dispatch(addCustomNotification(text, level))
 });
-const RegistrationInfoContent = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegistrationInfoContentWrapped);
+const RegistrationInfoContent = withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(RegistrationInfoContentWrapped)
+);
 
 RegistrationInfoContentWrapped.propTypes = {
   deviceId: PropTypes.string,
   regInfo: PropTypes.object,
-  updateRegInfo: PropTypes.func.isRequired,
   triggerNotification: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired
 };
