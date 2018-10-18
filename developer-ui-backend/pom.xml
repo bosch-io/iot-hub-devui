@@ -14,7 +14,7 @@
 
     <properties>
         <revision>0-SNAPSHOT</revision>
-        <vertx.version>3.5.3</vertx.version>
+        <vertx.version>3.5.4</vertx.version>
         <jackson.version>2.9.5</jackson.version>
         <proton.version>0.22.0</proton.version>
         <logback.version>1.2.3</logback.version>
