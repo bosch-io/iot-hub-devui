@@ -9,15 +9,20 @@ import { Field } from "redux-form/immutable";
 import "styles/datePicker.scss";
 import moment from "moment";
 import CalendarIcon from "images/calendarIcon.svg";
+import CancelIcon from "images/cancelIcon.svg";
 
 /* eslint-disable react/no-multi-comp */
 class DatePickerWrapped extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      placeholderText: this.props.placeholder
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleInputClick = this.handleInputClick.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.clearText = this.clearText.bind(this);
     this.component = React.createRef();
   }
 
@@ -30,7 +35,6 @@ class DatePickerWrapped extends Component {
   }
 
   handleChange(date) {
-    console.log(date);
     this.props.input.onChange(moment(date));
     this.props.input.onBlur();
   }
@@ -47,25 +51,31 @@ class DatePickerWrapped extends Component {
     active ? this.props.input.onBlur() : this.props.input.onFocus();
   }
 
+  clearText() {
+    this.props.input.onChange(null);
+    this.setState({ placeholderText: null });
+  }
+
   render() {
     const {
-      placeholder,
       input,
       meta: { active }
     } = this.props;
-
+    const { placeholderText } = this.state;
     return (
       <div className={`date-picker-wrapper ${active ? "active" : ""}`}>
         <ReactDatePicker
           ref={r => {
             this.component = r;
           }}
-          selected={input.value ? moment(input.value, "MM/DD/YYYY") : null}
+          dateFormat="YYYY-MM-DDTHH:mm:ss"
+          selected={input.value ? moment(input.value) : null}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
           onClickOutside={this.handleBlur}
-          placeholderText={placeholder}
+          placeholderText={placeholderText}
         />
+        <CancelIcon onClick={this.clearText} className="iconSpace" />
         <CalendarIcon onClick={this.toggle} />
         <FocusBar className={`bar ${active ? "active" : ""}`} />
       </div>
@@ -94,7 +104,8 @@ class DatePicker extends Component {
     this.state = {
       value: moment(),
       pristine: true,
-      active: false
+      active: false,
+      placeholder: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleFocus = this.handleFocus.bind(this);

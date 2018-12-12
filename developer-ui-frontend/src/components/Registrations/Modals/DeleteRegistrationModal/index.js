@@ -21,12 +21,10 @@ class DeleteRegistrationModalWrapped extends Component {
     super(props);
     this.state = {
       footerOptionChecked: true,
-      footerOptionCheckedSecond: true,
       isOpen: true
     };
     this.changeIsOpen = this.changeIsOpen.bind(this);
     this.onCheckboxClick = this.onCheckboxClick.bind(this);
-    this.onCheckboxClickSecond = this.onCheckboxClickSecond.bind(this);
     this.confirm = this.confirm.bind(this);
   }
 
@@ -36,29 +34,18 @@ class DeleteRegistrationModalWrapped extends Component {
     }));
   }
 
-  onCheckboxClickSecond() {
-    this.setState(state => ({
-      footerOptionCheckedSecond: !state.footerOptionCheckedSecond
-    }));
-  }
-
   changeIsOpen(opened) {
     this.setState({ isOpen: opened });
   }
 
   confirm() {
-    const { resetSelectedDevice, deleteReg, deviceId } = this.props;
+    const { resetSelectedDevice, deleteReg, deviceId, history } = this.props;
     this.changeIsOpen(false);
     const rememberedSelection = deviceId;
-    resetSelectedDevice(); // Clear selection
+    // Clear selection
+    resetSelectedDevice();
+    history.push("/registrations");
     if (this.state.footerOptionChecked) {
-      this.props
-        .deleteAllCredentialsOfDevice(rememberedSelection)
-        .then(() => deleteReg(rememberedSelection));
-    } else {
-      deleteReg(rememberedSelection);
-    }
-    if (this.state.footerOptionCheckedSecond) {
       this.props
         .deleteAllCredentialsOfDevice(rememberedSelection)
         .then(() => deleteReg(rememberedSelection));
@@ -119,6 +106,7 @@ DeleteRegistrationModalWrapped.propTypes = {
   deleteReg: PropTypes.func.isRequired,
   deleteAllCredentialsOfDevice: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   resetSelectedDevice: PropTypes.func.isRequired
 };
 

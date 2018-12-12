@@ -17,6 +17,7 @@ AccordionSection.propTypes = {
   toggleExpanded: requiredIf(PropTypes.func, props => !props.sticky),
   sticky: PropTypes.bool,
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   children: props => {
     if (
       !Array.isArray(props.children) ||

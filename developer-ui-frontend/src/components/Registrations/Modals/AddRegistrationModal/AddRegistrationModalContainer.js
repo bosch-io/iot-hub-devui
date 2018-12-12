@@ -173,8 +173,16 @@ class AddRegistrationModalContainer extends React.Component {
     ) : (
       <Redirect
         to={`/registrations/${selectedDevice ? selectedDevice + "/" : ""}${
-          selectedSubMenu ? selectedSubMenu : ""
-        }${selectedAuthId ? "/" + selectedAuthId : ""}`}
+          match.params.registrationsSubMenu
+            ? match.params.registrationsSubMenu
+            : ""
+        }${
+          selectedDevice &&
+          match.params.registrationsSubMenu &&
+          match.params.authId
+            ? "/" + match.params.authId
+            : ""
+        }`}
       />
     );
   }

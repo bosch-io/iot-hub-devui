@@ -48,7 +48,9 @@ class DeleteCredentialModalWrapped extends Component {
       </ConfirmationModal>
     ) : (
       <Redirect
-        to={`/registrations/${match.params.selectedDeviceId}/credentials/`}
+        to={`/registrations/${match.params.selectedDeviceId}/credentials/${
+          match.params.selectedAuthId
+        }`}
       />
     );
   }

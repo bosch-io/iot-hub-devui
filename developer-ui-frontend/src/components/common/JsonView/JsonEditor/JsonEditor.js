@@ -2,6 +2,7 @@
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { JsonEditor as Editor } from "jsoneditor-react";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
@@ -11,17 +12,20 @@ import PropTypes from "prop-types";
 import ace from "brace";
 import "styles/jsonEditor.scss";
 import "brace/mode/json";
-// import "brace/theme/tomorrow_night_blue";
 import "./customAceTheme";
+import Ajv from "ajv";
 
 const FixedBtnsContainer = styled.div`
   position: absolute;
   right: 0;
-  bottom: 0;
+  ${props => (props.snapFooter ? `bottom: 100%` : `bottom: 0`)};
+  ${props => (props.snapFooter ? `z-index: 0;` : `z-index: 5;`)};
   justify-content: flex-end;
   align-items: flex-end;
-  margin: 1rem;
-  z-index: 1;
+  padding: 0.6rem;
+  background-color: #2d3e50;
+  border-top-left-radius: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
 `;
 
 const EditorBtn = styled(FlatButton)`
@@ -33,6 +37,7 @@ const EditorBtn = styled(FlatButton)`
 
 const LINE_HEIGHT = 20; // px
 const BOTTOM_MARGIN = 10; // px
+const ajv = new Ajv({ allErrors: false, verbose: false });
 
 class JsonEditor extends Component {
   constructor(props) {
@@ -70,21 +75,48 @@ class JsonEditor extends Component {
       style,
       className,
       dynamicHeight,
-      value
+      value,
+      schema,
+      snapFooter,
+      isLeaving
     } = this.props;
     const { currentJson } = this.state;
+    const renderedButtons = (
+      <FixedBtnsContainer snapFooter={snapFooter}>
+        <EditorBtn cancel onClick={onCancel}>
+          CANCEL
+        </EditorBtn>
+        <EditorBtn secondary onClick={() => onSubmit(this.state.currentJson)}>
+          SAVE
+        </EditorBtn>
+      </FixedBtnsContainer>
+    );
+    let fixedButtons;
+    // If the Accordion footer is snapped, render the buttons relative to the footer with a Portal
+    if (snapFooter) {
+      const footerPortalNode = document.getElementById(
+        "fixed-acc-footer-modal"
+      );
+      if (footerPortalNode) {
+        fixedButtons = ReactDOM.createPortal(renderedButtons, footerPortalNode);
+      }
+    } else {
+      fixedButtons = renderedButtons;
+    }
     return (
       <div
         className={`jsoneditor-container ${className ? className : ""}`}
         style={style}>
-        <Prompt
-          when={currentJson !== value}
-          message={location =>
-            location.state && location.state.withChangesSaved
-              ? true
-              : "Are you sure you want to quit the Editor? Changes will be discarded"
-          }
-        />
+        {!isLeaving && (
+          <Prompt
+            when={currentJson !== value}
+            message={location =>
+              location.state && location.state.withChangesSaved
+                ? true
+                : "Are you sure you want to quit the Editor? Changes will be discarded"
+            }
+          />
+        )}
         <Editor
           {...editorConfig}
           value={currentJson}
@@ -92,18 +124,13 @@ class JsonEditor extends Component {
           search={false}
           navigationBar={false}
           ace={ace}
+          ajv={ajv}
+          schema={schema}
           mode="code"
           theme="ace/theme/prism_duo_tone"
           ref={dynamicHeight ? this.editorRef : null}
         />
-        <FixedBtnsContainer>
-          <EditorBtn cancel onClick={onCancel}>
-            CANCEL
-          </EditorBtn>
-          <EditorBtn secondary onClick={() => onSubmit(this.state.currentJson)}>
-            SAVE
-          </EditorBtn>
-        </FixedBtnsContainer>
+        {!isLeaving && fixedButtons}
       </div>
     );
   }
@@ -117,7 +144,10 @@ JsonEditor.propTypes = {
   style: PropTypes.object,
   className: PropTypes.string,
   dynamicHeight: PropTypes.bool,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  schema: PropTypes.object,
+  snapFooter: PropTypes.bool,
+  isLeaving: PropTypes.bool
 };
 
 export default withRouter(JsonEditor);

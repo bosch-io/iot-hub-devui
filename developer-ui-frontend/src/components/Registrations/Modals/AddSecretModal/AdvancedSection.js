@@ -37,7 +37,8 @@ class AdvancedSection extends Component {
           expanded={expanded}
           toggle={this.toggleSection}
           className="expand-link"
-          openToTop>
+          openToTop
+        >
           Advanced
         </ExpandLink>
 

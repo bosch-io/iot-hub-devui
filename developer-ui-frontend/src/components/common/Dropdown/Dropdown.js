@@ -2,6 +2,7 @@
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
 import React, { Component } from "react";
+import { Field } from "redux-form/immutable";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import enhanceWithClickOutside from "react-click-outside";
@@ -29,6 +30,8 @@ const DropdownWrapper = styled.div`
     z-index: 4;`};
 `;
 
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/prop-types */
 class Dropdown extends Component {
   constructor(props) {
     super(props);
@@ -50,10 +53,15 @@ class Dropdown extends Component {
   }
 
   selectItem(item) {
+    const { onChange } = this.props;
     this.setState({
       selectedItem: item,
       showItems: false
     });
+    /* If the component is a Redux Form Field,
+    the onChange is provided as prop and needs to be called
+    with the selection */
+    onChange && onChange(item.value);
   }
 
   handleClickOutside() {
@@ -61,10 +69,10 @@ class Dropdown extends Component {
   }
 
   render() {
-    const { input, items } = this.props;
+    const { items, ...other } = this.props;
     const { selectedItem, showItems } = this.state;
     return (
-      <DropdownOuter>
+      <DropdownOuter {...other}>
         <DropdownWrapper showItems={showItems}>
           <DropdownCurrentSelection
             toggle={this.toggleDropdown}
@@ -86,10 +94,26 @@ class Dropdown extends Component {
 Dropdown.propTypes = {
   disabled: PropTypes.bool,
   items: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.number, value: PropTypes.string })
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      value: PropTypes.string
+    })
   ),
-  selectedItem: PropTypes.array,
-  input: PropTypes.object
+  selectedItem: PropTypes.object,
+  input: PropTypes.object,
+  name: PropTypes.string,
+  className: PropTypes.string
 };
 
-export default enhanceWithClickOutside(Dropdown);
+const EnhancedDropdown = enhanceWithClickOutside(Dropdown);
+
+const DropdownStyledConnected = ({ input, ...others }) => (
+  <EnhancedDropdown {...input} {...others} />
+);
+
+export default props =>
+  props.asField ? (
+    <Field {...props} component={DropdownStyledConnected} />
+  ) : (
+    <EnhancedDropdown {...props} />
+  );

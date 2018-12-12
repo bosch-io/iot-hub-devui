@@ -121,7 +121,8 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
           </Fragment>
         }
         id="subConfigForm-container"
-        className={this.state.done ? "done" : ""}>
+        className={this.state.done ? "done" : ""}
+      >
         <form className="subConfigForm" onSubmit={handleSubmit(this.submit)}>
           <div id="registry-search-wrapper">
             <RegistrySearchbar
@@ -137,13 +138,16 @@ export class InitialSubscriptionsSelectionWrapped extends React.Component {
               changeSelected={this.changeSelected}
             />
           </div>
-          <RoundOutlineButton
-            primary
-            submitAnimation
-            type="submit"
-            disabled={numberOfSubscribedDevices === 0}>
-            Start
-          </RoundOutlineButton>
+          <div style={{ position: "relative", top: "25px" }}>
+            <RoundOutlineButton
+              primary
+              submitAnimation
+              type="submit"
+              disabled={numberOfSubscribedDevices === 0}
+            >
+              Start
+            </RoundOutlineButton>
+          </div>
         </form>
       </BigCard>
     );

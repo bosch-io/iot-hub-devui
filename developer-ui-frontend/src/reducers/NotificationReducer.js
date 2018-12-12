@@ -51,7 +51,7 @@ const notificationReducer = (state = initialState, action = {}) => {
     case actionTypes.NEW_REG:
       return state.withMutations(reducedState =>
         reducedState
-          .set("message", `${action.device.deviceId} successfully registered`)
+          .set("message", `${action.deviceId} successfully registered`)
           .set("level", "success")
       );
     case actionTypes.CREATING_REG_FAILED:

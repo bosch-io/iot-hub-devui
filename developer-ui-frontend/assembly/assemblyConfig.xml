@@ -13,7 +13,7 @@
    </fileSets>
    <files>
       <file>
-         <source>${project.basedir}/LICENSE.TXT</source>
+         <source>${project.basedir}/LICENSE</source>
          <outputDirectory>.</outputDirectory>
       </file>
       <file>

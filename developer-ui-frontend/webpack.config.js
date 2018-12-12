@@ -74,7 +74,7 @@ module.exports = {
     filename: "app.bundle.js",
     publicPath: publicPathConfig
   },
-  stats: { errorDetails: true },
+  stats: "verbose",
   devtool: isProd ? "source-map" : "cheap-module-source-map",
   module: {
     rules: [

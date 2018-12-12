@@ -23,11 +23,11 @@ const Caret = styled.span`
     props.openToTop ? `0 0.4em 0.4em 0.4em` : `0.4em 0.4em 0 0.4em`};
   border-color: ${props =>
     props.openToTop
-      ? `transparent transparent ${props.theme.accentBlue} 
+      ? `transparent transparent ${props.theme.accentBlue}
     transparent`
       : `${props.theme.accentBlue} transparent transparent
     transparent`};
-  margin-right: 1em;
+  margin-right: 0.5em;
 
   ${props =>
     props.expanded &&

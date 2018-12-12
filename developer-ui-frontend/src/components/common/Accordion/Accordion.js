@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Measure from "react-measure";
 import throttle from "lodash.throttle";
 
-const FOOTER_HEIGHT = 40;
+export const FOOTER_HEIGHT = 40;
 
 /* eslint-disable react/no-multi-comp */
 // AccordionContainer constrains the dimensions if the maximum height gets exceeded
@@ -42,12 +42,16 @@ const FixedFooterPortal = styled.div`
 
 // Create a context to expose state that is global to the whole componenent (asField, name, leadingCheckbox)
 // to all children
-const AccordionContext = React.createContext();
+export const AccordionContext = React.createContext();
 // Also create a HOC as simple API to wrap the children
 export const withAccordionContext = WrappedComponent => props => (
   <AccordionContext.Consumer>
-    {({ snapFooter }) => (
-      <WrappedComponent {...props} snapFooter={snapFooter} />
+    {({ snapFooter, containerHeight }) => (
+      <WrappedComponent
+        {...props}
+        containerHeight={containerHeight}
+        snapFooter={snapFooter}
+      />
     )}
   </AccordionContext.Consumer>
 );

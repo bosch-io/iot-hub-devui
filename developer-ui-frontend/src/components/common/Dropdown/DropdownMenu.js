@@ -70,7 +70,10 @@ const DropdownMenu = ({ show, items, input, selectItem }) => (
 DropdownMenu.propTypes = {
   show: PropTypes.bool,
   items: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.number, value: PropTypes.string })
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      value: PropTypes.string
+    })
   ),
   input: PropTypes.object,
   selectItem: PropTypes.func.isRequired

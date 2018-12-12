@@ -8,7 +8,7 @@ import * as fromConnection from "./ConnectionSelectors";
 import * as fromCredentials from "./CredentialsSelectors";
 import { createSelector } from "reselect";
 import { checkLog } from "utils";
-import { OrderedMap, fromJS } from "immutable";
+import { denormalizeCredential } from "api/schemas";
 
 // Selector Shortcuts
 // Naming:
@@ -49,6 +49,8 @@ export const selectCredentialIdsByDeviceId = (state, id) =>
   fromDevices.selectCredentialIdsByDeviceId(state.get("devices"), id);
 export const selectRegistrationInfo = (state, id) =>
   fromDevices.selectRegistrationInfo(state.get("devices"), id);
+export const selectAllDeviceIds = state =>
+  fromDevices.selectAllDeviceIds(state.get("devices"));
 
 export const selectAllFilters = state =>
   fromFilter.selectAllFilters(state.get("filters"));
@@ -108,40 +110,16 @@ export const selectVisibleLogs = createSelector(
   [selectAllFilters, selectAllLogs],
   (filters, logs) => logs.filter(log => checkLog(log, filters))
 );
-// TODO: Reimplement as Reselect Memoized Selector
-export const selectAllCredentialsApiFormat = (state, deviceId) => {
-  const credentialIds = selectCredentialIdsByDeviceId(state, deviceId);
-  const credentialsFromStore = credentialIds.map(credId =>
-    selectCredentialById(state, credId)
-  );
-  // (1) Add the device-id property, (2) get the correct secrets format and (3) bring it in the correct order
-  const allCreds = credentialsFromStore.map(credential => {
-    const secretsFromStore = selectSecretsByCredentialId(
-      state,
-      credential.get("auth-id")
-    );
-    const unorderedMap = credential.withMutations(cred =>
-      cred
-        .set("device-id", deviceId) // (1)
-        .set(
-          "secrets",
-          secretsFromStore.map(secret => {
-            return secret.delete("secretId");
-          }) // (2)
-        )
-    );
-    // (3)
-    return OrderedMap({
-      "device-id": unorderedMap.get("device-id"),
-      type: unorderedMap.get("type"),
-      "auth-id": unorderedMap.get("auth-id")
-    }).merge(unorderedMap);
-  });
-  return allCreds;
-};
 
-export const selectCredentialApiFormat = (state, deviceId, authId) => {
-  return selectAllCredentialsApiFormat(state, deviceId).find(
-    cred => cred.get("auth-id") === authId
+export const selectDenormalizedCredential = (state, deviceId, authId) =>
+  denormalizeCredential(
+    deviceId,
+    authId,
+    state.getIn(["credentials", "byId"]),
+    state.getIn(["credentials", "secrets", "byId"])
   );
+
+export const selectDenormalizedCredentials = (state, deviceId) => {
+  const authIds = selectCredentialIdsByDeviceId(state, deviceId);
+  return authIds.map(id => selectDenormalizedCredential(state, deviceId, id));
 };

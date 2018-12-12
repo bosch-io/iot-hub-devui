@@ -42,6 +42,9 @@ div.jsoneditor .jsoneditor-search input {
     .jsoneditor-menu {
       animation: fade-out 0.2s ease-out forwards;
     }
+    .jsoneditor-text-errors {
+      display: none;
+    }
 
     .jsoneditor-outer {
       margin-left: 0; // gets overwritten by the slide-out animation
@@ -72,7 +75,6 @@ div.jsoneditor table {
   border-collapse: collapse;
   width: auto;
 }
-
 div.jsoneditor td,
 div.jsoneditor th {
   padding: 0;
@@ -279,7 +281,7 @@ div.jsoneditor-container {
     height: 100%;
     margin: -40px 0 0 0;
     margin-left: -41px; // gets overwritten by forwards slide-in animation
-    padding: 40px 0 0 0;
+    padding: 40px 0 0 0 !important;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -378,9 +380,13 @@ div.jsoneditor td,
 div.jsoneditor th,
 div.jsoneditor textarea,
 .jsoneditor-schema-error {
-  font-family: "Roboto Mono", monospace;
-  font-size: 10pt;
-  color: #1a1a1a;
+  font-family: "Roboto", "RobotoDraft", "Helvetica Neue", "Helvetica", "Arial",
+    Sans-Serif;
+  font-size: 1.3rem;
+  color: #000;
+  letter-spacing: 0.01071em;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 /* popover */
@@ -546,10 +552,45 @@ div.jsoneditor-tree .jsoneditor-schema-error {
 /* JSON schema errors displayed at the bottom of the editor in mode text and code */
 
 .jsoneditor .jsoneditor-text-errors {
-  width: 100%;
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  z-index: 4;
   border-collapse: collapse;
-  background-color: #ffef8b;
-  border-top: 1px solid #ffd700;
+  background-color: rgba(255, 239, 139, 0.65);
+  animation: slideDown 0.2s ease-out forwards;
+  margin-top: 0.5rem;
+  border-radius: 0.4rem;
+  @keyframes slideDown {
+    0% {
+      transform: translate(-50%, -100%);
+    }
+    100% {
+      transform: translate(-50%, 0);
+    }
+  }
+}
+.jsoneditor .jsoneditor-text-errors tr {
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
+  padding-right: 1rem;
+
+  &:not(:first-of-type) {
+    display: none;
+  }
+
+  td {
+    &:empty {
+      display: none;
+    }
+    pre {
+      margin: 0;
+    }
+    button {
+      vertical-align: middle;
+    }
+  }
 }
 
 .jsoneditor .jsoneditor-text-errors td {

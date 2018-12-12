@@ -23,7 +23,7 @@ const ClickProxy = styled.span`
 
 const HeaderContainer = styled.div`
   position: relative;
-  z-index: 1;
+  z-index: 0;
   display: flex;
   justify-content: space-between;
   height: 4rem;
@@ -37,6 +37,13 @@ const HeaderContainer = styled.div`
   ${props =>
     props.expanded &&
     `box-shadow: inset 0px -5px 5px 0px rgba(28, 33, 35, 0.14);`};
+  ${props =>
+    props.disabled &&
+    `
+    pointer-events: none;
+    background: #e4e4e4 !important;
+    color: rgba(33, 33, 33, 0.47) !important;
+  `}
 `;
 
 const ActionButtonsWrapper = styled.span`
@@ -73,7 +80,12 @@ const TitleIcon = styled(({ icon, ...props }) =>
   margin-right: 1rem;
   overflow: visible;
   path {
-    fill: ${props => props.theme.accentColor};
+    fill: ${props => {
+      if (props.disabled) {
+        return "rgba(33, 33, 33, 0.47)";
+      }
+      return props.theme.accentColor;
+    }};
   }
 `;
 
@@ -84,18 +96,19 @@ const AccordionSectionHeader = ({
   toggleExpanded,
   children,
   sticky,
+  disabled,
   ...other
 }) => (
   <div>
-    <HeaderContainer expanded={expanded} {...other}>
+    <HeaderContainer expanded={expanded} disabled={disabled} {...other}>
       <ClickProxy onClick={toggleExpanded} sticky={sticky} />
       <TitleContainer>
-        {icon ? <TitleIcon icon={icon} /> : null}
+        {icon ? <TitleIcon icon={icon} disabled={disabled} /> : null}
         {title}
       </TitleContainer>
       <ActionButtonsWrapper>
         {(expanded || sticky) && children}
-        {!sticky && (
+        {!sticky && !disabled && (
           <CaretDown
             className={
               expanded ? "header-icon-right caret-rotated" : "header-icon-right"
@@ -110,6 +123,7 @@ const AccordionSectionHeader = ({
 
 AccordionSectionHeader.propTypes = {
   expanded: PropTypes.bool,
+  disabled: PropTypes.bool,
   toggleExpanded: PropTypes.func,
   title: PropTypes.string.isRequired,
   sticky: PropTypes.bool,

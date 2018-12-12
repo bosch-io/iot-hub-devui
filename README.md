@@ -23,11 +23,6 @@ The following features are available:
 * Register new devices and credentials
 * View devices and their credentials
 
-## System Requirements
-The Hub Developer UI works best using the following system environment:
-* Java 8 
-* Google Chrome
-
 ## Usage
 * Download the current release from our github release page: [Releases](https://github.com/bsinno/iot-hub-devui/releases).
 Alternatively you can clone the repo and build the source code on your own. 

@@ -7,11 +7,11 @@ import {
   NEW_SECRET,
   INIT_EMPTY_CREDENTIAL,
   SECRET_DELETED,
+  UPDATED_CRED_INFO,
+  UPDATED_CRED_SECRETS,
   CREDENTIAL_DELETED,
   CREDENTIALS_FETCHED,
-  UPDATED_CRED_INFO
-} from "actions/actionTypes";
-import { calculateSecretId } from "utils";
+  ENABLED_CRED_CHANGED} from "actions/actionTypes";
 
 export const initialState = fromJS({
   byId: {},
@@ -19,122 +19,102 @@ export const initialState = fromJS({
   secrets: { byId: {}, allIds: [] }
 });
 
+const handleNewSecret = (state, action) => {
+  const newSecretId = action.secret.secretId;
+  return state.withMutations(reducedState =>
+    reducedState
+      .updateIn(["byId", action.authId, "secrets"], ids =>
+        ids.push(newSecretId)
+      )
+      .updateIn(["secrets", "allIds"], ids => ids.push(newSecretId))
+      .setIn(["secrets", "byId", newSecretId], fromJS(action.secret))
+  );
+};
+
 const credentialsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     // CREDENTIALS_FETCHED means Credentials for a specific device-id are fetched
     case CREDENTIALS_FETCHED: {
-      // Loop over the payload and transfer each credential to the store format (defined in initialState)
-      // Update every credential (even those with auth ids that already exist in the store (the payload could be different))
-      const newCredentials = state.toJS();
-      action.data.credentials.forEach(cred => {
-        const { secrets, ...credWithoutSecrets } = cred;
-        const authId = cred["auth-id"];
-        const credInStore = {
-          ...credWithoutSecrets,
-          secrets: []
-        };
-        // (1) Delete every secret associated with that auth-id and (2) adopt the secrets from the API response
-        if (newCredentials.byId[authId]) {
-          newCredentials.byId[authId].secrets.forEach(secretId => {
-            delete newCredentials.secrets.byId[secretId];
-            newCredentials.secrets.allIds.splice(
-              newCredentials.secrets.allIds.findIndex(id => id === secretId),
-              1
-            );
-          });
-        }
-        secrets.forEach(secret => {
-          // (2)
-          const secretId = secret.secretId
-            ? secret.secretId
-            : calculateSecretId(secret, authId);
-          const secretInStore = { secretId, ...secret };
-          newCredentials.secrets.allIds.push(secretId);
-          credInStore.secrets.push(secretId);
-          newCredentials.secrets.byId[secretId] = secretInStore;
+      if (
+        action.data.entities &&
+        action.data.entities.credentials &&
+        action.data.entities.secrets &&
+        action.data.result &&
+        action.data.result.credentials
+      ) {
+        const newCredentials = fromJS({
+          byId: action.data.entities.credentials,
+          allIds: action.data.result.credentials,
+          secrets: {
+            byId: action.data.entities.secrets,
+            allIds: Object.keys(action.data.entities.secrets)
+          }
         });
-        // Either updates the credential or saves a new credential
-        newCredentials.byId[authId] = credInStore;
-        if (!newCredentials.allIds.some(id => id === authId)) {
-          newCredentials.allIds.push(authId);
-        }
-      });
-      // Finally check if there are less credentials in the payload than stored for that device
-      // Which would mean the credential got deleted by another application in the meantime
-      action.prevAuthIds.forEach(credId => {
-        const stillAvailable = action.data.credentials.some(
-          cred => cred["auth-id"] === credId
-        );
-        if (!stillAvailable) {
-          // Cleanup: Delete all associated secrets and the credential
-          const associatedSecretIds = newCredentials.byId[credId].secrets;
-          associatedSecretIds.forEach(secretId => {
-            delete newCredentials.secrets.byId[secretId];
-            newCredentials.secrets.allIds.splice(
-              newCredentials.secrets.allIds.findIndex(id => id === secretId),
-              1
-            );
-          });
-          delete newCredentials.byId[credId];
-          newCredentials.allIds.splice(
-            newCredentials.allIds.findIndex(id => id === credId),
-            1
-          );
-        }
-      });
-      return fromJS(newCredentials);
+        return newCredentials;
+      }
+      return state;
     }
-    case NEW_CREDENTIAL:
+    case NEW_CREDENTIAL: {
+      const newAuthId = action.credential["auth-id"];
+      // secrets are handled by handleNewSecret -> Reset secrets to [] for
+      // credential specific handling
+      const { secrets, ...credentialWithoutSecrets } = action.credential;
+      credentialWithoutSecrets.secrets = [];
       return state.withMutations(reducedState => {
         const newState = reducedState
           .update(
             "allIds",
             ids =>
-              reducedState.getIn(["byId", action.authId])
+              reducedState.getIn(["byId", newAuthId])
                 ? ids
-                : ids.push(action.authId)
+                : ids.push(newAuthId)
           )
           .setIn(
-            ["byId", action.authId],
+            ["byId", newAuthId],
             fromJS({
-              "device-id": action.deviceId,
               enabled: true,
-              ...action.newCredential
+              ...credentialWithoutSecrets
             })
           )
           .updateIn(
-            ["byId", action.authId],
+            ["byId", newAuthId],
             cred =>
               cred.get("firstInitTime") ? cred.delete("firstInitTime") : cred
-          );
+          )
+          .update(stateWithNewCreds => {
+            Object.keys(action.secrets).forEach(secret => {
+              stateWithNewCreds = handleNewSecret(stateWithNewCreds, {
+                authId: action.authId,
+                secret: { ...action.secrets[secret] }
+              });
+            });
+          });
         return newState;
       });
-    case INIT_EMPTY_CREDENTIAL:
+    }
+    case INIT_EMPTY_CREDENTIAL: {
+      const newAuthId = action.credential["auth-id"];
       return state.withMutations(reducedState =>
-        reducedState.update("allIds", ids => ids.push(action.authId)).setIn(
-          ["byId", action.authId],
+        reducedState.update("allIds", ids => ids.push(newAuthId)).setIn(
+          ["byId", newAuthId],
           fromJS({
-            ...action.newCredential,
+            ...action.credential,
             firstInitTime: new Date().getTime()
           })
         )
       );
+    }
+
     case UPDATED_CRED_INFO:
       return state.withMutations(reducedState =>
         reducedState
           .setIn(["byId", action.authId, "enabled"], action.enabled)
           .setIn(["byId", action.authId, "credentialInfo"], fromJS(action.data))
       );
+    case UPDATED_CRED_SECRETS:
+      return state.setIn(["secrets", "allIds"], fromJS(action.newSecrets));
     case NEW_SECRET:
-      const newSecretId = action.secret.secretId;
-      return state.withMutations(reducedState =>
-        reducedState
-          .updateIn(["secrets", "allIds"], ids => ids.push(newSecretId))
-          .setIn(["secrets", "byId", newSecretId], fromJS(action.secret))
-          .updateIn(["byId", action.authId, "secrets"], ids =>
-            ids.push(newSecretId)
-          )
-      );
+      return handleNewSecret(state, action);
     case SECRET_DELETED:
       return state.withMutations(reducedState =>
         reducedState
@@ -146,14 +126,40 @@ const credentialsReducer = (state = initialState, action = {}) => {
             ids.filter(id => id !== action.secretId)
           )
       );
+    case ENABLED_CRED_CHANGED:
+      return state.setIn(["byId", action.authId, "enabled"], action.enabled);
     case CREDENTIAL_DELETED:
-      return state.withMutations(reducedState =>
-        reducedState
-          .deleteIn(["byId", action.authId])
-          .update("allIds", authIds =>
-            authIds.filter(id => id !== action.authId)
-          )
-      );
+      // A Credential may not be loaded in the UI at the time it is deleted
+      // e.g. through "cascading delete" on its registration. This means, changes
+      // to the local app state are only needed if the credential is loaded
+      if (state.getIn(["byId", action.authId])) {
+        const deletedSecretIds = state.getIn([
+          "byId",
+          action.authId,
+          "secrets"
+        ]);
+        return state.withMutations(reducedState =>
+          reducedState
+            .deleteIn(["byId", action.authId])
+            .update("allIds", authIds =>
+              authIds.filter(id => id !== action.authId)
+            )
+            .updateIn(["secrets", "byId"], secrets => {
+              let reducedSecrets = secrets;
+              deletedSecretIds.forEach(id => {
+                reducedSecrets = reducedSecrets.delete(id);
+              });
+              return reducedSecrets;
+            })
+            .updateIn(["secrets", "allIds"], secretIds => {
+              const reducedIds = secretIds.filter(
+                id => deletedSecretIds.indexOf(id) === -1
+              );
+              return reducedIds;
+            })
+        );
+      }
+      return state;
     default:
       return state;
   }

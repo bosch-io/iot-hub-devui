@@ -219,7 +219,7 @@
         cursor: pointer;
         outline: none;
         text-decoration: none;
-        color: $disabled_font_color;
+        color: rgba(0, 0, 0, 0.55);
         z-index: 1;
         list-style: none;
         padding: 1rem;
@@ -228,6 +228,11 @@
         position: relative;
         transition: color 80ms ease-in;
         user-select: none;
+
+        &.disabled {
+          cursor: not-allowed;
+          color: $disabled_font_color;
+        }
 
         &:before {
           content: "";

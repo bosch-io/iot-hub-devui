@@ -82,7 +82,7 @@ const connectionReducer = (state = initialState, action = {}) => {
     case actionTypes.CREATING_REG_FAILED:
     case actionTypes.NEW_REG:
     case actionTypes.REG_DELETED:
-    case actionTypes.SETTED_VIA_PROPERTY:
+    case actionTypes.VIA_PROPERTY_SET:
     case actionTypes.CONFIGURED_GATEWAY:
     case actionTypes.DELETING_REG_FAILED:
     case actionTypes.UPDATED_REG_INFO:
@@ -102,6 +102,10 @@ const connectionReducer = (state = initialState, action = {}) => {
     case actionTypes.CREATING_CREDENTIAL:
     case actionTypes.DELETING_SECRET:
     case actionTypes.DELETING_CREDENTIAL:
+    case actionTypes.UPDATING_CRED_SECRETS:
+    case actionTypes.CHANGING_CRED_SECRETS:
+    case actionTypes.UPDATING_CRED_INFO:
+    case actionTypes.CHANGING_CRED_ENABLED:
       return state.updateIn(["fetchInProgress", "credentials", "byId"], ids => {
         const alreadyFetching = ids.some(id => id === action.authId);
         if (alreadyFetching) {
@@ -118,6 +122,12 @@ const connectionReducer = (state = initialState, action = {}) => {
     case actionTypes.DELETING_SECRET_FAILED:
     case actionTypes.CREDENTIAL_DELETED:
     case actionTypes.DELETING_CREDENTIAL_FAILED:
+    case actionTypes.DELETING_CRED_INFO_FAILED:
+    case actionTypes.DELETING_CRED_SECRETS_FAILED:
+    case actionTypes.UPDATED_CRED_INFO:
+    case actionTypes.CHANGED_CRED_ENABLED:
+    case actionTypes.UPDATED_CRED_SECRETS:
+    case actionTypes.CHANGED_CRED_SECRETS:
       return state.updateIn(["fetchInProgress", "credentials", "byId"], ids => {
         const credIndex = ids.findIndex(id => id === action.authId);
         if (credIndex === -1) {

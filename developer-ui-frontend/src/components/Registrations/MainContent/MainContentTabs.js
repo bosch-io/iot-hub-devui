@@ -17,7 +17,8 @@ const MainContentTabs = withRouter(
       <NavLink
         activeClassName="active"
         to={`/registrations/${selectedDeviceId}/registration`}
-        onClick={selectedDeviceId ? () => {} : e => e.preventDefault()}>
+        onClick={selectedDeviceId ? () => {} : e => e.preventDefault()}
+        className={!selectedDeviceId ? "disabled" : null}>
         Registration Info
       </NavLink>
       <NavLink
@@ -29,7 +30,8 @@ const MainContentTabs = withRouter(
           !credentialsTabLocked
             ? () => fetchCredential(selectedDeviceId)
             : e => e.preventDefault()
-        }>
+        }
+        className={credentialsTabLocked ? "disabled" : null}>
         Credentials
       </NavLink>
     </ul>

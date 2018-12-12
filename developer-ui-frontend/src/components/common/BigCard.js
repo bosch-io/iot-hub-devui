@@ -2,7 +2,8 @@
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import { transparentize, rgba } from "polished";
 import PropTypes from "prop-types";
 import BackgroundImage from "images/backgrounds/backgroundHeader.jpg";
 
@@ -63,9 +64,59 @@ const CardHeader = styled.h1`
   }
 `;
 
-const BigCard = ({ title, children, ...other }) => (
+const infiniteProgress = keyframes`
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+`;
+
+const openAnimation = keyframes`
+  from {
+    transform: scaleY(0);
+  } to {
+    transform: scaleY(1);
+  }
+`;
+
+const LoadingBar = styled.div`
+  position: absolute;
+  bottom: 0;
+  height: 0.3rem;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  animation: ${openAnimation} 0.5s cubic-bezier(0.12, 2, 0.67, 0.98) forwards;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25%;
+    height: 100%;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      to right,
+      ${props => transparentize(1, props.theme.accentGreen)} 0%,
+      ${props => rgba(props.theme.accentGreen, 1)} 10%,
+      ${props => rgba(props.theme.accentGreen, 1)} 90%,
+      ${props => transparentize(1, props.theme.accentGreen)} 100%
+    );
+    z-index: 3;
+    margin: 0;
+    transform-origin: 50% 100%;
+    animation: ${infiniteProgress} 2s cubic-bezier(0.7, 0.01, 0.37, 1) infinite;
+  }
+`;
+
+const BigCard = ({ title, children, loadingBarShown, ...other }) => (
   <Card {...other}>
-    <CardHeader>{title}</CardHeader>
+    <CardHeader>
+      {title}
+      {loadingBarShown && <LoadingBar />}
+    </CardHeader>
     {children}
   </Card>
 );
@@ -75,7 +126,8 @@ BigCard.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.node,
     PropTypes.arrayOf(PropTypes.node)
-  ])
+  ]),
+  loadingBarShown: PropTypes.bool
 };
 
 export default BigCard;

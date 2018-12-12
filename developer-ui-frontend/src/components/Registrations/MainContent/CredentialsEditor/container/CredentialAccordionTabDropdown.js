@@ -18,7 +18,8 @@ import MoreIcon from "images/moreIcon.svg";
 import DeleteCredIcon from "images/deletePwCredentialIcon.svg";
 import DeletePwSecretIcon from "images/deletePwSecretIcon.svg";
 import AddPwSecretIcon from "images/addPwSecretIcon.svg";
-
+import CodeIcon from "images/codeIcon.svg";
+import EditIcon from "images/editIcon.svg";
 class CredentialAccordionTabDropdownWrapped extends Component {
   constructor(props) {
     super(props);
@@ -28,22 +29,12 @@ class CredentialAccordionTabDropdownWrapped extends Component {
     };
     this.menuOptions = [
       {
-        value: "Add Secret",
-        icon: <AddPwSecretIcon />,
-        route: `/registrations/${props.selectedDevice}/credentials/${
+        value: "Edit Credential",
+        icon: <EditIcon />,
+        route: `/registrations/${props.selectedDevice}/${
           props.authId
-        }/additionalSecrets`,
-        disabledHoverTooltipId: "addSecretDisabled",
-        disabledText: "You can not have more than 10 secrets in a credential"
-      },
-      {
-        value: "Delete Secret",
-        icon: <DeletePwSecretIcon />,
-        route: `/registrations/${props.selectedDevice}/credentials/${
-          props.authId
-        }/deleteSecrets`,
-        disabledHoverTooltipId: "deleteSecretDisabled",
-        disabledText: "You must have at least one secret in a credential"
+        }/editCredential`,
+        disabledHoverTooltipId: "editCredentialDisabled"
       },
       {
         value: "Delete Credential",
@@ -53,22 +44,31 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         }/deleteCredential`,
         disabledHoverTooltipId: "deleteCredentialDisabled",
         disabledText: "There are no credentials for this device"
+      },
+      {
+        value: "Edit Raw",
+        icon: <CodeIcon />,
+        route: `/registrations/${props.selectedDevice}/credentials/${
+          props.authId
+        }/raw`,
+        disabledHoverTooltipId: "editRawDisabled",
+        disabledText: "There are no credentials for this device"
       }
     ];
     this.toggleDropdownMenu = this.toggleDropdownMenu.bind(this);
   }
 
   getIsDisabled(category) {
-    const { numberOfSecrets, numberOfCredentials } = this.props;
+    const { numberOfCredentials } = this.props;
     let isDisabled = null;
     switch (category) {
-      case "Add Secret":
-        isDisabled = numberOfSecrets >= 10;
-        break;
-      case "Delete Secret":
-        isDisabled = numberOfSecrets <= 1;
+      case "Edit Credential":
+        isDisabled = false;
         break;
       case "Delete Credential":
+        isDisabled = numberOfCredentials === 0;
+        break;
+      case "Edit Raw":
         isDisabled = numberOfCredentials === 0;
         break;
       default:
@@ -97,7 +97,8 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         <TooltipMenu
           open={isOpened}
           toggleOpen={this.toggleDropdownMenu}
-          ancorId={menuBtnId}>
+          ancorId={menuBtnId}
+        >
           {this.menuOptions.map((option, index) => (
             <TooltipMenuOption
               key={index}

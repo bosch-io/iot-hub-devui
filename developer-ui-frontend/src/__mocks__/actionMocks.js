@@ -15,13 +15,9 @@ import {
 import { exampleEventBus } from "__mocks__/storeMocks/stateMocks";
 import { exampleGetAuthIds } from "__mocks__/apiResponses";
 import { fromJS } from "immutable";
-import {
-  formatDateString,
-  randomDate,
-  calculateLogId,
-  calculateFilterId,
-  mapCredentialParams
-} from "utils";
+import { calculateLogId, calculateFilterId } from "utils";
+import { normalize } from "normalizr";
+import { Credential } from "api/schemas";
 
 export const exampleNewLogAction = {
   type: actionTypes.NEW_LOG,
@@ -116,36 +112,50 @@ export const exampleCalculateLogMemoryAction = {
 // Initial fetch
 export const exampleCredentialsFetchedAction = {
   type: actionTypes.CREDENTIALS_FETCHED,
-  data: exampleGetAuthIds,
-  prevAuthIds: fromJS([])
+  data: normalize(exampleGetAuthIds, {
+    credentials: [Credential]
+  }),
+  deviceId: exampleGetAuthIds.credentials[0]["device-id"]
 };
 
 // After fetches were made
 export const exampleCredentialsFetchedAction2 = {
   type: actionTypes.CREDENTIALS_FETCHED,
-  data: exampleGetAuthIds,
-  prevAuthIds: fromJS([
-    "newDevice-97fff113f84b4d91a208889d13236fa8",
-    "newDevice-f6ca6710e78043568ddf86b70bb4f010"
-  ])
+  data: normalize(exampleGetAuthIds, {
+    credentials: [Credential]
+  }),
+  deviceId: exampleGetAuthIds.credentials[0]["device-id"]
 };
 // First credential got deleted in the meantime
 export const exampleCredentialsFetchedAction3 = {
   type: actionTypes.CREDENTIALS_FETCHED,
-  data: { total: 1, credentials: [exampleGetAuthIds.credentials[1]] },
-  prevAuthIds: fromJS([
-    "newDevice-97fff113f84b4d91a208889d13236fa8",
-    "newDevice-f6ca6710e78043568ddf86b70bb4f010"
-  ])
+  data: normalize(
+    { total: 1, credentials: [exampleGetAuthIds.credentials[1]] },
+    {
+      credentials: [Credential]
+    }
+  ),
+  deviceId: exampleGetAuthIds.credentials[0]["device-id"]
 };
 
 export const exampleNewCredentialAction = {
   type: actionTypes.NEW_CREDENTIAL,
   authId: "newDevice-f6ca6710e78043568ddf86b70bb4f010",
-  deviceId: "newDevice",
-  newCredential: mapCredentialParams(
-    "newDevice-f6ca6710e78043568ddf86b70bb4f010",
-    "hashed-password",
-    null
-  )
+  deviceId: "newDevice-f6ca6710e78043568ddf86b70bb4f010",
+  credential: {
+    "auth-id": "newDevice-f6ca6710e78043568ddf86b70bb4f010",
+    type: "hashed-password",
+    secrets: [
+      "newDevice-f6ca6710e78043568ddf86b70bb4f010-owispKt9ltqmX3LG83FxrIrdy/0="
+    ]
+  },
+  secrets: {
+    "newDevice-f6ca6710e78043568ddf86b70bb4f010-owispKt9ltqmX3LG83FxrIrdy/0=": {
+      "hash-function": "sha-512",
+      "pwd-hash":
+        "tzmMe0PvXf4mFeY5NTR6g+ICy3beuof/h8TV9Wws3dNRPEt+bWmf2T1pdYIFK+xHB2vBnJ0qoawxREzFwdzMmA==",
+      secretId:
+        "newDevice-f6ca6710e78043568ddf86b70bb4f010-owispKt9ltqmX3LG83FxrIrdy/0="
+    }
+  }
 };

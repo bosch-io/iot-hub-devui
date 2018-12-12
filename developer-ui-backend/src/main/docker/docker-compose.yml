@@ -17,6 +17,6 @@ services:
     - HUB_CLIENT_TLS_ENABLED=true
     - HUB.CLIENT.USERNAME=____________TODO_ENTER_USER_NAME____________
     - HUB_CLIENT_PASSWORD=____________TODO_ENTER_PASSWORD____________
-    - HUB_DEVICEREGISTRY_DEVICEREGISTRY_URL=https://device-registry.bosch-iot-hub.com
+    - HUB_DEVICEREGISTRY_DEVICEREGISTRY_URL=https://manage.bosch-iot-hub.com
     - HUB_DEVICEREGISTRY_USERNAME=____________TODO_ENTER_USER_NAME____________
     - HUB_DEVICEREGISTRY_PASSWORD=____________TODO_ENTER_PASSWORD____________

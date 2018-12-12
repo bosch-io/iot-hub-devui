@@ -43,9 +43,13 @@ class AddRegistrationButton extends React.Component {
     return (
       <Fragment>
         <Link
-          to={`/registrations/${selectedDevice}${
-            selectedSubMenu ? "/" + selectedSubMenu : ""
-          }${selectedAuthId ? "/" + selectedAuthId : ""}?action=additionalRegs`}
+          to={`/registrations/${selectedDevice || ""}${
+            selectedDevice && selectedSubMenu ? "/" + selectedSubMenu : ""
+          }${
+            selectedDevice && selectedSubMenu && selectedAuthId
+              ? "/" + selectedAuthId
+              : ""
+          }?action=additionalRegs`}
           id="flyout-btn-fixed-container"
           data-tip
           data-for={tooltipIdFirstReg}>

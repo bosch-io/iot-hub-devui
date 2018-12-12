@@ -12,6 +12,7 @@ A full list of all contained components and licenses you can find in the disclos
 ## Assets overview
 The following table gives an overview about the in this project used design assets:
 
+=======
 | Resource        | Description |License   |Origin    |
 | --------------- |-------------|----------|----------|
 | /developer-ui-frontend/src/images/addIcon.svg | Add Icon | [Apache License 2.0][1] | [Material.io][2]|
@@ -72,6 +73,8 @@ The following table gives an overview about the in this project used design asse
 | /developer-ui-frontend/src/images/gatewayIcon.svg | Router | [Apache License 2.0][1] | [Material.io][2]|
 | /developer-ui-frontend/src/images/codeIcon.svg | Code | [Apache License 2.0][1] | [Material.io][2]|
 | /developer-ui-frontend/src/images/arrow-dropdown.svg | Code | [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/addBox.svg | Add Box| [Apache License 2.0][1] | [Material.io][2]|
+| /developer-ui-frontend/src/images/removeBox.svg | Add Box| [Apache License 2.0][1] | [Material.io][2]|
 | /devui.png | Key Visual | [Bosch SI Example Code License][5]| Own Creation
 | /developer-ui-frontend/src/images/jsoneditor-icons.svg | jsoneditor-icons | [Apache License 2.0][8] | [JSON Editor][8]|
 | /developer-ui-frontend/src/images/fixBugIcon.svg | _edited from bug\_report and build_ | [Apache License 2.0][1] | [Material.io][2]|

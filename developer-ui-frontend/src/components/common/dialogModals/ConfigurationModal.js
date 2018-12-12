@@ -49,18 +49,24 @@ export const ConfigurationModalHeader = ({
   icon,
   subject,
   subTitle,
+  children,
   ...other
 }) => (
   <DialogModalHeader {...other}>
     <h2>
       {icon && icon} {subject} {subTitle && <span>{subTitle}</span>}
     </h2>
+    {children}
   </DialogModalHeader>
 );
 ConfigurationModalHeader.propTypes = {
   subject: PropTypes.string.isRequired,
   subTitle: PropTypes.string,
-  icon: PropTypes.element
+  icon: PropTypes.element,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 export const ConfigurationModalFooter = ({
@@ -77,9 +83,9 @@ export const ConfigurationModalFooter = ({
   />
 );
 ConfigurationModalFooter.propTypes = {
-  submitType: PropTypes.oneOf(["delete", "submit"]).isRequired,
+  submitType: PropTypes.oneOf(["delete", "submit", "none"]).isRequired,
   toggleModal: PropTypes.func.isRequired,
-  confirm: PropTypes.func.isRequired,
+  confirm: PropTypes.func,
   submitBlocked: PropTypes.bool
 };
 

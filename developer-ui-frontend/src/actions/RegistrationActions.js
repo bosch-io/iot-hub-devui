@@ -1,32 +1,16 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import {
-  CREATING_REG,
-  NEW_REG,
-  CREATING_REG_FAILED,
-  UPDATING_REG_INFO,
-  UPDATED_REG_INFO,
-  UPDATING_REG_INFO_FAILED,
-  REG_DELETED,
-  DELETING_REG,
-  DELETING_REG_FAILED,
-  CHANGING_ENABLED,
-  ENABLED_CHANGED,
-  CONFIGURING_GATEWAY,
-  CONFIGURED_GATEWAY,
-  CONFIGURING_GATEWAY_FAILED,
-  SETTED_VIA_PROPERTY,
-  SETTING_VIA_PROPERTY
-} from "actions/actionTypes";
+import * as actionTypes from "actions/actionTypes";
 import { selectRegistrationInfo } from "reducers/selectors";
 import { createNewCredential } from "./CredentialActions";
+import { hashSecret } from "api/schemas";
 import { RESTSERVER_URL } from "_APP_CONSTANTS";
 import axios from "axios";
 
 export function configuringNewGateway(deviceId, info) {
   return {
-    type: CONFIGURING_GATEWAY,
+    type: actionTypes.CONFIGURING_GATEWAY,
     deviceId,
     info
   };
@@ -34,7 +18,7 @@ export function configuringNewGateway(deviceId, info) {
 
 export function newGatewayConfigured(deviceId, info) {
   return {
-    type: CONFIGURED_GATEWAY,
+    type: actionTypes.CONFIGURED_GATEWAY,
     deviceId,
     info
   };
@@ -42,7 +26,7 @@ export function newGatewayConfigured(deviceId, info) {
 
 export function configuringNewGatewayFailed(deviceId, info) {
   return {
-    type: CONFIGURING_GATEWAY_FAILED,
+    type: actionTypes.CONFIGURING_GATEWAY_FAILED,
     deviceId,
     info
   };
@@ -50,7 +34,7 @@ export function configuringNewGatewayFailed(deviceId, info) {
 
 export function settingViaProperty(deviceId, gatewayId) {
   return {
-    type: SETTING_VIA_PROPERTY,
+    type: actionTypes.SETTING_VIA_PROPERTY,
     deviceId,
     gatewayId
   };
@@ -58,7 +42,7 @@ export function settingViaProperty(deviceId, gatewayId) {
 
 export function settedViaProperty(deviceId, gatewayId) {
   return {
-    type: SETTED_VIA_PROPERTY,
+    type: actionTypes.VIA_PROPERTY_SET,
     deviceId,
     gatewayId
   };
@@ -92,42 +76,29 @@ export function setViaProperty(deviceId, gatewayId) {
   };
 }
 
-export function createdNewRegistration(device, configuredSubscribed) {
+export function createdNewRegistration(deviceId, configuredSubscribed) {
   return {
-    type: NEW_REG,
-    deviceId: device.deviceId,
-    device,
+    type: actionTypes.NEW_REG,
+    deviceId,
     configuredSubscribed
   };
 }
 
 export function creatingNewRegistration(deviceId) {
   return {
-    type: CREATING_REG,
+    type: actionTypes.CREATING_REG,
     deviceId
   };
 }
 
 export function creatingRegistrationFailed(deviceId) {
   return {
-    type: CREATING_REG_FAILED,
+    type: actionTypes.CREATING_REG_FAILED,
     deviceId
   };
 }
 
 export function createNewRegistration(deviceId, configuredSubscribed) {
-  const newReg = {
-    deviceId,
-    lastActive: null,
-    currentlyActive: false,
-    configuredSubscribed,
-    isSubscribed: false,
-    logs: [],
-    credentials: [],
-    registrationInfo: {
-      enabled: true
-    }
-  };
   const requestBody = {
     "device-id": deviceId,
     enabled: true
@@ -138,7 +109,7 @@ export function createNewRegistration(deviceId, configuredSubscribed) {
     return axios
       .post(`${RESTSERVER_URL}/registration/${tenant}`, requestBody)
       .then(() =>
-        dispatch(createdNewRegistration(newReg, configuredSubscribed))
+        dispatch(createdNewRegistration(deviceId, configuredSubscribed))
       )
       .catch(err => {
         dispatch(creatingRegistrationFailed(deviceId));
@@ -149,26 +120,27 @@ export function createNewRegistration(deviceId, configuredSubscribed) {
 
 export function deletingRegistration(deviceId) {
   return {
-    type: DELETING_REG,
+    type: actionTypes.DELETING_REG,
     deviceId
   };
 }
 
 export function deletedRegistration(deviceId) {
   return {
-    type: REG_DELETED,
+    type: actionTypes.REG_DELETED,
     deviceId
   };
 }
 
 export function deletingRegistrationFailed(deviceId) {
   return {
-    type: DELETING_REG_FAILED,
+    type: actionTypes.DELETING_REG_FAILED,
     deviceId
   };
 }
 
 export function deleteRegistration(deviceId) {
+  console.trace();
   return (dispatch, getState) => {
     const tenant = getState().getIn(["settings", "tenant"]);
     dispatch(deletingRegistration(deviceId));
@@ -184,7 +156,7 @@ export function deleteRegistration(deviceId) {
 
 export function updatingRegistrationInfo(deviceId, info) {
   return {
-    type: UPDATING_REG_INFO,
+    type: actionTypes.UPDATING_REG_INFO,
     deviceId,
     info
   };
@@ -192,7 +164,7 @@ export function updatingRegistrationInfo(deviceId, info) {
 
 export function updatedRegistrationInfo(deviceId, info) {
   return {
-    type: UPDATED_REG_INFO,
+    type: actionTypes.UPDATED_REG_INFO,
     deviceId,
     info
   };
@@ -200,7 +172,7 @@ export function updatedRegistrationInfo(deviceId, info) {
 
 export function updatingRegistrationInfoFailed(deviceId, info) {
   return {
-    type: UPDATING_REG_INFO_FAILED,
+    type: actionTypes.UPDATING_REG_INFO_FAILED,
     deviceId,
     info
   };
@@ -208,14 +180,14 @@ export function updatingRegistrationInfoFailed(deviceId, info) {
 
 export function changedEnabled(deviceId) {
   return {
-    type: ENABLED_CHANGED,
+    type: actionTypes.ENABLED_CHANGED,
     deviceId
   };
 }
 
 export function changingEnabled(deviceId, enabled) {
   return {
-    type: CHANGING_ENABLED,
+    type: actionTypes.CHANGING_ENABLED,
     deviceId,
     enabled
   };
@@ -223,6 +195,7 @@ export function changingEnabled(deviceId, enabled) {
 
 export function updateRegistrationInfo(deviceId, info, enableChange) {
   return (dispatch, getState) => {
+    console.log(info);
     const tenant = getState().getIn(["settings", "tenant"]);
     dispatch(updatingRegistrationInfo(deviceId, info));
     return axios
@@ -256,15 +229,12 @@ export function createStandardPasswordRegistration(
   return dispatch => {
     dispatch(createNewRegistration(deviceId, false)).then(() =>
       dispatch(
-        createNewCredential(
-          authId,
-          "hashed-password",
-          deviceId,
-          null,
-          null,
-          "Hashed Password",
-          secretData
-        )
+        createNewCredential({
+          "auth-id": authId,
+          type: "hashed-password",
+          "device-id": deviceId,
+          secrets: [hashSecret(secretData)]
+        })
       )
     );
   };

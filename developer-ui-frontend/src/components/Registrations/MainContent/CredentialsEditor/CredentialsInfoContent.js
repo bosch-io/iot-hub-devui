@@ -12,8 +12,9 @@ import AddCredentialTab from "./container/AddCredentialTab";
 // Redux
 import { connect } from "react-redux";
 import {
-  selectAllCredentialsApiFormat,
-  selectUninitializedCredentials
+  selectDenormalizedCredentials,
+  selectUninitializedCredentials,
+  selectIsFetchingByDeviceId
 } from "reducers/selectors";
 import { initializeEmptyCredential } from "actions/CredentialActions";
 import { addCustomNotification } from "actions/globalActions";
@@ -134,12 +135,16 @@ class CredentialsInfoContentWrapped extends Component {
           <Route
             key={credential.get("auth-id")}
             path={`/registrations/${selectedDevice}/credentials/:authId?/:credentialSubMenu?`}
-            render={() => (
+            render={({ match }) => (
               <AccordionTab
                 credential={credential}
                 selectedDevice={selectedDevice}
                 idIsOpened={idIsOpened}
                 toggleIsOpened={this.toggleIsOpened}
+                disabled={
+                  match.params.credentialSubMenu === "raw" &&
+                  credential.get("auth-id") !== idIsOpened
+                }
               />
             )}
           />
@@ -155,7 +160,7 @@ class CredentialsInfoContentWrapped extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   credentials: ownProps.selectedDevice
-    ? selectAllCredentialsApiFormat(state, ownProps.selectedDevice)
+    ? selectDenormalizedCredentials(state, ownProps.selectedDevice)
     : null,
   uninitializedCreds: selectUninitializedCredentials(state)
 });

@@ -10,7 +10,11 @@ import { withRouter, Route } from "react-router-dom";
 import { matchPath } from "react-router";
 // Redux
 import { connect } from "react-redux";
-import { selectNumberOfAllDevices, hasDevice } from "reducers/selectors";
+import {
+  selectNumberOfAllDevices,
+  hasDevice,
+  selectIsFetchingAny
+} from "reducers/selectors";
 import { formValueSelector, change } from "redux-form/immutable";
 // Child Components
 import BigCard from "components/common/BigCard";
@@ -62,13 +66,14 @@ export class Registrations extends React.Component {
 
   render() {
     const { mainPanelExpanded } = this.state;
-    const { numberOfDevices } = this.props;
+    const { numberOfDevices, anyFetching } = this.props;
     return (
       <Route
         path="/registrations/:selectedDeviceId?/:registrationsSubMenu?/:authId?"
         render={() => (
           <Fragment>
             <BigCard
+              loadingBarShown={anyFetching}
               title="Manage Device Registrations"
               id="registrations-form-container"
               className={mainPanelExpanded ? "expanded" : null}>
@@ -100,6 +105,7 @@ Registrations.propTypes = {
   initialState: PropTypes.object,
   numberOfDevices: PropTypes.number.isRequired,
   selectedDevice: PropTypes.string,
+  anyFetching: PropTypes.bool,
   history: PropTypes.object.isRequired,
   changeCurrentlySelectedDevice: PropTypes.func.isRequired,
   validateDeviceId: PropTypes.func.isRequired
@@ -112,6 +118,7 @@ Registrations = withRouter(
         state,
         "selectedDevice"
       ),
+      anyFetching: selectIsFetchingAny(state),
       numberOfDevices: selectNumberOfAllDevices(state),
       validateDeviceId: deviceId => hasDevice(state, deviceId)
     }),

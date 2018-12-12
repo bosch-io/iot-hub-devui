@@ -4,3 +4,4 @@
 export { default as OutlineButton } from "./OutlineButton";
 export { default as FlatButton } from "./FlatButton";
 export { default as RoundOutlineButton } from "./RoundOutlineButton";
+export { default as SimpleButton } from "./SimpleButton";

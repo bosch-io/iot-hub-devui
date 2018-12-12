@@ -1,40 +1,24 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import {
-  CREATING_CREDENTIAL,
-  NEW_CREDENTIAL,
-  CREATING_CREDENTIAL_FAILED,
-  CREATING_SECRET,
-  NEW_SECRET,
-  CREATING_SECRET_FAILED,
-  NOT_ALLOWED_CREATING_SECRET,
-  INIT_EMPTY_CREDENTIAL,
-  DELETING_SECRET,
-  SECRET_DELETED,
-  DELETING_SECRET_FAILED,
-  DELETING_CREDENTIAL,
-  CREDENTIAL_DELETED,
-  DELETING_CREDENTIAL_FAILED,
-  UPDATING_CRED_INFO,
-  UPDATED_CRED_INFO,
-  UPDATING_CRED_INFO_FAILED
-} from "./actionTypes";
+import * as actionTypes from "./actionTypes";
 import {
   selectCredentialById,
   selectSecretById,
-  selectCredentialApiFormat,
-  selectCredentialIdsByDeviceId
+  selectDenormalizedCredential,
+  selectCredentialIdsByDeviceId,
+  selectSecretsByCredentialId
 } from "reducers/selectors";
+import { fetchCredentialsByDeviceId } from "actions/DataFetchActions";
 import { RESTSERVER_URL } from "_APP_CONSTANTS";
-import { mapCredentialParams, mapSecretParams } from "utils";
+import { Credential, Secret } from "api/schemas";
 import axios from "axios";
 import _ from "lodash";
-import { selectSecretsByCredentialId } from "reducers/selectors";
+import { normalize } from "normalizr";
 
 export function creatingSecret(authId, secret) {
   return {
-    type: CREATING_SECRET,
+    type: actionTypes.CREATING_SECRET,
     authId,
     secret
   };
@@ -42,7 +26,7 @@ export function creatingSecret(authId, secret) {
 
 export function newSecretCreated(authId, secret) {
   return {
-    type: NEW_SECRET,
+    type: actionTypes.NEW_SECRET,
     authId,
     secret
   };
@@ -50,7 +34,7 @@ export function newSecretCreated(authId, secret) {
 
 export function creatingSecretFailed(authId, secret) {
   return {
-    type: CREATING_SECRET_FAILED,
+    type: actionTypes.CREATING_SECRET_FAILED,
     authId,
     secret
   };
@@ -58,26 +42,31 @@ export function creatingSecretFailed(authId, secret) {
 
 export function notAllowedCreatingSecret(authId, secret) {
   return {
-    type: NOT_ALLOWED_CREATING_SECRET,
+    type: actionTypes.NOT_ALLOWED_CREATING_SECRET,
     authId,
     secret
   };
 }
 
-export function createNewSecret(deviceId, authId, secretType, secretId, data) {
+export function createNewSecret(deviceId, authId, secret) {
   return (dispatch, getState) => {
+    const denormalizedSecret = Object.assign({}, secret);
     const numberOfSecrets = selectSecretsByCredentialId(getState(), deviceId)
       .size;
     // 1. Create a new Secret Object as it's stored in the Redux Store
-    const newSecret = mapSecretParams(secretId, authId, secretType, data);
+    const newSecret = Object.values(
+      normalize(
+        { "auth-id": authId, secret: denormalizedSecret },
+        { secret: Secret }
+      ).entities.secrets
+    )[0];
     // 2. Flatten the normalized form and add the secret to the secrets array of the credential
-    const modifiedCredential = selectCredentialById(getState(), authId).toJS();
-    modifiedCredential.secrets = modifiedCredential.secrets.map(id =>
-      selectSecretById(getState(), id)
-        .delete("secretId")
-        .toJS()
-    );
-    modifiedCredential.secrets.push(_.omit(newSecret, "secretId"));
+    const modifiedCredential = selectDenormalizedCredential(
+      getState(),
+      deviceId,
+      authId
+    ).toJS();
+    modifiedCredential.secrets.push(denormalizedSecret); // Use the denormalized secret (Without the secretId)
     // 3. Add the required fields to match the API schema
     const requestBody = { ...modifiedCredential, "device-id": deviceId };
     // 4. Start the regular XHR handling with the updated credential as PUT request
@@ -99,44 +88,32 @@ export function createNewSecret(deviceId, authId, secretType, secretId, data) {
   };
 }
 
-export function updatingCredentialInfo(authId, enabled, data) {
+export function changedEnabled(authId, enabled) {
   return {
-    type: UPDATING_CRED_INFO,
+    type: actionTypes.ENABLED_CRED_CHANGED,
     authId,
-    enabled,
-    data
+    enabled
   };
 }
 
-export function updatedCredentialInfo(authId, enabled, data) {
+export function changingEnabled(authId, enabled) {
   return {
-    type: UPDATED_CRED_INFO,
+    type: actionTypes.UPDATED_CRED_INFO,
     authId,
-    enabled,
-    data
+    enabled
   };
 }
 
-export function updatingCredentialInfoFailed(authId, enabled, data) {
+export function changingEnabledFailed(authId, enabled) {
   return {
-    type: UPDATING_CRED_INFO_FAILED,
+    type: actionTypes.UPDATING_CRED_INFO_FAILED,
     authId,
-    enabled,
-    data
+    enabled
   };
 }
 
-export function updateCredentialInfo(data) {
+export function changeEnabled(deviceId, authId, enabled) {
   return (dispatch, getState) => {
-    // Destructure the received data and extract the optional fields from the required fields
-    const {
-      "device-id": deviceId,
-      type,
-      "auth-id": authId,
-      enabled,
-      secrets,
-      ...optional
-    } = data;
     // Flatten the normalized form and delete the current credential info
     const modifiedCredential = selectCredentialById(getState(), authId).toJS();
     modifiedCredential.secrets = modifiedCredential.secrets.map(id =>
@@ -150,101 +127,103 @@ export function updateCredentialInfo(data) {
     // Add the required fields to match the API schema
     const requestBody = {
       "device-id": deviceId,
-      ...modifiedCredential,
-      ...optional
+      ...modifiedCredential
     };
     // Start the regular XHR handling with the updated credential as PUT request
     const tenant = getState().getIn(["settings", "tenant"]);
-    dispatch(updatingCredentialInfo(authId, enabled, optional));
+    const info = selectDenormalizedCredential(getState(), deviceId, authId)
+      .set("enabled", enabled)
+      .toJS();
     return axios
       .put(`${RESTSERVER_URL}/credentials/${tenant}`, requestBody)
-      .then(() => dispatch(updatedCredentialInfo(authId, enabled, optional)))
+      .then(() => dispatch(fetchCredentialsByDeviceId(deviceId)))
       .catch(err => {
-        dispatch(updatingCredentialInfoFailed(authId, enabled, optional));
+        dispatch(changingEnabledFailed(authId, info));
         console.error(err);
       });
   };
 }
 
-export function newCredentialCreated(authId, deviceId, newCredential) {
+export function newCredentialCreated(authId, deviceId, credential, secrets) {
   return {
-    type: NEW_CREDENTIAL,
+    type: actionTypes.NEW_CREDENTIAL,
     authId,
     deviceId,
-    newCredential
+    credential,
+    secrets
   };
 }
 
 // An empty credential is not yet created and needs a secret before it's sent to the backend
-export function initializeEmptyCredential(authId, credType, deviceId, data) {
-  const newCredential = mapCredentialParams(authId, credType, data);
+export function initializeEmptyCredential(credential) {
+  const newAuthId = credential["auth-id"];
   return {
-    type: INIT_EMPTY_CREDENTIAL,
-    authId,
-    deviceId,
-    newCredential
+    type: actionTypes.INIT_EMPTY_CREDENTIAL,
+    credential: normalize(credential, Credential).entities.credentials[
+      newAuthId
+    ],
+    deviceId: credential["device-id"]
   };
 }
 
-export function creatingNewCredential(authId, deviceId, newCredential) {
+export function creatingNewCredential(authId, deviceId, credential, secrets) {
   return {
-    type: CREATING_CREDENTIAL,
+    type: actionTypes.CREATING_CREDENTIAL,
     authId,
     deviceId,
-    newCredential
+    credential,
+    secrets
   };
 }
 
-export function creatingNewCredentialFailed(authId, deviceId, newCredential) {
+export function creatingNewCredentialFailed(
+  authId,
+  deviceId,
+  credential,
+  secrets
+) {
   return {
-    type: CREATING_CREDENTIAL_FAILED,
+    type: actionTypes.CREATING_CREDENTIAL_FAILED,
     authId,
     deviceId,
-    newCredential
+    credential,
+    secrets
   };
 }
 
-// This function creates a new Credential with a new Secret on the backend (The API does not distinguish between
-// credentials and secrets)
+// This function creates a new Credential with a new Secret in the IoT Hub Device Registry
 // It could be called after an empty credential was initialized and a firstInitialization
 // has been done (the first secret was added to the empty credential) or after a quickstart like
 // from the action createStandardPasswordRegistration
 // (in this case, the credential and the secret get created in one step)
-// The secretId Argument is optional (if not defined it's generated by mapSecretParams)
-// TODO: Refactoring - Too many parameters + make it possible to create new credentials with many secrets
-export function createNewCredential(
-  authId,
-  credType,
-  deviceId,
-  data,
-  secretId,
-  secretType,
-  secretData
-) {
+export function createNewCredential(credential) {
+  const denormalizedCredential = { ...credential };
+  const { "auth-id": authId, "device-id": deviceId } = credential;
   return (dispatch, getState) => {
     const tenant = getState().getIn(["settings", "tenant"]);
-    // 1. Create new Credential Object as it's stored in the Redux store
-    const newCredential = mapCredentialParams(authId, credType, data);
-    // 2. Create new secret for the new credential
-    const newSecret = mapSecretParams(secretId, authId, secretType, secretData);
-    // 3. Add the required fields to match the API schema
-    const requestBody = Object.assign(
-      {
-        "device-id": deviceId
-      },
-      { ...newCredential, secrets: [_.omit(newSecret, "secretId")] }
+    // Normalize the credential with Credential and Secret to store in the Redux store
+    const normalized = normalize(credential, Credential);
+    const newCredential = normalized.entities.credentials[authId];
+    const newSecrets = normalized.entities.secrets;
+    dispatch(
+      creatingNewCredential(authId, deviceId, newCredential, newSecrets)
     );
-    // 4. Start the regular XHR handling with the new credential as POST request
-    dispatch(creatingNewCredential(authId, deviceId, newCredential));
     return axios
-      .post(`${RESTSERVER_URL}/credentials/${tenant}`, requestBody)
+      .post(`${RESTSERVER_URL}/credentials/${tenant}`, denormalizedCredential)
       .then(() => {
-        dispatch(newCredentialCreated(authId, deviceId, newCredential));
-        // This also adds the new secret
-        dispatch(newSecretCreated(authId, newSecret));
+        dispatch(
+          newCredentialCreated(authId, deviceId, newCredential, newSecrets)
+        );
       })
       .catch(err => {
-        dispatch(creatingNewCredentialFailed(authId, deviceId, newCredential));
+        dispatch(
+          creatingNewCredentialFailed(
+            authId,
+            deviceId,
+            newCredential,
+            newSecrets
+          )
+        );
         console.error(err);
       });
   };
@@ -252,7 +231,7 @@ export function createNewCredential(
 
 export function deletingSecret(deviceId, authId, secretId) {
   return {
-    type: DELETING_SECRET,
+    type: actionTypes.DELETING_SECRET,
     deviceId,
     authId,
     secretId
@@ -261,7 +240,7 @@ export function deletingSecret(deviceId, authId, secretId) {
 
 export function secretDeleted(deviceId, authId, secretId) {
   return {
-    type: SECRET_DELETED,
+    type: actionTypes.SECRET_DELETED,
     deviceId,
     authId,
     secretId
@@ -270,7 +249,7 @@ export function secretDeleted(deviceId, authId, secretId) {
 
 export function deletingSecretFailed(deviceId, authId, secretId) {
   return {
-    type: DELETING_SECRET_FAILED,
+    type: actionTypes.DELETING_SECRET_FAILED,
     deviceId,
     authId,
     secretId
@@ -282,7 +261,7 @@ export function deleteSecret(deviceId, authId, secretId) {
     const deletedSecret = selectSecretById(getState(), secretId).delete(
       "secretId"
     );
-    const currentCredential = selectCredentialApiFormat(
+    const currentCredential = selectDenormalizedCredential(
       getState(),
       deviceId,
       authId
@@ -290,7 +269,7 @@ export function deleteSecret(deviceId, authId, secretId) {
     const modifiedCredential = currentCredential
       .update(
         "secrets",
-        secrets => secrets.filter(secret => secret.equals(deletedSecret)) // Uses efficient deep Object Comparison (Immutable.js Maps)
+        secrets => secrets.filter(secret => !secret.equals(deletedSecret)) // Uses efficient deep Object Comparison (Immutable.js Maps)
       )
       .toJS();
     const tenant = getState().getIn(["settings", "tenant"]);
@@ -307,7 +286,7 @@ export function deleteSecret(deviceId, authId, secretId) {
 
 export function deletingCredential(deviceId, authId) {
   return {
-    type: DELETING_CREDENTIAL,
+    type: actionTypes.DELETING_CREDENTIAL,
     deviceId,
     authId
   };
@@ -315,7 +294,7 @@ export function deletingCredential(deviceId, authId) {
 
 export function credentialDeleted(deviceId, authId) {
   return {
-    type: CREDENTIAL_DELETED,
+    type: actionTypes.CREDENTIAL_DELETED,
     deviceId,
     authId
   };
@@ -323,7 +302,7 @@ export function credentialDeleted(deviceId, authId) {
 
 export function deletingCredentialFailed(deviceId, authId) {
   return {
-    type: DELETING_CREDENTIAL_FAILED,
+    type: actionTypes.DELETING_CREDENTIAL_FAILED,
     deviceId,
     authId
   };
@@ -359,8 +338,120 @@ export function deleteCredential(deviceId, authId) {
 export function deleteAllCredentialsOfDevice(deviceId) {
   return (dispatch, getState) => {
     const credentials = selectCredentialIdsByDeviceId(getState(), deviceId);
+    console.log("credentials", credentials);
     return Promise.all(
       credentials.map(id => dispatch(deleteCredential(deviceId, id)))
     );
+  };
+}
+
+export function updatingCredentialSecrets(authId, info) {
+  return {
+    type: actionTypes.UPDATING_CRED_SECRETS,
+    authId,
+    info
+  };
+}
+
+export function updatedCredentialSecrets(authId, newSecrets) {
+  return {
+    type: actionTypes.UPDATED_CRED_SECRETS,
+    authId,
+    newSecrets
+  };
+}
+
+export function updatingCredentialSecretsFailed(authId, info) {
+  return {
+    type: actionTypes.UPDATING_CRED_SECRETS_FAILED,
+    authId,
+    info
+  };
+}
+
+export function changingSecretsInfo(authId, info) {
+  return {
+    type: actionTypes.CHANGING_CRED_SECRETS,
+    authId,
+    info
+  };
+}
+
+export function updatingCredentialInfoFailed(authId, enabled, data) {
+  return {
+    type: actionTypes.UPDATING_CRED_INFO_FAILED,
+    authId,
+    enabled,
+    data
+  };
+}
+
+export function updateCredentialInfo(data) {
+  return (dispatch, getState) => {
+    // Destructure the received data and extract the optional fields from the required fields
+    const {
+      "device-id": deviceId,
+      type,
+      "auth-id": authId,
+      enabled,
+      secrets,
+      ...optional
+    } = data;
+    // Flatten the normalized form and delete the current credential info
+    const modifiedCredential = selectCredentialById(getState(), authId).toJS();
+    modifiedCredential.secrets = modifiedCredential.secrets.map(id =>
+      selectSecretById(getState(), id)
+        .delete("secretId")
+        .toJS()
+    );
+    delete modifiedCredential.credentialInfo;
+    // edit the mutable credential Informations (enabled and the optional data)
+    if (enabled !== undefined) modifiedCredential.enabled = enabled;
+    if (secrets !== undefined) modifiedCredential.secrets = secrets;
+    if (optional !== undefined) modifiedCredential.optional = secrets;
+    // Add the required fields to match the API schema
+    const requestBody = {
+      "device-id": deviceId,
+      ...modifiedCredential,
+      ...optional
+    };
+    // Start the regular XHR handling with the updated credential as PUT request
+    const tenant = getState().getIn(["settings", "tenant"]);
+    dispatch(changingSecretsInfo(authId, enabled, optional));
+    return axios
+      .put(`${RESTSERVER_URL}/credentials/${tenant}`, requestBody)
+      .then(() => dispatch(updatedCredentialSecrets(authId, enabled, optional)))
+      .then(() => dispatch(fetchCredentialsByDeviceId(deviceId)))
+      .catch(err => {
+        dispatch(updatingCredentialInfoFailed(authId, enabled, optional));
+        console.error(err);
+      });
+  };
+}
+
+export function updateCredentialInfoSecrets(deviceId, authId, info) {
+  return (dispatch, getState) => {
+    const tenant = getState().getIn(["settings", "tenant"]);
+    dispatch(updatingCredentialSecrets(authId, info));
+    return axios
+      .put(`${RESTSERVER_URL}/credentials/${tenant}`, info)
+      .then(({ data }) => {
+        dispatch(updatedCredentialSecrets(authId, info.secrets));
+        dispatch(fetchCredentialsByDeviceId(deviceId));
+      })
+      .catch(err => {
+        dispatch(updatingCredentialSecretsFailed(authId, info));
+        console.error(err);
+      });
+  };
+}
+
+export function changeSecretsInfo(deviceId, authId, newSecrets) {
+  return (dispatch, getState) => {
+    dispatch(changingSecretsInfo(authId, newSecrets));
+    const info = selectDenormalizedCredential(getState(), deviceId, authId)
+      .set("secrets", newSecrets)
+      .toJS();
+    return dispatch(updateCredentialInfoSecrets(deviceId, authId, info));
   };
 }

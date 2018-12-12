@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { default as AddSecretModalInner } from "./AddSecretModal";
 import PropTypes from "prop-types";
+import { hashSecret } from "api/schemas";
 import { reduxForm, formValueSelector } from "redux-form/immutable";
 import {
   createNewSecret,
@@ -46,7 +47,6 @@ class AddSecretModalWrapped extends Component {
   }
 
   submit(values) {
-    console.log("hashAlgorithm " + values);
     const {
       authId,
       deviceId,
@@ -64,30 +64,22 @@ class AddSecretModalWrapped extends Component {
       secretData["not-after"] = values.get("notAfter").format();
     }
     if (values.get("salt")) {
-      secretData.salt = values.get("salt");
+      secretData.salt = btoa(values.get("salt"));
     }
     const hashAlgorithm = values.get("hashAlgorithm");
     if (hashAlgorithm) {
       secretData.hashMethod = hashAlgorithm;
     }
+    const hashedSecret = hashSecret(secretData);
     if (firstInitialization) {
-      this.props.createNewCredential(
-        authId,
-        credentialType,
-        deviceId,
-        null,
-        null,
-        values.get("secretType"),
-        secretData
-      );
+      this.props.createNewCredential({
+        "auth-id": authId,
+        type: credentialType,
+        "device-id": deviceId,
+        secrets: [hashedSecret]
+      });
     } else {
-      this.props.createNewSecret(
-        deviceId,
-        authId,
-        values.get("secretType"),
-        null,
-        secretData
-      );
+      this.props.createNewSecret(deviceId, authId, hashedSecret);
     }
     this.changeIsOpen(false);
   }

@@ -6,6 +6,10 @@
 .date-picker-wrapper {
   position: relative;
 
+  .iconSpace {
+    padding-right: 25px;
+  }
+
   svg {
     cursor: pointer;
     position: absolute;
@@ -168,7 +172,7 @@
 }
 
 .react-datepicker-popper {
-  z-index: 1;
+  z-index: 99999999999;
 }
 
 .react-datepicker-popper[data-placement^="bottom"] {

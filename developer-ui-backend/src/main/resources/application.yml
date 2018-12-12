@@ -17,6 +17,6 @@ hub:
         password: ____________TODO_ENTER_PASSWORD____________
 
     deviceregistry:
-        url: https://device-registry.bosch-iot-hub.com
+        url: https://manage.bosch-iot-hub.com
         username: ____________TODO_ENTER_PASSWORD____________
         password: ____________TODO_ENTER_PASSWORD____________

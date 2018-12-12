@@ -24,7 +24,7 @@ class JsonView extends Component {
     const { value, inEditingMode, isFetching, children, location } = this.props;
     const childrenArr = React.Children.toArray(children);
     const JsonEditorChild = childrenArr.find(
-      child => child.type === JsonEditor
+      child => child.type !== JsonReadOnlyView
     );
     const JsonReadOnlyChild = childrenArr.find(
       child => child.type === JsonReadOnlyView
@@ -86,6 +86,7 @@ class JsonView extends Component {
                                 ? "two-digit-length"
                                 : ""
                             }`,
+                            isLeaving: editorTransition === "leaving",
                             ...this.props
                           })
                         )}
@@ -113,23 +114,25 @@ JsonView.propTypes = {
   isFetching: PropTypes.bool,
   inEditingMode: PropTypes.bool,
   location: PropTypes.object.isRequired,
+  /* evntually passed through Accordion Context */
+  snapFooter: PropTypes.bool,
+  containerHeight: PropTypes.number,
   children: (props, propName, componentName) => {
     const childs = props[propName];
     const childTypes = childs.map(c => c.type);
     const expectedTypes = [JsonReadOnlyView, JsonEditor];
-    const expectedTypesVariant = [JsonEditor, JsonReadOnlyView];
-    // Only accept two children of the appropriate type
+    // Only accept two children of the appropriate type:
+    // Note: In some cases, the JsonEditor has to be wrapped inside
+    // a Context.Consumer -> Only check if there are 2 children and
+    // if one of them is of type JsonReadOnlyView.
     if (
       React.Children.count(childs) !== 2 ||
-      !(
-        childTypes.every((type, index) => type === expectedTypes[index]) ||
-        childTypes.every((type, index) => type === expectedTypesVariant[index])
-      )
+      !childTypes.find((type, index) => type === JsonReadOnlyView)
     ) {
       return new Error(
-        `"${componentName}" should have two children of the following types: ${expectedTypes.join(
-          "`, `"
-        )}.`
+        `"${componentName}" should have two children of the following types: ${expectedTypes
+          .map(t => t.name)
+          .join("`, `")}.`
       );
     }
     return null;

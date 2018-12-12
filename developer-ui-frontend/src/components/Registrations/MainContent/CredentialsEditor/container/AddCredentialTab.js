@@ -35,11 +35,12 @@ class AddCredentialTabWrapped extends Component {
     const { initializeEmptyCredential, selectedDevice } = this.props;
     const newAuthId = values.get("authId");
     this.setState({ inAddingMode: false });
-    return initializeEmptyCredential(
-      newAuthId,
-      "hashed-password",
-      selectedDevice
-    );
+    return initializeEmptyCredential({
+      "auth-id": newAuthId,
+      type: "hashed-password",
+      "device-id": selectedDevice,
+      secrets: []
+    });
   }
 
   autogenAuthId() {

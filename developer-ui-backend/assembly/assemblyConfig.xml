@@ -12,7 +12,7 @@
             <outputDirectory>.</outputDirectory>
         </file>
         <file>
-            <source>${project.build.directory}/frontend/webroot/LICENSE.TXT</source>
+            <source>${project.build.directory}/frontend/webroot/LICENSE</source>
             <outputDirectory>.</outputDirectory>
         </file>
         <file>

@@ -13,8 +13,9 @@ import {
   FETCHING_CREDENTIALS_FAILED
 } from "actions/actionTypes";
 import { RESTSERVER_URL } from "_APP_CONSTANTS";
-import { arrayToObject } from "utils";
 import axios from "axios";
+import { normalize } from "normalizr";
+import { Credential, Registration } from "api/schemas";
 
 export function tenantFetched(tenant) {
   return {
@@ -41,27 +42,10 @@ export function fetchingRegistrationsFailed() {
   };
 }
 
-export function registrationsFetched(registrations) {
-  const mappedFormatArray = registrations.devices.map(device => {
-    const deviceCopy = Object.assign({}, device);
-    delete deviceCopy["device-id"];
-    deviceCopy.deviceId = device["device-id"];
-    const { deviceId, ...other } = deviceCopy;
-    return {
-      deviceId,
-      lastActive: null,
-      currentlyActive: false,
-      configuredSubscribed: false,
-      isSubscribed: false,
-      logs: [],
-      credentials: [],
-      registrationInfo: { ...other }
-    };
-  });
-  const mappedFormat = arrayToObject(mappedFormatArray, "deviceId");
+export function registrationsFetched(data) {
   return {
     type: REGISTRATIONS_FETCHED,
-    registrations: mappedFormat
+    data
   };
 }
 
@@ -72,12 +56,11 @@ export function fetchingCredentials(deviceId) {
   };
 }
 
-export function credentialsFetched(data, deviceId, prevAuthIds) {
+export function credentialsFetched(data, deviceId) {
   return {
     type: CREDENTIALS_FETCHED,
     data,
-    deviceId,
-    prevAuthIds
+    deviceId
   };
 }
 
@@ -107,7 +90,12 @@ export function fetchAllRegistrations() {
     const tenant = getState().getIn(["settings", "tenant"]);
     return axios
       .get(`${RESTSERVER_URL}/registration/${tenant}`)
-      .then(({ data }) => dispatch(registrationsFetched(data)))
+      .then(({ data }) => {
+        const normalizedData = normalize(data, {
+          devices: [Registration]
+        });
+        dispatch(registrationsFetched(normalizedData));
+      })
       .catch(err => {
         dispatch(fetchingRegistrationsFailed());
         console.error(err);
@@ -124,17 +112,14 @@ export function fetchCredentialsByDeviceId(deviceId) {
   return (dispatch, getState) => {
     dispatch(fetchingCredentials(deviceId));
     const tenant = getState().getIn(["settings", "tenant"]);
-    const prevAuthIds = getState().getIn([
-      "devices",
-      "byId",
-      deviceId,
-      "credentials"
-    ]);
     return axios
       .get(`${RESTSERVER_URL}/credentials/${tenant}?device-id=${deviceId}`)
-      .then(({ data }) =>
-        dispatch(credentialsFetched(data, deviceId, prevAuthIds))
-      )
+      .then(({ data }) => {
+        const normalizedData = normalize(data, {
+          credentials: [Credential]
+        });
+        dispatch(credentialsFetched(normalizedData, deviceId));
+      })
       .catch(err => {
         dispatch(fetchingCredentialsFailed(deviceId));
         console.error(err);

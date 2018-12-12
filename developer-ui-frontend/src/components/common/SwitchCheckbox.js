@@ -4,9 +4,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const SwitchCheckbox = ({ checked, onCheckboxClick, label }) => (
-  <div className="pretty p-switch p-fill">
-    <input onChange={onCheckboxClick} checked={checked} type="checkbox" />
+const SwitchCheckbox = ({
+  checked,
+  onCheckboxClick,
+  label,
+  input,
+  className
+}) => (
+  <div className={`pretty p-switch p-fill ${className || ""}`}>
+    <input
+      {...input}
+      onChange={onCheckboxClick}
+      checked={checked}
+      type="checkbox"
+    />
     <div className="state">
       <label>{label}</label>
     </div>
@@ -16,7 +27,9 @@ const SwitchCheckbox = ({ checked, onCheckboxClick, label }) => (
 SwitchCheckbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   onCheckboxClick: PropTypes.func.isRequired,
-  label: PropTypes.string
+  label: PropTypes.string,
+  input: PropTypes.object,
+  className: PropTypes.string
 };
 
 export default SwitchCheckbox;

@@ -73,9 +73,9 @@ export const ConfirmationModalFooter = ({
 };
 
 ConfirmationModalFooter.propTypes = {
-  submitType: PropTypes.oneOf(["delete", "submit"]).isRequired,
+  submitType: PropTypes.oneOf(["delete", "submit"]),
   toggleModal: PropTypes.func.isRequired,
-  confirm: PropTypes.func.isRequired,
+  confirm: PropTypes.func,
   checkboxOption: PropTypes.shape({
     checkboxLabel: PropTypes.string.isRequired,
     checked: PropTypes.bool.isRequired,
@@ -156,7 +156,7 @@ ConfirmationModal.propTypes = {
   modalShown: PropTypes.bool.isRequired,
   subject: PropTypes.string,
   subTitle: PropTypes.string,
-  submitType: PropTypes.oneOf(["delete", "submit"]),
+  submitType: PropTypes.oneOf(["delete", "submit"]).isRequired,
   toggleModal: PropTypes.func,
   children: PropTypes.any,
   confirm: PropTypes.func,

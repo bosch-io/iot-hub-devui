@@ -53,7 +53,9 @@ export const DialogModalBase = styled(Modal)`
 `;
 
 export const DialogModalHeaderBase = styled.div`
-  display: inline-block;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
   width: calc(100% - 2 * 2.4rem);
   white-space: nowrap;
   border-bottom: 1px solid rgba(34, 36, 38, 0.15);
@@ -99,8 +101,7 @@ export const DialogModalFooter = ({
       <RoundOutlineButton
         primary
         disabled={Boolean(submitBlocked)}
-        onClick={confirm}
-      >
+        onClick={confirm}>
         Delete
       </RoundOutlineButton>
     );
@@ -111,29 +112,44 @@ export const DialogModalFooter = ({
         disabled={Boolean(submitBlocked)}
         submitAnimation
         onClick={confirm}
-        type="submit"
-      >
+        type="submit">
         Submit
       </FlatButton>
     );
   }
-  return (
-    <DialogModalFtr hasCheckbox={Boolean(checkboxOption)}>
-      {checkboxOption && checkboxOption}
-      <span>
-        <FlatButton cancel onClick={() => toggleModal(null, false)}>
-          Cancel
-        </FlatButton>
-        {ConfirmBtn}
-      </span>
-    </DialogModalFtr>
-  );
+  let SecondButton = null;
+  if (submitType === "none") {
+    SecondButton = (
+      <DialogModalFtr hasCheckbox={Boolean(checkboxOption)}>
+        {checkboxOption && checkboxOption}
+        <span>
+          <FlatButton close onClick={() => toggleModal(null, false)}>
+            Close
+          </FlatButton>
+          {ConfirmBtn}
+        </span>
+      </DialogModalFtr>
+    );
+  } else {
+    SecondButton = (
+      <DialogModalFtr hasCheckbox={Boolean(checkboxOption)}>
+        {checkboxOption && checkboxOption}
+        <span>
+          <FlatButton cancel onClick={() => toggleModal(null, false)}>
+            Cancel
+          </FlatButton>
+          {ConfirmBtn}
+        </span>
+      </DialogModalFtr>
+    );
+  }
+  return SecondButton;
 };
 
 DialogModalFooter.propTypes = {
-  submitType: PropTypes.oneOf(["delete", "submit"]).isRequired,
+  submitType: PropTypes.oneOf(["delete", "submit", "none"]).isRequired,
   toggleModal: PropTypes.func.isRequired,
-  confirm: PropTypes.func.isRequired,
+  confirm: PropTypes.func,
   submitBlocked: PropTypes.bool,
   /* If provided, this content gets added on the left hand side of
   the footer (usually a checkbox like "Don't show me again") */

@@ -4,6 +4,7 @@
 @import "~pretty-checkbox/src/pretty-checkbox.scss";
 
 html {
+  overflow: hidden;
   font-size: 62.5%; // For rem units support (62.5% of 16px = 10px -> easier calculations)
   font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
@@ -64,8 +65,6 @@ body {
   letter-spacing: 0.01rem;
   color: $primary_font_color;
   background-color: #f5f5f5;
-  overflow-x: hidden;
-  overflow-y: auto;
   background-image: url("https://s3.eu-central-1.amazonaws.com/developer-ui.bosch-iot-hub.com/assets/bosch_supergraphic_top.jpg");
   background-position: bottom center;
   background-repeat: no-repeat;

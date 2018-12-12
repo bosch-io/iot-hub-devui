@@ -3,32 +3,45 @@
  */
 import { fromJS } from "immutable";
 import { calculateLogId, extractDeviceIdFromLog } from "utils";
-import { hubDevPresetRegistrations } from "__mocks__/storeMocks/deviceMocks";
-import {
-  NEW_LOG,
-  REMOVE_OLDEST_LOG,
-  NEW_SUB,
-  SUB_DELETED,
-  DELETING_SUB,
-  ADDING_SUB,
-  EVENTBUS_DISCONNECTED,
-  NEW_REG,
-  CONFIGURED_GATEWAY,
-  REGISTRATIONS_FETCHED,
-  REG_DELETED,
-  NEW_CREDENTIAL,
-  REMOVE_ALL_LOGS,
-  UPDATED_REG_INFO,
-  INIT_EMPTY_CREDENTIAL,
-  CREDENTIAL_DELETED,
-  CREDENTIALS_FETCHED
-} from "actions/actionTypes";
+import * as actionTypes from "actions/actionTypes"; // Too many types for destructuring -> Create a namespace
+
+const createRegistration = issuer => {
+  const emptyReg = {
+    lastActive: null,
+    currentlyActive: false,
+    isSubscribed: false,
+    logs: [],
+    credentials: []
+  };
+  switch (issuer) {
+    case "fromApi":
+      return (deviceId, registrationInfo) =>
+        fromJS(
+          Object.assign(emptyReg, {
+            deviceId,
+            configuredSubscribed: false,
+            registrationInfo
+          })
+        );
+    case "fromUi":
+      return (deviceId, configuredSubscribed) =>
+        fromJS(
+          Object.assign(emptyReg, {
+            deviceId,
+            configuredSubscribed,
+            registrationInfo: { enabled: true }
+          })
+        );
+    default:
+      return new Error("Unknown issuer for createRegistration.");
+  }
+};
 
 export const initialState = fromJS({ byId: {}, allIds: [] });
 
 const devicesReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case NEW_LOG:
+    case actionTypes.NEW_LOG:
       const logId = calculateLogId(action.message);
       const deviceId = JSON.parse(action.message.body).deviceId;
       const time = action.message.timestamp;
@@ -40,12 +53,12 @@ const devicesReducer = (state = initialState, action = {}) => {
           .setIn(["byId", deviceId, "lastActive"], time)
           .setIn(["byId", deviceId, "currentlyActive"], true);
       });
-    case REMOVE_OLDEST_LOG:
+    case actionTypes.REMOVE_OLDEST_LOG:
       const oldestDeviceId = extractDeviceIdFromLog(action.id);
       return state.updateIn(["byId", oldestDeviceId, "logs"], loggings =>
         loggings.filter(currId => currId !== action.id)
       );
-    case REMOVE_ALL_LOGS:
+    case actionTypes.REMOVE_ALL_LOGS:
       return state.withMutations(reducedState => {
         let newState = reducedState;
         newState.get("allIds").forEach(id => {
@@ -55,21 +68,21 @@ const devicesReducer = (state = initialState, action = {}) => {
         });
         return newState;
       });
-    case DELETING_SUB:
+    case actionTypes.DELETING_SUB:
       return state.setIn(
         ["byId", action.deviceId, "configuredSubscribed"],
         false
       );
-    case SUB_DELETED:
+    case actionTypes.SUB_DELETED:
       return state.setIn(["byId", action.deviceId, "isSubscribed"], false);
-    case ADDING_SUB:
+    case actionTypes.ADDING_SUB:
       return state.setIn(
         ["byId", action.deviceId, "configuredSubscribed"],
         true
       );
-    case NEW_SUB:
+    case actionTypes.NEW_SUB:
       return state.setIn(["byId", action.deviceId, "isSubscribed"], true);
-    case EVENTBUS_DISCONNECTED:
+    case actionTypes.EVENTBUS_DISCONNECTED:
       return state.withMutations(reducedState => {
         let newState = reducedState;
         newState.get("allIds").forEach(id => {
@@ -81,69 +94,78 @@ const devicesReducer = (state = initialState, action = {}) => {
         });
         return newState;
       });
-    case REGISTRATIONS_FETCHED: {
-      let reduced = state;
-      const fetchedRegistrations = fromJS(action.registrations);
-      const newAllIds = fromJS(Object.keys(action.registrations));
-      newAllIds.forEach(id => {
-        // Check if the device is already in the store (e.g. because of localStorage persistence)
-        if (state.getIn(["byId", id])) {
-          // If so, update just the registrationInfo
-          reduced = reduced.setIn(
-            ["byId", id, "registrationInfo"],
-            fetchedRegistrations.getIn([id, "registrationInfo"])
-          );
-        } else {
-          reduced = reduced.setIn(["byId", id], fetchedRegistrations.get(id));
-        }
-      });
-      // Delete all devices that are persisted but not fetched
-      if (newAllIds.size < state.get("allIds").size) {
-        const outdatedDevices = newAllIds
-          .filter(id => !state.get("allIds").includes(id))
-          .concat(state.get("allIds").filter(id => !newAllIds.includes(id)));
-        outdatedDevices.forEach(id => {
-          reduced = reduced.deleteIn(["byId", id]);
-        });
+    case actionTypes.REGISTRATIONS_FETCHED: {
+      if (action.data && action.data.result && action.data.entities) {
+        const fetched = fromJS(action.data);
+        const merged = fetched
+          .getIn(["entities", "devices"])
+          .withMutations(fetchedDevices => {
+            fetched.getIn(["result", "devices"]).forEach(fetchedId => {
+              const oldReg = state.getIn(["byId", fetchedId]);
+              if (oldReg) {
+                // In Case of a conflict (e.g. always on the registrationInfo Prop), use the fetched version
+                /* eslint-disable no-unused-vars */
+                fetchedDevices.update(fetchedId, dev =>
+                  dev.mergeWith((fetchedProp, oldProp) => fetchedProp, oldReg)
+                );
+                /* eslint-enable no-unused-vars */
+              } else {
+                fetchedDevices.update(fetchedId, dev =>
+                  createRegistration("fromApi")(
+                    fetchedId,
+                    dev.get("registrationInfo").toJS()
+                  )
+                );
+              }
+            });
+          });
+        return state
+          .set("byId", merged)
+          .set("allIds", fromJS(action.data.result.devices));
       }
-      reduced = reduced.set("allIds", newAllIds);
-
-      return reduced;
+      return state;
     }
-    case CREDENTIALS_FETCHED: {
-      const fetchedCredentials = action.data.credentials;
-      const newAllIds = fromJS(fetchedCredentials.map(cred => cred["auth-id"]));
-      return state.setIn(["byId", action.deviceId, "credentials"], newAllIds);
+    case actionTypes.CREDENTIALS_FETCHED: {
+      if (action.data.result && action.data.result.credentials) {
+        return state.setIn(
+          ["byId", action.deviceId, "credentials"],
+          fromJS(action.data.result.credentials)
+        );
+      }
+      return state;
     }
-    case NEW_REG:
-      const newReg = fromJS(action.device);
+    case actionTypes.NEW_REG:
+      const newReg = createRegistration("fromUi")(
+        action.deviceId,
+        action.configuredSubscribed
+      );
       return state.withMutations(reducedState =>
         reducedState
-          .setIn(["byId", action.device.deviceId], newReg)
+          .setIn(["byId", action.deviceId], newReg)
           .update("allIds", ids => ids.push(newReg.get("deviceId")).sort())
       );
-    case CONFIGURED_GATEWAY: {
+    case actionTypes.CONFIGURED_GATEWAY: {
       const gatewayProperty = action.info;
       return state.setIn(
         ["byId", action.deviceId, "registrationInfo", "via"],
         gatewayProperty.get("via")
       );
     }
-    case REG_DELETED:
+    case actionTypes.REG_DELETED:
       return state.withMutations(reducedState =>
         reducedState
           .deleteIn(["byId", action.deviceId])
           .update("allIds", ids => ids.filter(id => id !== action.deviceId))
       );
-    case UPDATED_REG_INFO:
+    case actionTypes.UPDATED_REG_INFO:
       return state.setIn(
         ["byId", action.deviceId, "registrationInfo"],
         fromJS(action.info)
       );
-    case NEW_CREDENTIAL:
-    case INIT_EMPTY_CREDENTIAL:
+    case actionTypes.NEW_CREDENTIAL:
+    case actionTypes.INIT_EMPTY_CREDENTIAL:
       const newCredentialDeviceId = action.deviceId;
-      const authId = action.authId;
+      const authId = action.credential["auth-id"];
       return state.updateIn(
         ["byId", newCredentialDeviceId, "credentials"],
         credentials =>
@@ -151,7 +173,7 @@ const devicesReducer = (state = initialState, action = {}) => {
             ? credentials
             : credentials.push(authId)
       );
-    case CREDENTIAL_DELETED:
+    case actionTypes.CREDENTIAL_DELETED:
       return state.updateIn(["byId", action.deviceId, "credentials"], creds =>
         creds.filter(id => id !== action.authId)
       );

@@ -3,7 +3,6 @@
  */
 import uuid from "uuid/v4";
 import _ from "lodash";
-import jssha from "jssha";
 
 export const camelCase = str => {
   return str
@@ -26,14 +25,6 @@ export const formatDateString = date => {
 
 export const calculateLogId = message =>
   JSON.parse(message.body).deviceId + "-" + message.timestamp;
-
-export const calculateSecretId = (secretObj, authId) => {
-  // secretHashes must be deterministic for testing -> use a hash function
-  const hashObj = new jssha("SHA-1", "TEXT");
-  hashObj.update(JSON.stringify(secretObj));
-  const hashValue = hashObj.getHash("B64");
-  return authId + "-" + hashValue;
-};
 
 export const calculateFilterId = (category, value) =>
   category.toLowerCase() + "-" + value.toLowerCase();
@@ -84,46 +75,6 @@ export const checkLog = (log, filterList) => {
   return !filteredOut;
 };
 
-// Maps the entered form params to the schema defined by the CredentialsReducer
-export const mapCredentialParams = (authId, credType, data, secrets) => {
-  const newAuthId = authId;
-  const newType = credType;
-  let newCredential = {
-    "auth-id": newAuthId,
-    type: newType,
-    secrets: secrets ? secrets : []
-  };
-  if (data) {
-    newCredential = { ...newCredential, ...data };
-  }
-  return newCredential;
-};
-// Maps the entered form params to the schema defined by the CredentialsReducer
-export const mapSecretParams = (secretId, authId, secretType, data) => {
-  const newSecretType = secretType;
-  let newSecret = null;
-  if (newSecretType === "Hashed Password") {
-    const { hashMethod, password, ...other } = data;
-    let pw = "";
-    try {
-      const method = hashMethod;
-      const hashObj = new jssha(method.toUpperCase(), "TEXT");
-      hashObj.update(password);
-      pw = hashObj.getHash("B64");
-      newSecret = {
-        "hash-function": method,
-        "pwd-hash": pw,
-        ...other
-      };
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  const newSecretId = secretId || calculateSecretId(newSecret, authId);
-  newSecret = { ...newSecret, secretId: newSecretId };
-  return newSecret;
-};
-
 export const deepDiff = (object, base) => {
   const changes = (obj, bs) => {
     return _.transform(obj, (result, value, key) => {
@@ -137,9 +88,3 @@ export const deepDiff = (object, base) => {
   };
   return changes(object, base);
 };
-
-export const arrayToObject = (array, keyField) =>
-  array.reduce((obj, item) => {
-    obj[item[keyField]] = item;
-    return obj;
-  }, {});

@@ -61,6 +61,7 @@ export const selectPendingUnsubscribes = state => {
 };
 export const selectNumberOfPendingUnsubscribes = state =>
   selectPendingUnsubscribes(state).size;
+export const selectAllDeviceIds = state => state.get("allIds");
 export const selectAllDevices = state =>
   state.get("allIds").map(id => state.getIn(["byId", id]));
 export const selectNumberOfAllDevices = state => state.get("allIds").size;

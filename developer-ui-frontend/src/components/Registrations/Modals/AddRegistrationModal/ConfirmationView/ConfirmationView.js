@@ -30,8 +30,6 @@ export default class ConfirmationView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props.inConfirmationMode);
-    console.log(nextProps.inConfirmationMode);
     if (
       (nextProps.inConfirmationMode && !this.props.inConfirmationMode) ||
       !this.state.checkmarkAnimationFinished
@@ -41,7 +39,6 @@ export default class ConfirmationView extends Component {
   }
 
   startAnimations() {
-    console.log("Cdm ConfirmationView, props: ", this.props);
     // set shiftingAnimationFinished to true and start the staggered motion
     setTimeout(() => this.setState({ checkmarkAnimationFinished: true }), 1500);
     setTimeout(() => this.setState({ shiftingAnimationFinished: true }), 1750);
