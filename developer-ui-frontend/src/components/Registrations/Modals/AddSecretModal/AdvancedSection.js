@@ -31,6 +31,7 @@ class AdvancedSection extends Component {
 
   render() {
     const { expanded } = this.state;
+    const { secretType } = this.props;
     return (
       <div className="advanced-options">
         <ExpandLink
@@ -44,7 +45,12 @@ class AdvancedSection extends Component {
 
         {expanded && (
           <div className="advanced-option-inputs">
-            <div className="salt-input-wrapper">
+            <div
+              className="salt-input-wrapper"
+              style={{
+                display: secretType === "hashed-password" ? "unset" : "none"
+              }}
+            >
               <TextField asField name="salt" type="text" label="Salt" />
               <a onClick={this.autogenSalt}>Generate that for me</a>
             </div>
@@ -69,7 +75,8 @@ class AdvancedSection extends Component {
 }
 
 AdvancedSection.propTypes = {
-  changeSaltVal: PropTypes.func.isRequired
+  changeSaltVal: PropTypes.func.isRequired,
+  secretType: PropTypes.string
 };
 
 AdvancedSection = connect(

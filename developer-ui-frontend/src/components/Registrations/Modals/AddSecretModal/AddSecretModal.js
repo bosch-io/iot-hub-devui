@@ -4,7 +4,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "styles/additionalSecretsModal.scss";
-import { Field } from "redux-form/immutable";
 // Child Components
 import AdvancedSection from "./AdvancedSection";
 import {
@@ -23,7 +22,7 @@ const AddSecretModal = ({
   authId,
   changeIsOpen,
   handleSubmit,
-  selectedType,
+  secretType,
   pristine,
   submitting,
   invalid
@@ -39,28 +38,27 @@ const AddSecretModal = ({
       <ConfigurationModalBody className="configuration-modal-content">
         <div className="dropdown-input">
           <label htmlFor="secretType">Type</label>
-          <Dropdown
-            asField
-            name="secretType"
-            items={[
-              { value: "Hashed Password", id: 1 },
-              { value: "Certificate", id: 2, disabled: true }
-            ]}
-          />
+          {" " + secretType}
         </div>
-        {selectedType === "Hashed Password" && (
+
+        {secretType === "hashed-password" && (
           <div className="dropdown-input">
             <label htmlFor="hashAlgorithm">Hash Algorithm</label>
             <Dropdown
               asField
+              header="Choose a type"
               name="hashAlgorithm"
               items={[{ value: "sha-512", id: 1 }, { value: "sha-256", id: 2 }]}
             />
           </div>
         )}
-        <TextField asField name="password" type="password" label="Password" />
+        {secretType === "hashed-password" ? (
+          <TextField asField name="password" type="password" label="Password" />
+        ) : (
+          <TextField asField name="key" type="password" label="Key" />
+        )}
       </ConfigurationModalBody>
-      <AdvancedSection />
+      <AdvancedSection secretType={secretType} />
       <ConfigurationModalFooter
         submitType="submit"
         toggleModal={() => changeIsOpen(!isOpen)}
@@ -76,7 +74,7 @@ AddSecretModal.propTypes = {
   authId: PropTypes.string,
   changeIsOpen: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  selectedType: PropTypes.string,
+  secretType: PropTypes.string,
   pristine: PropTypes.bool,
   submitting: PropTypes.bool,
   invalid: PropTypes.bool

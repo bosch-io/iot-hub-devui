@@ -133,8 +133,6 @@ class AddRegistrationModalContainer extends React.Component {
     const subjectTitle = `New Device with ${
       type === CREDENTIAL_TYPES.PASSWORD ? "Standard Password " : "Certificate "
     } Credential`;
-    const selectedSubMenu = match.params.registrationsSubMenu;
-    const selectedAuthId = match.params.authId;
     return isOpen ? (
       <form onSubmit={handleSubmit(this.submit)}>
         <ConfigurationModal

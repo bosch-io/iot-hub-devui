@@ -39,10 +39,21 @@ const notificationReducer = (state = initialState, action = {}) => {
           .set("message", "Connected to Hono Messaging")
           .set("level", "success")
       );
-    case actionTypes.EVENTBUS_DISCONNECTED:
     case actionTypes.HUB_DISCONNECTED:
       return state.withMutations(reducedState =>
+        reducedState
+          .set("message", "Disconnected to Hono Messaging")
+          .set("level", "success")
+      );
+    case actionTypes.EVENTBUS_DISCONNECTED:
+      return state.withMutations(reducedState =>
         reducedState.set("message", "Connection lost").set("level", "error")
+      );
+    case actionTypes.HUB_DISCONNECTED_FAILED:
+      return state.withMutations(reducedState =>
+        reducedState
+          .set("message", "Connected to Hono Messaging")
+          .set("level", "error")
       );
     case actionTypes.CONNECTING_FAILED:
       return state.withMutations(reducedState =>

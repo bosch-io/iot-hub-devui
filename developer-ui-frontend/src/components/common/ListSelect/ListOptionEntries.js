@@ -6,9 +6,12 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { TransitionMotion } from "react-motion";
 import ListOptionEntry from "./ListOptionEntry";
-import { withListContext } from "./ListSelect";
+import { withListContext, ListEntry } from "./ListSelect";
 import { Field } from "redux-form/immutable";
 import * as transition from "animations/checklistSelectTransitions";
+import "styles/gateway.scss";
+
+const SelectionList = styled.div``;
 
 const ListEntries = styled.ul`
   padding: 0;
@@ -26,11 +29,47 @@ const ListEntries = styled.ul`
   }
 `;
 
+const Icon = styled(({ icon, ...props }) => React.cloneElement(icon, props))`
+  right: 1rem;
+  position: absolute;
+  top: 1rem;
+  user-select: none;
+  cursor: pointer;
+  z-index: 1;
+  transition: opacity 0.2s;
+
+  path {
+    fill: ${props => props.theme.accentColor};
+    opacity: 0.8;
+  }
+  &:hover {
+    path {
+      opacity: 1;
+    }
+  }
+`;
+
+const Selected = styled.ul`
+  display: flex;
+  padding: 0.7rem 1.4rem;
+  margin: 0 0.5rem;
+  height: 3.5rem;
+  justify-content: space-between;
+  align-items: center;
+  vertical-align: middle;
+  border-bottom: 1px solid #e0e0e0;
+`;
+
+const SelectedEntry = ListEntry.extend`
+  color: ${props => props.theme.accentBlack};
+`;
+
 class ListOptionEntries extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      selectedIndex: null
+      selectedIndex: null,
+      selected: this.props.selectedItem
     };
   }
   getStyles() {
@@ -63,37 +102,78 @@ class ListOptionEntries extends Component {
     selectRef.dispatchEvent(changeEvent);
   }
 
+  resetSelect() {
+    this.props.data.forEach(data => (data.selected = false));
+    this.setState({ selectedIndex: null });
+    this.setState({ selected: "" });
+  }
+
   render() {
-    const { data, onClick, name, asField, className } = this.props;
+    const {
+      data,
+      onClick,
+      name,
+      asField,
+      className,
+      onIconClick,
+      icon,
+      tooltipFunc,
+      selectedItem
+    } = this.props;
+    const { selected } = this.state;
     return (
-      <ListEntries className={className}>
-        {asField && (
-          <Field
-            name={name}
-            component="select"
-            ref={sel => {
-              if (!this.selectRef) {
-                this.selectRef = sel;
-              }
-            }}
-            withRef>
-            {data.map((entry, index) => (
-              <option key={"DropdownEntry" + index} value={entry.text}>
-                {entry.text}
-              </option>
-            ))}
-          </Field>
+      <SelectionList
+        style={{
+          height: selected !== "" ? "80%" : "100%"
+        }}
+      >
+        {selected ? (
+          <div>
+            <Selected>
+              <SelectedEntry>{selectedItem}</SelectedEntry>
+            </Selected>
+            <Icon
+              icon={icon}
+              onClick={() => {
+                onIconClick && onIconClick();
+                asField && this.resetSelect();
+              }}
+              data-tip
+              data-for={tooltipFunc}
+            />
+          </div>
+        ) : (
+          ""
         )}
-        <TransitionMotion
-          defaultStyles={transition.getDefaultStyles(data)}
-          styles={this.getStyles.bind(this)()}
-          willLeave={transition.willLeave}
-          willEnter={transition.willEnter}>
-          {interpStyles => {
-            return (
-              <div>
-                {interpStyles.map(
-                  ({ data: { text, selected }, style, key }) => (
+        <ListEntries className={className}>
+          {asField && (
+            <Field
+              name={name}
+              component="select"
+              ref={sel => {
+                if (!this.selectRef) {
+                  this.selectRef = sel;
+                }
+              }}
+              withRef
+            >
+              {data.map((entry, index) => (
+                <option key={"DropdownEntry" + index} value={entry.text}>
+                  {entry.text}
+                </option>
+              ))}
+            </Field>
+          )}
+          <TransitionMotion
+            defaultStyles={transition.getDefaultStyles(data)}
+            styles={this.getStyles.bind(this)()}
+            willLeave={transition.willLeave}
+            willEnter={transition.willEnter}
+          >
+            {interpStyles => {
+              return (
+                <div>
+                  {interpStyles.map(({ data: { text }, style, key }) => (
                     <ListOptionEntry
                       text={text}
                       selected={text === this.state.selectedIndex}
@@ -104,13 +184,13 @@ class ListOptionEntries extends Component {
                         asField && this.changeSelect(text);
                       }}
                     />
-                  )
-                )}
-              </div>
-            );
-          }}
-        </TransitionMotion>
-      </ListEntries>
+                  ))}
+                </div>
+              );
+            }}
+          </TransitionMotion>
+        </ListEntries>
+      </SelectionList>
     );
   }
 }
@@ -123,11 +203,15 @@ ListOptionEntries.propTypes = {
   ),
   filterText: PropTypes.string,
   onClick: PropTypes.func.isRequired,
+  onIconClick: PropTypes.func,
+  icon: PropTypes.element,
+  tooltipFunc: PropTypes.string,
   asField: PropTypes.bool,
   name: PropTypes.string,
   selectedOption: PropTypes.string,
   changeSelectedOption: PropTypes.func,
-  className: PropTypes.string
+  className: PropTypes.string,
+  selectedItem: PropTypes.string
 };
 
 export default ListOptionEntries;

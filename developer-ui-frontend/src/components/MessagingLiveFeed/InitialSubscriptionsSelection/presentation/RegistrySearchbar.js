@@ -4,7 +4,6 @@
 import React, { Fragment, Component } from "react";
 import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
-import { Field } from "redux-form/immutable";
 import { SearchbarL } from "components/common/textInputs";
 
 export default class RegistrySearchbar extends Component {

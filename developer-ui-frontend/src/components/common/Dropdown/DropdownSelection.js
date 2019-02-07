@@ -48,9 +48,22 @@ const DropdownSelectedValue = styled.div`
   padding: 0 3rem 0 1.2rem;
 `;
 
-const DropdownCurrentSelection = ({ selected, toggle, isOpen }) => (
+const DropdownCurrentSelection = ({
+  selected,
+  toggle,
+  isOpen,
+  header,
+  input
+}) => (
   <DropdownSelectBox isOpen={isOpen} onClick={toggle}>
-    <DropdownSelectedValue>{selected && selected.value}</DropdownSelectedValue>
+    {selected ? (
+      <DropdownSelectedValue {...input}>
+        {selected && selected.value}
+      </DropdownSelectedValue>
+    ) : (
+      <DropdownSelectedValue {...input}>{header}</DropdownSelectedValue>
+    )}
+
     <CaretContainer>
       <Caret rotated={isOpen ? 1 : 0} />
     </CaretContainer>
@@ -60,7 +73,9 @@ const DropdownCurrentSelection = ({ selected, toggle, isOpen }) => (
 DropdownCurrentSelection.propTypes = {
   toggle: PropTypes.func.isRequired,
   selected: PropTypes.object,
-  isOpen: PropTypes.bool.isRequired
+  isOpen: PropTypes.bool.isRequired,
+  header: PropTypes.string,
+  input: PropTypes.object
 };
 
 export default DropdownCurrentSelection;

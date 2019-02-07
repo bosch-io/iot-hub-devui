@@ -16,8 +16,6 @@ import HoverTooltip from "components/common/HoverTooltip";
 // SVG Imports
 import MoreIcon from "images/moreIcon.svg";
 import DeleteCredIcon from "images/deletePwCredentialIcon.svg";
-import DeletePwSecretIcon from "images/deletePwSecretIcon.svg";
-import AddPwSecretIcon from "images/addPwSecretIcon.svg";
 import CodeIcon from "images/codeIcon.svg";
 import EditIcon from "images/editIcon.svg";
 class CredentialAccordionTabDropdownWrapped extends Component {
@@ -97,8 +95,7 @@ class CredentialAccordionTabDropdownWrapped extends Component {
         <TooltipMenu
           open={isOpened}
           toggleOpen={this.toggleDropdownMenu}
-          ancorId={menuBtnId}
-        >
+          ancorId={menuBtnId}>
           {this.menuOptions.map((option, index) => (
             <TooltipMenuOption
               key={index}

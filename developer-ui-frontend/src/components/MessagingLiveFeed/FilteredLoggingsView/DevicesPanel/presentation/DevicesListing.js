@@ -110,9 +110,9 @@ export default class DevicesListing extends React.Component {
           willLeave={devicesListTransition.willLeave}
           willEnter={devicesListTransition.willEnter}>
           {interpStyles => {
-            let registeredFields = [];
+            const registeredFields = [];
             /* eslint-disable consistent-return */
-            fields.forEach((el, index, fieldsProp) => {
+            fields.forEach((el, index) => {
               if (index < interpStyles.length) {
                 const {
                   key,
@@ -191,8 +191,8 @@ export default class DevicesListing extends React.Component {
           submitType="delete">
           <Fragment>
             Are you sure, you want to delete the subscription for{" "}
-            <i>{this.state.confirmModal.deviceId}</i>
-            ? You will no longer see any traffic of it in the feed.
+            <i>{this.state.confirmModal.deviceId}</i>? You will no longer see
+            any traffic of it in the feed.
           </Fragment>
         </ConfirmationModal>
       </span>

@@ -81,7 +81,8 @@ class Accordion extends Component {
     const containerHeight = this.state.outerDimensions.height;
     const usedHeight = this.state.innerDimensions.height;
     const diffHeight = containerHeight - usedHeight;
-    const toggleFooter = this.state.snapFooter
+    let toggleFooter;
+    toggleFooter === this.state.snapFooter
       ? diffHeight >= FOOTER_HEIGHT
       : diffHeight < 0;
     toggleFooter && this.setState(state => ({ snapFooter: !state.snapFooter }));
@@ -101,7 +102,8 @@ class Accordion extends Component {
               this.setState({
                 outerDimensions: contentRect.client
               });
-            }}>
+            }}
+          >
             {measure => (
               <AccordionContainer innerRef={measure.measureRef}>
                 <Measure
@@ -113,11 +115,13 @@ class Accordion extends Component {
                       },
                       this.calculateRemainingSpace
                     );
-                  }}>
+                  }}
+                >
                   {({ measureRef }) => (
                     <AccordionInner
                       snapFooter={snapFooter}
-                      innerRef={measureRef}>
+                      innerRef={measureRef}
+                    >
                       {children}
                     </AccordionInner>
                   )}

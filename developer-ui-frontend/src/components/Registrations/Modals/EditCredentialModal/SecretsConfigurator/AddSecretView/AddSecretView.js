@@ -15,7 +15,6 @@ import { TextField } from "components/common/textInputs";
 import { FlatButton } from "components/common/buttons";
 import Dropdown from "components/common/Dropdown";
 import AddPwSecretIcon from "images/addPwSecretIcon.svg";
-import CancelIcon from "images/cancelIcon.svg";
 import "styles/credentialModal.scss";
 
 class AddSecretViewWrapped extends Component {
@@ -26,9 +25,18 @@ class AddSecretViewWrapped extends Component {
   }
 
   submit(values) {
-    const secretData = {
-      password: values.get("password")
-    };
+    const { secretType } = this.props;
+    let secretData;
+    if (values.get("key")) {
+      secretData = {
+        key: values.get("key")
+      };
+    }
+    if (values.get("password")) {
+      secretData = {
+        password: values.get("password")
+      };
+    }
     if (values.get("notBefore")) {
       secretData["not-before"] = values.get("notBefore").format();
     }
@@ -38,20 +46,26 @@ class AddSecretViewWrapped extends Component {
     if (values.get("salt")) {
       secretData.salt = values.get("salt");
     }
-    const hashAlgorithm = values.get("hashAlgorithm");
-    if (hashAlgorithm) {
-      secretData.hashMethod = hashAlgorithm;
+    if (secretType === "hashed-password") {
+      const hashAlgorithm = values.get("hashAlgorithm");
+      if (hashAlgorithm) {
+        secretData.hashMethod = hashAlgorithm;
+      }
     }
+    if (secretType === "hashed-password") {
+      secretData = hashSecret(secretData);
+    }
+    console.log(secretData);
     this.props.createNewSecret(
       this.props.deviceId,
       this.props.authId,
-      hashSecret(secretData)
+      secretData
     );
     this.props.toggleAddingMode();
   }
 
   render() {
-    const { authId, toggleAddingMode, handleSubmit } = this.props;
+    const { authId, toggleAddingMode, handleSubmit, secretType } = this.props;
     return (
       <form onSubmit={handleSubmit(this.submit)} name="addNewSecret">
         <div className="secrets-config-inner">
@@ -68,28 +82,35 @@ class AddSecretViewWrapped extends Component {
               </button>
             </div>
             <div className="secrets-standard-fields">
+              {secretType === "hashed-password" && (
+                <div className="standard-field">
+                  <label htmlFor="hashAlgorithm">Hash Algorithm</label>
+                  <Dropdown
+                    asField
+                    header="Choose a type"
+                    name="hashAlgorithm"
+                    className="field-dropdown"
+                    items={[
+                      { value: "sha-512", id: 1 },
+                      { value: "sha-256", id: 2 }
+                    ]}
+                  />
+                </div>
+              )}
               <div className="standard-field">
-                <label htmlFor="hashAlgorithm">Hash Algorithm</label>
-                <Dropdown
-                  asField
-                  name="hashAlgorithm"
-                  className="field-dropdown"
-                  items={[
-                    { value: "sha-512", id: 1 },
-                    { value: "sha-256", id: 2 }
-                  ]}
-                />
-              </div>
-              <div className="standard-field">
-                <TextField
-                  asField
-                  name="password"
-                  type="password"
-                  label="Password"
-                />
+                {secretType === "hashed-password" ? (
+                  <TextField
+                    asField
+                    name="password"
+                    type="password"
+                    label="Password"
+                  />
+                ) : (
+                  <TextField asField name="key" type="password" label="Key" />
+                )}
               </div>
             </div>
-            <AddSecretAdvancedSection />
+            <AddSecretAdvancedSection secretType={secretType} />
             <div className="fixed-footer">
               <FlatButton
                 primary
@@ -112,10 +133,9 @@ let AddSecretView = reduxForm({
   enableReinitialize: true
 })(AddSecretViewWrapped);
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = () => {
   return {
     initialValues: {
-      secretType: ownProps.secretType,
       hashAlgorithm: "sha-512"
     }
   };

@@ -11,24 +11,7 @@
 }
 
 #searchbar-form {
-  flex: 5;
-  @media (max-width: 1795px) {
-    #searchbar-form {
-      flex: 4;
-    }
-  }
-
-  @media (max-width: 1500px) {
-    #searchbar-form {
-      flex: 3;
-    }
-  }
-
-  @media (max-width: 1203px) {
-    #searchbar-form {
-      flex: 2;
-    }
-  }
+  flex: 1;
 }
 
 #searchbar-form input[type="text"],
@@ -51,9 +34,8 @@
 }
 
 .dropdown-wrapper {
-  flex: 1;
   position: relative;
-  min-width: 21rem;
+  min-width: 22rem;
   border-bottom: 1px solid #dedede;
 }
 
@@ -192,40 +174,45 @@
   padding: 0.4em;
   background-color: #fff;
 }
+.filter-tags {
+  background-color: #fff;
+  .filterTag {
+    background: #ddd;
+    transform-origin: 100% 50%;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8em;
+    border-radius: 0.5rem;
+    padding: 0.3em;
+    margin: 0.5em;
 
-.filterTag {
-  background: #ddd;
-  font-size: 0.8em;
-  border-radius: 0.5rem;
-  padding: 0.3em;
-  margin: 0 0.5em;
+    svg {
+      height: 1.2rem;
+      width: auto;
+      vertical-align: middle;
 
-  svg {
-    height: 1.2rem;
-    width: auto;
-    vertical-align: middle;
-
-    path,
-    ellipse,
-    rect {
-      fill: $accent_color;
-    }
-  }
-
-  svg:first-child {
-    padding-right: 1em;
-    padding-left: 0.4em;
-  }
-  svg:nth-child(2) {
-    cursor: pointer;
-    padding-left: 1em;
-    padding-right: 0.4em;
-
-    &:hover {
       path,
       ellipse,
       rect {
-        fill: #000;
+        fill: $accent_color;
+      }
+    }
+
+    svg:first-child {
+      padding-right: 1em;
+      padding-left: 0.4em;
+    }
+    svg:nth-child(2) {
+      cursor: pointer;
+      padding-left: 1em;
+      padding-right: 0.4em;
+
+      &:hover {
+        path,
+        ellipse,
+        rect {
+          fill: #000;
+        }
       }
     }
   }

@@ -13,8 +13,7 @@ import AddCredentialTab from "./container/AddCredentialTab";
 import { connect } from "react-redux";
 import {
   selectDenormalizedCredentials,
-  selectUninitializedCredentials,
-  selectIsFetchingByDeviceId
+  selectUninitializedCredentials
 } from "reducers/selectors";
 import { initializeEmptyCredential } from "actions/CredentialActions";
 import { addCustomNotification } from "actions/globalActions";

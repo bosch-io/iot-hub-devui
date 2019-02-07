@@ -20,7 +20,14 @@ class SecretAdvancedSection extends Component {
   }
 
   render() {
-    const { notBefore, notAfter, salt, inEditingMode, secretId } = this.props;
+    const {
+      notBefore,
+      notAfter,
+      salt,
+      inEditingMode,
+      secretId,
+      secretType
+    } = this.props;
     const { expanded } = this.state;
     const saltText = salt || "";
     return (
@@ -28,12 +35,14 @@ class SecretAdvancedSection extends Component {
         <p className="advanced-headline">Advanced</p>
         {expanded && (
           <div className="advanced-option-inputs">
-            <div className="salt-input-wrapper">
-              <div className="standard-field">
-                <label className="credentialLabels">Salt: </label>
-                {saltText}
+            {secretType === "hashed-password" && (
+              <div className="salt-input-wrapper">
+                <div className="standard-field">
+                  <label className="credentialLabels">Salt: </label>
+                  {saltText}
+                </div>
               </div>
-            </div>
+            )}
             <div className="validity-period-wrapper">
               {inEditingMode ? (
                 <Fragment>
@@ -81,7 +90,8 @@ SecretAdvancedSection.propTypes = {
   notBefore: PropTypes.string,
   notAfter: PropTypes.string,
   salt: PropTypes.string,
-  inEditingMode: PropTypes.bool
+  inEditingMode: PropTypes.bool,
+  secretType: PropTypes.string
 };
 
 export default SecretAdvancedSection;

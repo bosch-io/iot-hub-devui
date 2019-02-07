@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import Measure from "react-measure";
-import { Motion, spring, presets } from "react-motion";
+import { Motion, spring } from "react-motion";
 
 const AnimationWrapper = styled.div`
   overflow: hidden;
@@ -31,7 +31,10 @@ export default class AccordionSectionBody extends Component {
         {({ measureRef }) => (
           <Motion
             style={{
-              height: spring(expanded ? height : 0, presets.noWobble)
+              height: spring(expanded ? height : 0, {
+                stiffness: 300,
+                damping: 27
+              })
             }}
             defaultStyle={{ height: 0 }}>
             {interpolatingStyle => (

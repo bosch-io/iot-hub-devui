@@ -20,7 +20,6 @@ import {
   notOver100
 } from "validation/settingsFormValidation";
 import { applyValidations } from "validation/generalValidation";
-import { log } from "util";
 
 class SettingsDropdownMenu extends React.Component {
   constructor(props) {
@@ -44,25 +43,26 @@ class SettingsDropdownMenu extends React.Component {
 
   // Gets called inside the handleSubmit function of the decorated form, which passes it the current Field values
   submit(values) {
+    let vals = values;
     // Both errors and warnings must hold the values under the property of the specific <Field/> name
     let errors = {};
     let warnings = {};
     // Apply validation functions of the settingsForm
-    if (values.get("selectedSettingsItem") === "Buffer Size") {
+    if (vals.get("selectedSettingsItem") === "Buffer Size") {
       // the return value of unitNormalization is either an error string or the number in Megabytes
-      const normalized = unitNormalization(values.toJS());
+      const normalized = unitNormalization(vals.toJS());
       if (!isNaN(normalized)) {
         // if it's a number normalization was succesful
-        values = values.set("settingsTextInput", normalized);
+        vals = vals.set("settingsTextInput", normalized);
         // valueRequired is already checked in unitNormalization
         errors = applyValidations(
-          values.toJS(),
+          vals.toJS(),
           "settingsTextInput",
           [noNegativeValues, notOver1000],
           false
         );
         warnings = applyValidations(
-          values.toJS(),
+          vals.toJS(),
           "settingsTextInput",
           [notOver700],
           false
@@ -71,15 +71,15 @@ class SettingsDropdownMenu extends React.Component {
         errors.settingsTextInput = [];
         errors.settingsTextInput.push(normalized);
       }
-    } else if (values.get("selectedSettingsItem") === "Number of Feed Lines") {
+    } else if (vals.get("selectedSettingsItem") === "Number of Feed Lines") {
       errors = applyValidations(
-        values.toJS(),
+        vals.toJS(),
         "settingsTextInput",
         [valueRequired, noNegativeValues],
         false
       );
       warnings = applyValidations(
-        values.toJS(),
+        vals.toJS(),
         "settingsTextInput",
         [notOver100],
         false

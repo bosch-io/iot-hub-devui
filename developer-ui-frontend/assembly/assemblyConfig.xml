@@ -7,7 +7,7 @@
    <includeBaseDirectory>false</includeBaseDirectory>
    <fileSets>
       <fileSet>
-         <directory>${project.basedir}/target/classes/public/</directory>
+         <directory>${project.basedir}/build/</directory>
          <outputDirectory>.</outputDirectory>
       </fileSet>
    </fileSets>
@@ -17,7 +17,7 @@
          <outputDirectory>.</outputDirectory>
       </file>
       <file>
-         <source>${project.build.directory}/DISCLOSURE.TXT</source>
+         <source>${project.basedir}/build/DISCLOSURE.TXT</source>
          <outputDirectory>.</outputDirectory>
       </file>
    </files>

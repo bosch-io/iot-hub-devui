@@ -42,8 +42,12 @@ const connectionReducer = (state = initialState, action = {}) => {
       );
     case actionTypes.HUB_CONNECTED:
       return state.set("hubConnected", true);
+    case actionTypes.HUB_CONNECTED_FAILED:
+      return state.set("hubConnected", false);
     case actionTypes.HUB_DISCONNECTED:
       return state.set("hubConnected", false);
+    case actionTypes.HUB_DISCONNECTED_FAILED:
+      return state.set("hubConnected", true);
     case actionTypes.NEW_SUB:
     case actionTypes.SUB_DELETED:
       return state.set("eventBus", action.eventBus);
@@ -122,12 +126,7 @@ const connectionReducer = (state = initialState, action = {}) => {
     case actionTypes.DELETING_SECRET_FAILED:
     case actionTypes.CREDENTIAL_DELETED:
     case actionTypes.DELETING_CREDENTIAL_FAILED:
-    case actionTypes.DELETING_CRED_INFO_FAILED:
-    case actionTypes.DELETING_CRED_SECRETS_FAILED:
-    case actionTypes.UPDATED_CRED_INFO:
-    case actionTypes.CHANGED_CRED_ENABLED:
     case actionTypes.UPDATED_CRED_SECRETS:
-    case actionTypes.CHANGED_CRED_SECRETS:
       return state.updateIn(["fetchInProgress", "credentials", "byId"], ids => {
         const credIndex = ids.findIndex(id => id === action.authId);
         if (credIndex === -1) {

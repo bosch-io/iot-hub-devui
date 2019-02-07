@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OutlineButton should render correctly 1`] = `
+<styled.button
+  name="button test"
+>
+  <span>
+     
+  </span>
+</styled.button>
+`;

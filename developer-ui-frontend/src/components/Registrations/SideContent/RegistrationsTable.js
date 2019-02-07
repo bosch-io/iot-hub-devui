@@ -11,15 +11,22 @@ import ChecklistSelect, {
 } from "components/common/ChecklistSelect";
 import { connect } from "react-redux";
 import { changeEnabled } from "actions/RegistrationActions";
+import {
+  fetchAllRegistrations,
+  fetchCredentialsByDeviceId
+} from "actions/DataFetchActions";
 import { selectAllDevices } from "reducers/selectors";
 import { toJS } from "components/helpers/to-js";
 import { SearchbarM } from "components/common/textInputs";
+import RefreshButton from "images/refreshButton.svg";
+import HoverTooltip from "components/common/HoverTooltip";
 
 class RegistrationsTableWrapped extends Component {
   constructor(props) {
     super(props);
     this.handleItemClick = this.handleItemClick.bind(this);
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleRefreshClick = this.handleRefreshClick.bind(this);
   }
 
   updatePath(path, item) {
@@ -47,16 +54,35 @@ class RegistrationsTableWrapped extends Component {
     this.props.changeEnabled(deviceId, !enabled);
   }
 
+  handleRefreshClick() {
+    const { initialValues } = this.props;
+    const selectedDeviceId = initialValues.get("selectedDevice");
+    this.props.fetchAllRegistrations();
+    this.props.fetchCredentialsByDeviceId(selectedDeviceId);
+  }
+
   render() {
-    const { deviceData, registrySearchValue } = this.props;
+    const { deviceData, registrySearchValue, initialValues } = this.props;
+    const selectedDevice = initialValues.get("selectedDevice");
+    const tooltipRefresh = "refresh-device-data";
     return (
       <form onSubmit={e => e.preventDefault()}>
         <SearchbarM
+          id={tooltipRefresh}
           name="registrySearchText"
           type="text"
           placeholder="Search for registered Devices..."
           autoComplete="off"
+          icon={<RefreshButton />}
+          onIconClick={this.handleRefreshClick}
+          tooltipAncor={tooltipRefresh}
           asField
+        />
+        <HoverTooltip
+          id={tooltipRefresh}
+          text={`Refresh current registrations${
+            selectedDevice ? ` and ${selectedDevice} device data` : ""
+          }`}
         />
         <ChecklistSelect
           useSwitches
@@ -102,7 +128,7 @@ let RegistrationsTableContainer = reduxForm({
 RegistrationsTableContainer = withRouter(
   connect(
     mapStateToProps,
-    { changeEnabled }
+    { changeEnabled, fetchAllRegistrations, fetchCredentialsByDeviceId }
   )(toJS(RegistrationsTableContainer))
 );
 
@@ -112,7 +138,10 @@ RegistrationsTableWrapped.propTypes = {
   ),
   setMainPanel: PropTypes.func.isRequired,
   changeEnabled: PropTypes.func.isRequired,
+  fetchAllRegistrations: PropTypes.func.isRequired,
+  fetchCredentialsByDeviceId: PropTypes.func.isRequired,
   registrySearchValue: PropTypes.string,
+  initialValues: PropTypes.object,
   history: PropTypes.object.isRequired
 };
 

@@ -1,10 +1,10 @@
 @import "_globalVars.scss";
 @import "_mixins.scss";
 /*
-  This scss is structured in three parts: 
+  This scss is structured in three parts:
   1. general styles for the registrations card (#registrations-form-container)
   2. styles for the main panel collapsed (#registrations-main-content:not(.expanded))
-  3. styles for the main panel expanded (#registrations-main-content.expanded) 
+  3. styles for the main panel expanded (#registrations-main-content.expanded)
 */
 
 // 1) General Styles
@@ -20,7 +20,7 @@
       background-color: #fff;
       height: 100%;
       border-right: 1px solid #ccc;
-      transition: width 0.2s;
+      transition: width 0.35s cubic-bezier(0, 0, 0.2, 1);
 
       form {
         height: 100%;
@@ -69,7 +69,8 @@
       position: relative;
       display: flex;
       flex-flow: column nowrap;
-      transition: flex-grow 0.2s, flex-shrink 0.2s, transform 0.2s;
+      transition: flex-grow 0.35s, flex-shrink 0.35s,
+        transform 0.35s cubic-bezier(0, 0, 0.2, 1);
       background-color: $accent_color;
       height: 100%;
       box-sizing: border-box;
@@ -84,6 +85,11 @@
           align-items: center;
           height: 5rem;
           margin-bottom: 0.9rem;
+          transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+
+          &.collapsed {
+            transform: translateX(100%);
+          }
 
           #action-buttons {
             a {
@@ -126,7 +132,7 @@
           }
 
           h2 {
-            margin: 0 1rem 0 5rem;
+            margin: 0 1rem 0 4.5rem;
             font-size: 2.2em;
             font-weight: 500;
             color: $accent_color;

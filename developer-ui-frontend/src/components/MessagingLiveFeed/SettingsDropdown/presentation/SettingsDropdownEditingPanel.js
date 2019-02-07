@@ -5,10 +5,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
 import { onlyNumbers } from "validation/settingsFormValidation";
-// Velocity Animations
-require("velocity-animate");
-require("velocity-animate/velocity.ui");
-import { VelocityTransitionGroup } from "velocity-react";
 import { Field } from "redux-form/immutable";
 // SVG Imports
 import HintIcon from "images/hintIcon.svg";
@@ -88,15 +84,11 @@ export default class SettingsDropdownEditingPanel extends React.Component {
         />
         <i className={errorIndicatorClass} />
         <button type="submit">OK</button>
-        <VelocityTransitionGroup
-          enter={{ animation: "transition.flipBounceYIn", duration: 300 }}
-          leave={{ animation: "transition.flipYOut", duration: 200 }}>
-          {(this.state.hintShown || errorIndicator !== 0) && (
-            <div id="hint">
-              <span>{hintMessage}</span>
-            </div>
-          )}
-        </VelocityTransitionGroup>
+        {(this.state.hintShown || errorIndicator !== 0) && (
+          <div id="hint">
+            <span>{hintMessage}</span>
+          </div>
+        )}
       </div>
     );
   }

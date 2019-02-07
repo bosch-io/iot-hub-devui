@@ -38,7 +38,7 @@ class Dropdown extends Component {
     this.state = {
       ...this.props,
       items: this.props.items || [],
-      selectedItem: this.props.items[0] || this.props.selectedItem,
+      selectedItem: this.props.selectedItem,
       showItems: false
     };
     this.toggleDropdown = this.toggleDropdown.bind(this);
@@ -61,7 +61,7 @@ class Dropdown extends Component {
     /* If the component is a Redux Form Field,
     the onChange is provided as prop and needs to be called
     with the selection */
-    onChange && onChange(item.value);
+    onChange && onChange(item);
   }
 
   handleClickOutside() {
@@ -69,7 +69,7 @@ class Dropdown extends Component {
   }
 
   render() {
-    const { items, ...other } = this.props;
+    const { items, header, ...other } = this.props;
     const { selectedItem, showItems } = this.state;
     return (
       <DropdownOuter {...other}>
@@ -78,6 +78,7 @@ class Dropdown extends Component {
             toggle={this.toggleDropdown}
             selected={selectedItem}
             isOpen={showItems}
+            header={header}
           />
           <DropdownMenu
             show={showItems}
@@ -93,6 +94,7 @@ class Dropdown extends Component {
 
 Dropdown.propTypes = {
   disabled: PropTypes.bool,
+  header: PropTypes.string,
   items: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

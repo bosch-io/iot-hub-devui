@@ -10,6 +10,7 @@ public class DevUiProperties {
     private String bindAddress;
     private String htmlRoot;
     private String apiRoot;
+    private boolean connectOnStartup;
 
     public String getTenant() {
         return tenant;
@@ -50,4 +51,14 @@ public class DevUiProperties {
     public void setApiRoot(String apiRoot) {
         this.apiRoot = apiRoot;
     }
+
+	public boolean isConnectOnStartup() {
+		return connectOnStartup;
+	}
+
+	public void setConnectOnStartup(boolean connectOnStartup) {
+		this.connectOnStartup = connectOnStartup;
+	}
+    
+    
 }

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FlatButton should render correctly 1`] = `
+<styled.button
+  danger={0}
+  name="button test"
+  primary={0}
+  secondary={0}
+/>
+`;

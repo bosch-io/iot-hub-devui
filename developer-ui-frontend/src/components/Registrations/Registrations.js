@@ -76,7 +76,8 @@ export class Registrations extends React.Component {
               loadingBarShown={anyFetching}
               title="Manage Device Registrations"
               id="registrations-form-container"
-              className={mainPanelExpanded ? "expanded" : null}>
+              className={mainPanelExpanded ? "expanded" : null}
+            >
               <div id="form-content">
                 <SideContent
                   mainPanelExpanded={mainPanelExpanded}

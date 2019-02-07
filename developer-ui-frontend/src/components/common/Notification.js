@@ -26,13 +26,16 @@ const style = {
       alignItems: "center",
       borderRadius: "4px",
       padding: "10px 40px",
-      overflow: "hidden"
+      height: "unset !important",
+      overflow: "hidden !important"
     },
     success: {
       backgroundImage: `url(${require("images/pngIcons/doneIcon.png")})`,
       backgroundRepeat: "no-repeat",
       backgroundPosition: "4% 50%",
-      backgroundSize: "20px 20px"
+      backgroundSize: "20px 20px",
+      height: "unset !important",
+      overflow: "hidden !important"
     },
     error: {
       backgroundImage: `url(${require("images/pngIcons/errorIconOutline.png")})`,

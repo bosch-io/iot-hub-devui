@@ -54,7 +54,7 @@ export function newGatewayConfiguration(deviceId, info, gatewayId) {
     dispatch(configuringNewGateway(deviceId, info));
     return axios
       .put(`${RESTSERVER_URL}/registration/${tenant}/${deviceId}`, info)
-      .then(({ data }) => {
+      .then(() => {
         dispatch(newGatewayConfigured(deviceId, info));
         gatewayId && dispatch(settedViaProperty(deviceId, info.get("via")));
       })
@@ -68,10 +68,15 @@ export function newGatewayConfiguration(deviceId, info, gatewayId) {
 export function setViaProperty(deviceId, gatewayId) {
   return (dispatch, getState) => {
     dispatch(settingViaProperty(deviceId, gatewayId));
-    const info = selectRegistrationInfo(getState(), deviceId).set(
-      "via",
-      gatewayId.get("via")
-    );
+    let info = null;
+    if (gatewayId !== null) {
+      info = selectRegistrationInfo(getState(), deviceId).set(
+        "via",
+        gatewayId.get("via")
+      );
+    } else {
+      info = selectRegistrationInfo(getState(), deviceId).set("via", undefined);
+    }
     return dispatch(newGatewayConfiguration(deviceId, info, gatewayId));
   };
 }
@@ -146,7 +151,7 @@ export function deleteRegistration(deviceId) {
     dispatch(deletingRegistration(deviceId));
     return axios
       .delete(`${RESTSERVER_URL}/registration/${tenant}/${deviceId}`)
-      .then(({ data }) => dispatch(deletedRegistration(deviceId)))
+      .then(() => dispatch(deletedRegistration(deviceId)))
       .catch(err => {
         dispatch(deletingRegistrationFailed(deviceId));
         console.error(err);
@@ -200,7 +205,7 @@ export function updateRegistrationInfo(deviceId, info, enableChange) {
     dispatch(updatingRegistrationInfo(deviceId, info));
     return axios
       .put(`${RESTSERVER_URL}/registration/${tenant}/${deviceId}`, info)
-      .then(({ data }) => {
+      .then(() => {
         dispatch(updatedRegistrationInfo(deviceId, info));
         enableChange && dispatch(changedEnabled(deviceId));
       })

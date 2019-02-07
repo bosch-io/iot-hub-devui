@@ -31,22 +31,25 @@ class AddSecretAdvancedSection extends Component {
 
   render() {
     const { expanded } = this.state;
+    const { secretType } = this.props;
     return (
       <div className="secrets-advanced-options">
         <ExpandLink
           expanded={expanded}
           toggle={this.toggleSection}
           className="expand-link"
-          openToTop>
+          openToTop
+        >
           Advanced
         </ExpandLink>
-
         {expanded && (
           <div className="advanced-option-inputs">
-            <div className="salt-input-wrapper">
-              <TextField asField name="salt" type="text" label="Salt" />
-              <a onClick={this.autogenSalt}>Generate that for me</a>
-            </div>
+            {secretType === "hashed-password" && (
+              <div className="salt-input-wrapper">
+                <TextField asField name="salt" type="text" label="Salt" />
+                <a onClick={this.autogenSalt}>Generate that for me</a>
+              </div>
+            )}
             <div className="validity-period-wrapper">
               <div className="standard-field">
                 <label>Validity Period: </label>
@@ -70,7 +73,8 @@ class AddSecretAdvancedSection extends Component {
 }
 
 AddSecretAdvancedSection.propTypes = {
-  changeSaltVal: PropTypes.func.isRequired
+  changeSaltVal: PropTypes.func.isRequired,
+  secretType: PropTypes.string
 };
 
 AddSecretAdvancedSection = connect(

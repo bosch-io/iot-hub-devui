@@ -1,23 +1,14 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import { AVERAGE_MEMCALC_INTERVAL } from "_APP_CONSTANTS";
+import { AVERAGE_MEMCALC_INTERVAL, RESTSERVER_URL } from "_APP_CONSTANTS";
+import axios from "axios";
 import {
   registerNewDeviceHandler,
   useWebsockets,
   unregisterHandler
 } from "WebsocketConnection";
-import {
-  CONNECT_TO_EVENTBUS,
-  EVENTBUS_CONNECTED,
-  CALCULATE_LOG_MEMORY,
-  NEW_ERROR,
-  EVENTBUS_INIT,
-  EVENTBUS_DISCONNECTED,
-  CONNECTING_FAILED,
-  HUB_CONNECTED,
-  HUB_DISCONNECTED
-} from "./actionTypes";
+import * as actionTypes from "./actionTypes";
 import {
   selectOldestLog,
   selectAllLogs,
@@ -31,51 +22,78 @@ import { fetchInitialData } from "./DataFetchActions";
 
 export function connecting() {
   return {
-    type: CONNECT_TO_EVENTBUS
+    type: actionTypes.CONNECT_TO_EVENTBUS
   };
 }
 
 export function initializedEventBus(eventBus) {
   return {
-    type: EVENTBUS_INIT,
+    type: actionTypes.EVENTBUS_INIT,
     eventBus
   };
 }
 
 export function connected(eventBus) {
   return {
-    type: EVENTBUS_CONNECTED,
+    type: actionTypes.EVENTBUS_CONNECTED,
     eventBus
   };
 }
 
 export function disconnected(eventBus) {
   return {
-    type: EVENTBUS_DISCONNECTED,
+    type: actionTypes.EVENTBUS_DISCONNECTED,
     eventBus
   };
 }
 
 export function connectingFailed(eventBus) {
   return {
-    type: CONNECTING_FAILED,
+    type: actionTypes.CONNECTING_FAILED,
     eventBus
   };
 }
 
-export function hubConnected(time) {
-  return (dispatch, getState) => {
+export function hubDisconnected(time) {
+  return dispatch => {
     dispatch({
-      type: HUB_CONNECTED,
+      type: actionTypes.HUB_CONNECTED_FAILED,
       time
     });
     dispatch(fetchInitialData()); // (re)initialize
   };
 }
 
-export function hubDisconnected(time) {
+export function hubConnected(time) {
+  return dispatch => {
+    dispatch({
+      type: actionTypes.HUB_CONNECTED,
+      time
+    });
+    dispatch(fetchInitialData()); // (re)initialize
+  };
+}
+
+export function hubConnectedFailed(time) {
   return {
-    type: HUB_DISCONNECTED,
+    type: actionTypes.HUB_CONNECTED_FAILED,
+    time
+  };
+}
+
+export function hubHonoDisconnected(time) {
+  return dispatch => {
+    dispatch({
+      type: actionTypes.HUB_DISCONNECTED,
+      time
+    });
+    dispatch(fetchInitialData()); // (re)initialize
+  };
+}
+
+export function hubDisconnectedFailed(time) {
+  return {
+    type: actionTypes.HUB_DISCONNECTED_FAILED,
     time
   };
 }
@@ -83,14 +101,14 @@ export function hubDisconnected(time) {
 // Only exported for unit tests
 export function calculateLogMemory(allLogs) {
   return {
-    type: CALCULATE_LOG_MEMORY,
+    type: actionTypes.CALCULATE_LOG_MEMORY,
     allLogs
   };
 }
 
 export function newError(error) {
   return {
-    type: NEW_ERROR,
+    type: actionTypes.NEW_ERROR,
     error
   };
 }
@@ -159,6 +177,31 @@ export function handleDeleteSub(deviceId) {
 export function eventBusConnect() {
   return (dispatch, getState) => {
     useWebsockets(dispatch, getState);
+  };
+  // Otherwise, the onOpen callback will call unregisterHandler for all pending unsubscribes.
+}
+
+export function honoConnect(honoConnection) {
+  return dispatch => {
+    if (honoConnection === true) {
+      return axios
+        .get(`${RESTSERVER_URL}/connect`)
+        .then(() => dispatch(hubConnected(honoConnection)))
+        .catch(err => {
+          dispatch(hubConnectedFailed(honoConnection));
+          console.error(err);
+        });
+    }
+    if (honoConnection === false) {
+      return axios
+        .get(`${RESTSERVER_URL}/disconnect`)
+        .then(() => dispatch(hubHonoDisconnected(honoConnection)))
+        .catch(err => {
+          dispatch(hubDisconnectedFailed(honoConnection));
+          console.error(err);
+        });
+    }
+    return 1;
   };
   // Otherwise, the onOpen callback will call unregisterHandler for all pending unsubscribes.
 }

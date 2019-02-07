@@ -6,7 +6,6 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styled, { keyframes } from "styled-components";
 import enhanceWithClickOutside from "react-click-outside";
-import ReactTooltip from "react-tooltip";
 import HoverTooltip from "components/common/HoverTooltip";
 
 /* eslint-disable react/no-multi-comp */
@@ -151,23 +150,21 @@ class TooltipMenu extends Component {
             open={open}>
             <MenuOptionsList>
               {/* Spread the props to all children */}
-              {Children.map(
-                children,
-                child =>
-                  child.props.disabled ? (
-                    <Fragment>
-                      {cloneElement(child, { open, toggleOpen })}
-                      <HoverTooltip
-                        key={child.props.disabledHoverTooltipId}
-                        id={child.props.disabledHoverTooltipId}
-                        text={child.props.disabledText}
-                        effect="float"
-                        delayShow={0}
-                      />
-                    </Fragment>
-                  ) : (
-                    cloneElement(child, { open, toggleOpen })
-                  )
+              {Children.map(children, child =>
+                child.props.disabled ? (
+                  <Fragment>
+                    {cloneElement(child, { open, toggleOpen })}
+                    <HoverTooltip
+                      key={child.props.disabledHoverTooltipId}
+                      id={child.props.disabledHoverTooltipId}
+                      text={child.props.disabledText}
+                      effect="float"
+                      delayShow={0}
+                    />
+                  </Fragment>
+                ) : (
+                  cloneElement(child, { open, toggleOpen })
+                )
               )}
             </MenuOptionsList>
           </MenuContainerEnhanced>

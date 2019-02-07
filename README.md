@@ -7,7 +7,7 @@
 
 <br />
 
-![Developer UI Screenshot](devui.png "Developer UI Screenshot")
+![Developer UI Screenshot](./resources/devui.png "Developer UI Screenshot")
 
 ## About
 

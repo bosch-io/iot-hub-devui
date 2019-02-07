@@ -40,7 +40,7 @@ class DatePickerWrapped extends Component {
   }
 
   handleBlur() {
-    this.props.input.onBlur(this.props.input.value);
+    this.props.input.onBlur();
   }
 
   toggle() {

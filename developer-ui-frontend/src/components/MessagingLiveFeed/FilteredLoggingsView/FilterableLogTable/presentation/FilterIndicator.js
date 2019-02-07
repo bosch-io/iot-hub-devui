@@ -2,7 +2,6 @@
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
 import React from "react";
-import { fromJS } from "immutable";
 import PropTypes from "prop-types";
 import { calculateFilterId } from "utils";
 // SVG Imports
@@ -78,7 +77,7 @@ export default class FilterIndicator extends React.Component {
 
   render() {
     return (
-      <div className="filterTag">
+      <div className="filterTag" style={this.props.style}>
         {this.getIcon()}
         {this.props.value}
         <CancelIcon onClick={this.handleClick} />
@@ -101,5 +100,6 @@ FilterIndicator.propTypes = {
    * Gets called when the user deletes a filter by clicking on the x Button on a FilterIndicator component.
    *
    */
-  deleteFilter: PropTypes.func.isRequired
+  deleteFilter: PropTypes.func.isRequired,
+  style: PropTypes.object
 };

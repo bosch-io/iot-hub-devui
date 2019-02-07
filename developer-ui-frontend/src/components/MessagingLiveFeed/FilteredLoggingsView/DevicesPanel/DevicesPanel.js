@@ -22,9 +22,6 @@ import {
   selectSubscribedDevices,
   selectEventbusConnected
 } from "reducers/selectors";
-// Velocity Animations
-import { ExpandAnimations } from "animations/collapsableDevicesPanel";
-import { VelocityComponent } from "velocity-react";
 
 export class DevicesPanelWrapped extends React.Component {
   constructor(props) {
@@ -81,59 +78,51 @@ export class DevicesPanelWrapped extends React.Component {
       handleSubmit,
       isConnected
     } = this.props;
-    let animationProps;
-    if (!expanded) {
-      animationProps = ExpandAnimations.collapse;
-    } else {
-      animationProps = ExpandAnimations.expand;
-    }
 
     const tooltipIdEditSubs = "edit-btn";
     const tooltipIdCollapsePanel = "collapse-panel";
     return (
       <Fragment>
-        <VelocityComponent key="devicePanelFrag1" animation={animationProps}>
-          <div id="devices-panel-container">
-            <form
-              id="additional-subs-form"
-              onSubmit={handleSubmit(this.submit)}>
-              <DevicesPanelHeader
-                deviceAddingModeActive={this.state.deviceAddingModeActive}
-                switchToAddingMode={this.switchToAddingMode}
-                expanded={expanded}
-                isConnected={isConnected}
-                toggleDevicesPanel={toggleDevicesPanel}
-                tooltipIdEditSubs={tooltipIdEditSubs}
-                tooltipIdCollapsePanel={tooltipIdCollapsePanel}
-              />
-              <div
-                id="devices-panel-body"
-                className={
-                  this.state.deviceAddingModeActive
-                    ? "registryView custom-scrollbar-1"
-                    : "custom-scrollbar-1"
-                }>
-                {this.state.deviceAddingModeActive ? (
-                  [
-                    <RegisteredDevicesListing
-                      key="deviceBodyFrag1"
-                      expanded={expanded}
-                    />,
-                    <button
-                      id="subscription-confirm-btn"
-                      className="shadow-z-1"
-                      key="deviceBodyFrag2"
-                      type="submit">
-                      Confirm
-                    </button>
-                  ]
-                ) : (
-                  <SubscribedDevicesListing expanded={expanded} />
-                )}
-              </div>
-            </form>
-          </div>
-        </VelocityComponent>
+        <div
+          id="devices-panel-container"
+          className={!expanded ? "collapsed" : null}>
+          <form id="additional-subs-form" onSubmit={handleSubmit(this.submit)}>
+            <DevicesPanelHeader
+              deviceAddingModeActive={this.state.deviceAddingModeActive}
+              switchToAddingMode={this.switchToAddingMode}
+              expanded={expanded}
+              isConnected={isConnected}
+              toggleDevicesPanel={toggleDevicesPanel}
+              tooltipIdEditSubs={tooltipIdEditSubs}
+              tooltipIdCollapsePanel={tooltipIdCollapsePanel}
+            />
+            <div
+              id="devices-panel-body"
+              className={
+                this.state.deviceAddingModeActive
+                  ? "registryView custom-scrollbar-1"
+                  : "custom-scrollbar-1"
+              }>
+              {this.state.deviceAddingModeActive ? (
+                [
+                  <RegisteredDevicesListing
+                    key="deviceBodyFrag1"
+                    expanded={expanded}
+                  />,
+                  <button
+                    id="subscription-confirm-btn"
+                    className="shadow-z-1"
+                    key="deviceBodyFrag2"
+                    type="submit">
+                    Confirm
+                  </button>
+                ]
+              ) : (
+                <SubscribedDevicesListing expanded={expanded} />
+              )}
+            </div>
+          </form>
+        </div>
         {!this.state.deviceAddingModeActive && (
           <HoverTooltip
             key="devicePanelFrag2"

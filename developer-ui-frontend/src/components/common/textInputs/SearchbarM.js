@@ -71,6 +71,37 @@ const Searchbar = styled.input`
   }
 `;
 
+const IconButton = styled.button`
+  background: none;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  right: 1rem;
+  position: absolute;
+  padding: 0;
+  height: 2rem;
+  width: 2rem;
+  top: 2rem;
+  user-select: none;
+  z-index: 1;
+`;
+
+const Icon = styled(({ icon, ...props }) => React.cloneElement(icon, props))`
+  path {
+    fill: ${props => props.theme.accentColor};
+    transition: opacity 0.2s;
+    opacity: 0.6;
+  }
+  &:hover {
+    path {
+      opacity: 1;
+    }
+  }
+`;
+
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/prop-types */
 class SearchbarStyledConnected extends Component {
@@ -86,6 +117,9 @@ class SearchbarStyledConnected extends Component {
 
 const SearchbarM = ({
   autoComplete,
+  icon,
+  onIconClick,
+  tooltipAncor,
   type,
   id,
   error,
@@ -107,8 +141,16 @@ const SearchbarM = ({
     )}
     <FocusBar className="bar" warning={warning} error={error} />
     <SearchSvg className="searchIcon" />
-    {/* To support submit on enter, provide a hidden submit button element */}
-    <button type="submit" style={{ display: "none" }} />
+    {icon ? (
+      <IconButton type="submit">
+        <Icon
+          icon={icon}
+          onClick={onIconClick}
+          data-tip
+          data-for={tooltipAncor}
+        />
+      </IconButton>
+    ) : null}
   </SearchbarContainer>
 );
 
@@ -120,6 +162,9 @@ SearchbarM.propTypes = {
   error: PropTypes.bool,
   warning: PropTypes.bool,
   autoComplete: PropTypes.oneOf(["on", "off"]),
+  icon: PropTypes.element,
+  onIconClick: PropTypes.func,
+  tooltipAncor: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
   name: PropTypes.string,

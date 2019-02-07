@@ -36,20 +36,20 @@ class SecretsConfiguratorWrapped extends Component {
   submit(values) {
     this.setState({ inEditingMode: false });
     const currSecret = this.props.secrets[this.state.selectedSecret];
-    if (values.get(currSecret["secretId"] + "notBefore")) {
+    if (values.get(currSecret.secretId + "notBefore")) {
       currSecret["not-before"] = values
-        .get(currSecret["secretId"] + "notBefore")
+        .get(currSecret.secretId + "notBefore")
         .format();
     }
-    if (values.get(currSecret["secretId"] + "notBefore") === null) {
+    if (values.get(currSecret.secretId + "notBefore") === null) {
       delete currSecret["not-before"];
     }
-    if (values.get(currSecret["secretId"] + "notAfter")) {
+    if (values.get(currSecret.secretId + "notAfter")) {
       currSecret["not-after"] = values
-        .get(currSecret["secretId"] + "notAfter")
+        .get(currSecret.secretId + "notAfter")
         .format();
     }
-    if (values.get(currSecret["secretId"] + "notAfter") === null) {
+    if (values.get(currSecret.secretId + "notAfter") === null) {
       delete currSecret["not-after"];
     }
     this.props.changeSecretsInfo(
@@ -116,6 +116,7 @@ class SecretsConfiguratorWrapped extends Component {
           increaseSelectedSecret={this.increaseSelectedSecret}
         />
         <SecretMainView
+          secretType={secretType}
           secrets={secrets}
           toggleEditingMode={this.toggleEditingMode}
           selectedSecret={selectedSecret}

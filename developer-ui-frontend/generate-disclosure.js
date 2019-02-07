@@ -1,22 +1,25 @@
-const spawner = require('child_process');
-const fs = require('fs');
-var disclosureFile = fs.createWriteStream("target/DISCLOSURE.TXT");
+/*
+ * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
+ */
+const spawner = require("child_process");
+const fs = require("fs");
+const disclosureFile = fs.createWriteStream("build/DISCLOSURE.TXT");
 
-disclosureFile.once('open', function (fd) {
+disclosureFile.once("open", () => {
+  const disclosureGenerator = spawner.exec(
+    "yarn licenses generate-disclaimer",
+    (err, stdout) => {
+      disclosureFile.write(stdout);
+    }
+  );
 
-    var disclosureGenerator = spawner.exec('yarn licenses generate-disclaimer',
-        function (err, stdout, stderr) {
-            disclosureFile.write(stdout);
-        });
+  disclosureGenerator.on("close", code => {
+    disclosureFile.end();
 
-    disclosureGenerator.on('close', (code) => {
-        disclosureFile.end();
-
-        if (code === 0) {
-            console.log('Disclosure generation process exited ok.');
-        } else {
-            console.log('Disclosure generation process exited with code ${code}.');
-        }
-
-    });
+    if (code === 0) {
+      console.log("Disclosure generation process exited ok.");
+    } else {
+      console.log("Disclosure generation process exited with code ${code}.");
+    }
+  });
 });

@@ -6,7 +6,8 @@ import { reduxForm, formValueSelector } from "redux-form/immutable";
 import { withRouter } from "react-router-dom";
 import { toJS } from "components/helpers/to-js";
 import { connect } from "react-redux";
-import { selectAllDevices } from "reducers/selectors";
+import { reset } from "redux-form";
+import { selectAllDevices, selectRegistrationInfo } from "reducers/selectors";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
@@ -30,16 +31,13 @@ class AddGatewayModalWrapped extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: true,
-      deviceData: props.gatewayDevices.map(device => ({
-        deviceId: device,
-        selected: false
-      }))
+      isOpen: true
     };
     this.changeIsOpen = this.changeIsOpen.bind(this);
     this.confirm = this.confirm.bind(this);
     this.changeSelected = this.changeSelected.bind(this);
     this.submit = this.submit.bind(this);
+    this.resetSelected = this.resetSelected.bind(this);
   }
 
   submit(values) {
@@ -49,35 +47,44 @@ class AddGatewayModalWrapped extends Component {
   }
 
   changeSelected(id) {
-    const deviceIndex = this.state.deviceData.findIndex(
-      device => device.deviceId === id
-    );
-    this.setState(state => {
-      const changedEntry = Object.assign({}, state.deviceData[deviceIndex]);
-      changedEntry.selected = !changedEntry.selected;
-      return {
-        deviceData: [
-          ...state.deviceData.slice(0, deviceIndex),
-          changedEntry,
-          ...state.deviceData.slice(deviceIndex + 1, state.deviceData.length)
-        ]
-      };
-    });
+    const { deviceData } = this.props;
+    const deviceIndex = deviceData.findIndex(device => device.deviceId === id);
+    const changedEntry = Object.assign({}, deviceData[deviceIndex]);
+    changedEntry.selected = !changedEntry.selected;
+    return {
+      deviceData: [
+        ...deviceData.slice(0, deviceIndex),
+        changedEntry,
+        ...deviceData.slice(deviceIndex + 1, deviceData.length)
+      ]
+    };
   }
 
   changeIsOpen(opened) {
     this.setState({ isOpen: opened });
   }
 
+  resetSelected() {
+    this.props.reset("selectedDevice");
+  }
+
   confirm() {}
   render() {
-    const { handleSubmit, deviceId, gatewaySearch } = this.props;
-    const { deviceData, isOpen } = this.state;
+    const {
+      handleSubmit,
+      deviceId,
+      gatewaySearch,
+      deviceData,
+      viaProperty,
+      selectedGateway
+    } = this.props;
+    const { isOpen } = this.state;
     return isOpen ? (
       <ConfigurationModalBig
         modalShown={isOpen}
         toggleModal={this.changeIsOpen}
-        changeIsOpen={this.changeIsOpen}>
+        changeIsOpen={this.changeIsOpen}
+      >
         <ConfigurationModalHeader
           icon={<GatewayIcon />}
           subject={"Configure Gateway for " + deviceId}
@@ -86,7 +93,8 @@ class AddGatewayModalWrapped extends Component {
           style={{
             padding: "0px 6rem",
             background: "rgba(226, 226, 226, 0.45)"
-          }}>
+          }}
+        >
           <div className="main-content">
             <div className="description-text">
               <p>
@@ -99,7 +107,8 @@ class AddGatewayModalWrapped extends Component {
                 Further information can be found in the{" "}
                 <a
                   href="https://docs.bosch-iot-hub.com/general-concepts/gatewaymode.html"
-                  target="_blank">
+                  target="_blank"
+                >
                   Gateway mode documentation.
                 </a>
               </p>
@@ -111,14 +120,21 @@ class AddGatewayModalWrapped extends Component {
                 name="gatewaySearchText"
                 type="text"
                 placeholder="Search for a device..."
+                onIconClick={handleSubmit(this.resetSelected)}
                 autoComplete="off"
                 asField
               />
-              <GatewaySelectionList
-                searchText={gatewaySearch}
-                deviceData={deviceData}
-                changeSelected={this.changeSelected}
-              />
+              <form onSubmit={handleSubmit(this.resetSelected)}>
+                <GatewaySelectionList
+                  name="selectedDevice"
+                  searchText={gatewaySearch}
+                  deviceData={deviceData}
+                  changeSelected={this.changeSelected}
+                  resetSelected={handleSubmit(this.resetSelected)}
+                  selectedGateway={selectedGateway}
+                  viaProperty={viaProperty}
+                />
+              </form>
             </div>
           </div>
         </ConfigurationModalBody>
@@ -134,12 +150,21 @@ class AddGatewayModalWrapped extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const selector = formValueSelector("gatewayTab");
   const gateways = selectAllDevices(state);
   return {
     gatewaySearch: selector(state, "gatewaySearchText"),
-    gatewayDevices: gateways.map(device => device.get("deviceId"))
+    selectedGateway: selector && selector(state, "via"),
+    viaProperty: selectRegistrationInfo(state, ownProps.deviceId).get("via"),
+    gatewayDevices: gateways.map(device => device.get("deviceId")),
+    deviceData: gateways.map(device => ({
+      deviceId: device.get("deviceId"),
+      selected: false
+    })),
+    initialValues: {
+      selectedDevice: ownProps.match.params.selectedDeviceId || null
+    }
   };
 };
 
@@ -151,7 +176,8 @@ AddGatewayModalContainer = withRouter(
   connect(
     mapStateToProps,
     {
-      setViaProperty
+      setViaProperty,
+      reset
     }
   )(toJS(AddGatewayModalContainer))
 );
@@ -159,9 +185,15 @@ AddGatewayModalContainer = withRouter(
 AddGatewayModalWrapped.propTypes = {
   handleSubmit: PropTypes.func,
   gatewaySearch: PropTypes.string,
+  selectedGateway: PropTypes.string,
+  viaProperty: PropTypes.string,
   gatewayDevices: PropTypes.array.isRequired,
   deviceId: PropTypes.string.isRequired,
-  setViaProperty: PropTypes.func.isRequired
+  setViaProperty: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
+  deviceData: PropTypes.arrayOf(
+    PropTypes.shape({ deviceId: PropTypes.string, selected: PropTypes.bool })
+  )
 };
 
 const AddGateway = AddGatewayModalContainer;

@@ -13,7 +13,6 @@ import { fetchCredentialsByDeviceId } from "actions/DataFetchActions";
 import { RESTSERVER_URL } from "_APP_CONSTANTS";
 import { Credential, Secret } from "api/schemas";
 import axios from "axios";
-import _ from "lodash";
 import { normalize } from "normalizr";
 
 export function creatingSecret(authId, secret) {
@@ -71,7 +70,6 @@ export function createNewSecret(deviceId, authId, secret) {
     const requestBody = { ...modifiedCredential, "device-id": deviceId };
     // 4. Start the regular XHR handling with the updated credential as PUT request
     const tenant = getState().getIn(["settings", "tenant"]);
-
     if (numberOfSecrets > 9) {
       dispatch(notAllowedCreatingSecret(authId, newSecret));
     } else {
@@ -391,7 +389,6 @@ export function updateCredentialInfo(data) {
     // Destructure the received data and extract the optional fields from the required fields
     const {
       "device-id": deviceId,
-      type,
       "auth-id": authId,
       enabled,
       secrets,
@@ -435,7 +432,7 @@ export function updateCredentialInfoSecrets(deviceId, authId, info) {
     dispatch(updatingCredentialSecrets(authId, info));
     return axios
       .put(`${RESTSERVER_URL}/credentials/${tenant}`, info)
-      .then(({ data }) => {
+      .then(() => {
         dispatch(updatedCredentialSecrets(authId, info.secrets));
         dispatch(fetchCredentialsByDeviceId(deviceId));
       })

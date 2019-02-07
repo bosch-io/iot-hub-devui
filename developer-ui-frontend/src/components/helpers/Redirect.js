@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React, { Component } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import withRouter from "react-router-dom/withRouter";
 import { withLastLocation } from "react-router-last-location";

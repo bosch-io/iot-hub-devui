@@ -77,10 +77,11 @@ export const roughSizeOfObject = object => {
       bytes += 8;
     } else if (typeof value === "object" && objectList.indexOf(value) === -1) {
       objectList.push(value);
-
+      /* eslint-disable guard-for-in */
       for (const i in value) {
         stack.push(value[i]);
       }
+      /* eslint-enable */
     }
   }
   return bytes;

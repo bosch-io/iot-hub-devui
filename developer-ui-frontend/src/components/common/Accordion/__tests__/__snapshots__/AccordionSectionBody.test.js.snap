@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccordionSectionBody should render correctly 1`] = `
+<_class
+  onResize={[Function]}
+  scroll={true}
+>
+  <Component />
+</_class>
+`;

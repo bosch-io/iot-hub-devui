@@ -62,7 +62,8 @@ class AppWrapped extends Component {
               atLeave={transitionSettings.atLeave}
               atActive={transitionSettings.atActive}
               mapStyles={mapStyles}
-              className="route-wrapper">
+              className="route-wrapper"
+            >
               <Route exact path="/" render={() => <Redirect to="/feed" />} />
               {/* Change the Redirect path back to /feed/initial */}
               <Route

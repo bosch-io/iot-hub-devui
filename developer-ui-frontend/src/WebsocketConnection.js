@@ -68,6 +68,7 @@ export const unregisterHandler = (eventBus, channel, dispatch) => {
   dispatch(subDeleted(eventBus, channel));
   console.log(`device.${channel} deregistered as handler"`);
 };
+
 // Create the Websocket connection (the eventBus object)
 export const useWebsockets = (dispatch, getState) => {
   dispatch(wsActions.connecting());
@@ -88,11 +89,13 @@ export const useWebsockets = (dispatch, getState) => {
       );
     }
   };
+  dispatch(wsActions.hubDisconnected(new Date().getTime()));
+  console.log("NOT CONNECTED");
+
   eventBus.onclose = () => {
     getState().getIn(["connection", "eventBusConnected"])
       ? dispatch(wsActions.disconnected(eventBus))
       : dispatch(wsActions.connectingFailed(eventBus));
   };
-
   eventBus.enableReconnect(true);
 };

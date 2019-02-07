@@ -1,0 +1,16 @@
+target/
+.classpath
+.project
+.settings/
+.flattened-pom.xml
+.idea/*
+!/.idea/runConfigurations
+/.idea/runConfigurations/*
+*.iml
+.terraform
+terraform.tfstate.backup
+node_modules
+
+#Vert.X Cache
+.vertx/
+/node_modules

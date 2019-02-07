@@ -12,6 +12,11 @@ html {
 
 .route-wrapper {
   position: relative;
+  height: calc(100vh - 8.2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .route-wrapper > div {
@@ -122,12 +127,16 @@ body {
       transition: 0.5s filter linear;
     }
     .notification {
+      height: unset !important;
+      overflow: hidden !important;
       background-color: rgba(0, 0, 0, 0.9) !important;
       .notification-dismiss {
         background-color: rgba(0, 0, 0, 0.9) !important;
       }
       .notification-message {
         color: #fff !important;
+        height: unset !important;
+        overflow: hidden !important;
       }
     }
   }
@@ -169,7 +178,6 @@ h1 {
 }
 
 #main-view-headline {
-  margin-top: 3rem;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;

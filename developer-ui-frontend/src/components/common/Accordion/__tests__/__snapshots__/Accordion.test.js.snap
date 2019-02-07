@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Accordion should render correctly 1`] = `
+<Fragment>
+  <ContextProvider
+    value={
+      Object {
+        "containerHeight": -1,
+        "snapFooter": false,
+      }
+    }
+  >
+    <_class
+      client={true}
+      onResize={[Function]}
+    >
+      <Component />
+    </_class>
+  </ContextProvider>
+  <styled.div
+    containerHeight={-1}
+    containerWidth={-1}
+    id="fixed-acc-footer-modal"
+    snapFooter={false}
+  />
+</Fragment>
+`;

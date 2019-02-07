@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RoundOutlineButton should render correctly 1`] = `
+<styled.button
+  name="button test"
+  primary={0}
+>
+  <span>
+     
+     
+  </span>
+</styled.button>
+`;

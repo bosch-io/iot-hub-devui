@@ -11,7 +11,8 @@ import {
   UPDATED_CRED_SECRETS,
   CREDENTIAL_DELETED,
   CREDENTIALS_FETCHED,
-  ENABLED_CRED_CHANGED} from "actions/actionTypes";
+  ENABLED_CRED_CHANGED
+} from "actions/actionTypes";
 
 export const initialState = fromJS({
   byId: {},
@@ -58,16 +59,14 @@ const credentialsReducer = (state = initialState, action = {}) => {
       const newAuthId = action.credential["auth-id"];
       // secrets are handled by handleNewSecret -> Reset secrets to [] for
       // credential specific handling
+      /* eslint-disable no-unused-vars */
       const { secrets, ...credentialWithoutSecrets } = action.credential;
+      /* eslint-enable */
       credentialWithoutSecrets.secrets = [];
       return state.withMutations(reducedState => {
         const newState = reducedState
-          .update(
-            "allIds",
-            ids =>
-              reducedState.getIn(["byId", newAuthId])
-                ? ids
-                : ids.push(newAuthId)
+          .update("allIds", ids =>
+            reducedState.getIn(["byId", newAuthId]) ? ids : ids.push(newAuthId)
           )
           .setIn(
             ["byId", newAuthId],
@@ -76,18 +75,18 @@ const credentialsReducer = (state = initialState, action = {}) => {
               ...credentialWithoutSecrets
             })
           )
-          .updateIn(
-            ["byId", newAuthId],
-            cred =>
-              cred.get("firstInitTime") ? cred.delete("firstInitTime") : cred
+          .updateIn(["byId", newAuthId], cred =>
+            cred.get("firstInitTime") ? cred.delete("firstInitTime") : cred
           )
           .update(stateWithNewCreds => {
+            /* eslint-disable no-param-reassign */
             Object.keys(action.secrets).forEach(secret => {
               stateWithNewCreds = handleNewSecret(stateWithNewCreds, {
                 authId: action.authId,
                 secret: { ...action.secrets[secret] }
               });
             });
+            /* eslint-enable */
           });
         return newState;
       });
@@ -95,13 +94,15 @@ const credentialsReducer = (state = initialState, action = {}) => {
     case INIT_EMPTY_CREDENTIAL: {
       const newAuthId = action.credential["auth-id"];
       return state.withMutations(reducedState =>
-        reducedState.update("allIds", ids => ids.push(newAuthId)).setIn(
-          ["byId", newAuthId],
-          fromJS({
-            ...action.credential,
-            firstInitTime: new Date().getTime()
-          })
-        )
+        reducedState
+          .update("allIds", ids => ids.push(newAuthId))
+          .setIn(
+            ["byId", newAuthId],
+            fromJS({
+              ...action.credential,
+              firstInitTime: new Date().getTime()
+            })
+          )
       );
     }
 

@@ -4,7 +4,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 // Components
-import { VelocityComponent } from "velocity-react";
 import DevicesSearchbar from "./DevicesSearchbar";
 import ReactTooltip from "react-tooltip";
 // SVG Imports
@@ -24,54 +23,50 @@ class DevicesPanelHeader extends Component {
       tooltipIdCollapsePanel
     } = this.props;
     return (
-      <VelocityComponent
-        animation={{ translateX: expanded ? "0%" : "-100%" }}
-        duration={100}
-        delay={expanded ? 200 : 0}>
-        <div id="devices-panel-header">
-          <div id="fixed-header-content">
-            <span>
-              <ArrowRight
-                id="arrow-button"
-                onClick={toggleDevicesPanel}
-                data-tip
-                data-for={tooltipIdCollapsePanel}
-              />
-              <h6>
-                {deviceAddingModeActive
-                  ? "Subscription Configurations"
-                  : "Subscribed Devices"}
-              </h6>
-            </span>
-            {!deviceAddingModeActive && (
-              <button
-                id="add-button"
-                ref={addBtn => {
-                  this.addBtn = addBtn;
-                }}
-                onClick={
-                  !deviceAddingModeActive
-                    ? e => {
-                        ReactTooltip.hide(this.addBtn);
-                        switchToAddingMode(e);
-                      }
-                    : null
-                }
-                data-tip
-                data-for={tooltipIdEditSubs}>
-                <EditIcon />
-              </button>
-            )}
-            {deviceAddingModeActive &&
-              !isConnected && <DisconnectedIcon id="disconnected-icon" />}
-          </div>
-          <div
-            id="collapsable-searchbar"
-            className={deviceAddingModeActive ? "searchbar-collapsed" : ""}>
-            <DevicesSearchbar />
-          </div>
+      <div id="devices-panel-header" className={!expanded ? "collapsed" : null}>
+        <div id="fixed-header-content">
+          <span>
+            <ArrowRight
+              id="arrow-button"
+              onClick={toggleDevicesPanel}
+              data-tip
+              data-for={tooltipIdCollapsePanel}
+            />
+            <h6>
+              {deviceAddingModeActive
+                ? "Subscription Configurations"
+                : "Subscribed Devices"}
+            </h6>
+          </span>
+          {!deviceAddingModeActive && (
+            <button
+              id="add-button"
+              ref={addBtn => {
+                this.addBtn = addBtn;
+              }}
+              onClick={
+                !deviceAddingModeActive
+                  ? e => {
+                      ReactTooltip.hide(this.addBtn);
+                      switchToAddingMode(e);
+                    }
+                  : null
+              }
+              data-tip
+              data-for={tooltipIdEditSubs}>
+              <EditIcon />
+            </button>
+          )}
+          {deviceAddingModeActive && !isConnected && (
+            <DisconnectedIcon id="disconnected-icon" />
+          )}
         </div>
-      </VelocityComponent>
+        <div
+          id="collapsable-searchbar"
+          className={deviceAddingModeActive ? "searchbar-collapsed" : ""}>
+          <DevicesSearchbar />
+        </div>
+      </div>
     );
   }
 }

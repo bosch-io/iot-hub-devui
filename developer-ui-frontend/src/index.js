@@ -19,7 +19,7 @@ import App from "./components/App";
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router basename={process.env.PUBLIC_PATH || "/"}>
+    <Router basename={process.env.PUBLIC_URL || "/"}>
       <LastLocationProvider>
         <ThemeProvider theme={theme}>
           <Fragment>

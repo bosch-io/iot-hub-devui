@@ -52,7 +52,7 @@ class MainContentWrapped extends Component {
     return (
       <Route
         path="/registrations/:selectedDeviceId?/:registrationsSubMenu?/:authId?"
-        render={({ match }) => (
+        render={() => (
           <div
             id="registrations-main-content"
             className={this.props.mainPanelExpanded ? "expanded" : null}

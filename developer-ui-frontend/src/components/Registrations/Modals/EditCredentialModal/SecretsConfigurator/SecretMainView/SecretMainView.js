@@ -29,10 +29,10 @@ const calcOpacity = (diffIndex, scaling) => {
 };
 
 const SecretMainView = ({
+  secretType,
   secrets,
   contentRect,
   inEditingMode,
-  toggleEditingMode,
   measureRef,
   selectedSecret
 }) => (
@@ -55,14 +55,13 @@ const SecretMainView = ({
           )}px)`,
           opacity: calcOpacity(index - selectedSecret, 4),
           zIndex: index === selectedSecret ? 3 : -2
-        }}
-      >
+        }}>
         <span
           className={`animated-card  ${
             index === selectedSecret ? "selected" : ""
-          }`}
-        >
+          }`}>
           <SecretMainViewBody
+            secretType={secretType}
             key={secret.secretId}
             secret={secret}
             inEditingMode={inEditingMode}
@@ -81,6 +80,7 @@ const SecretMainView = ({
 );
 
 SecretMainView.propTypes = {
+  secretType: PropTypes.string,
   secrets: PropTypes.arrayOf(
     PropTypes.shape({
       secretId: PropTypes.string.isRequired,

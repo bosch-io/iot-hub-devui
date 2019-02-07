@@ -2,24 +2,27 @@
 
 #devices-panel-container {
   z-index: 2;
-  flex: 2;
   border: 1px solid $accent_color;
   border-radius: 2px;
-  transition: flex-grow 0.4s, transform 0.4s;
-  transform: scaleX(1);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: left;
   overflow: hidden;
   height: calc(100% - 2px);
-  min-width: 25rem;
+  width: 30rem;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+  &.collapsed {
+    margin-left: -30rem;
+  }
 }
 
 #devices-panel-container.devices-panel-closed {
-  flex-grow: 0 !important;
-  transform: scaleX(0);
+  margin-left: -30rem;
 }
 
 #devices-panel-header {
+  transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1) 0.1s,
+    opacity 0.2s cubic-bezier(0, 0, 0.2, 1) 0.2s;
   box-sizing: border-box;
   display: flex;
   flex-flow: row wrap;
@@ -30,6 +33,11 @@
   color: #fff;
   padding: 0 1em;
   overflow: hidden;
+
+  &.collapsed {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
 
   #fixed-header-content {
     display: flex;
@@ -108,6 +116,7 @@
 }
 
 #devices-panel-body {
+  position: relative;
   background-color: rgba(58, 73, 89, 0.33);
   height: calc(#{$filtering_section_height} - 6rem);
   overflow-y: auto;
@@ -289,7 +298,7 @@
               z-index: 1;
             }
             &:after {
-              background-image: url("../images/deviceIcon.svg") !important;
+              background-image: url("../images/deviceIconBlack.svg") !important;
             }
           }
         }
@@ -339,7 +348,7 @@
 .device-active {
   background: $icon_gradient_connected !important;
   &:after {
-    background-image: url("../images/deviceIcon.svg") !important;
+    background-image: url("../images/deviceIconBlack.svg") !important;
   }
   &:before {
     background: $accent_color_light !important;
@@ -370,11 +379,10 @@
   //   height: 100%;
 
   #subscription-confirm-btn {
-    position: fixed;
+    position: absolute;
     background: rgba(31, 43, 56, 0.9);
     font-family: "Roboto", "RobotoDraft", "Helvetica Neue, Helvetica, Arial",
       sans-serif;
-    bottom: 1rem;
     width: calc(100% - 2rem);
     height: 4rem;
     color: rgba(255, 255, 255, 0.9);

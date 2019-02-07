@@ -7,7 +7,7 @@ import { Redirect, withRouter } from "react-router-dom";
 import { default as AddSecretModalInner } from "./AddSecretModal";
 import PropTypes from "prop-types";
 import { hashSecret } from "api/schemas";
-import { reduxForm, formValueSelector } from "redux-form/immutable";
+import { reduxForm } from "redux-form/immutable";
 import {
   createNewSecret,
   createNewCredential
@@ -51,11 +51,29 @@ class AddSecretModalWrapped extends Component {
       authId,
       deviceId,
       firstInitialization,
-      credentialType
+      credentialType,
+      secretType
     } = this.props;
-    const secretData = {
-      password: values.get("password")
-    };
+    let secretData;
+
+    if (values.get("key")) {
+      secretData = {
+        key: values.get("key")
+      };
+    }
+    if (values.get("password")) {
+      secretData = {
+        password: values.get("password")
+      };
+    }
+    if (secretType === "hashed-password") {
+      if (values.get("hashAlgorithm")) {
+        const hashAlgorithm = values.get("hashAlgorithm");
+        if (hashAlgorithm) {
+          secretData.hashMethod = hashAlgorithm;
+        }
+      }
+    }
     // Optional ("advanced") Field values
     if (values.get("notBefore")) {
       secretData["not-before"] = values.get("notBefore").format();
@@ -66,20 +84,18 @@ class AddSecretModalWrapped extends Component {
     if (values.get("salt")) {
       secretData.salt = btoa(values.get("salt"));
     }
-    const hashAlgorithm = values.get("hashAlgorithm");
-    if (hashAlgorithm) {
-      secretData.hashMethod = hashAlgorithm;
+    if (secretType === "hashed-password") {
+      secretData = hashSecret(secretData);
     }
-    const hashedSecret = hashSecret(secretData);
     if (firstInitialization) {
       this.props.createNewCredential({
         "auth-id": authId,
         type: credentialType,
         "device-id": deviceId,
-        secrets: [hashedSecret]
+        secrets: [secretData]
       });
     } else {
-      this.props.createNewSecret(deviceId, authId, hashedSecret);
+      this.props.createNewSecret(deviceId, authId, secretData);
     }
     this.changeIsOpen(false);
   }
@@ -88,7 +104,7 @@ class AddSecretModalWrapped extends Component {
     const {
       authId,
       handleSubmit,
-      selectedType,
+      secretType,
       pristine,
       submitting,
       invalid,
@@ -103,7 +119,7 @@ class AddSecretModalWrapped extends Component {
           authId={authId}
           changeIsOpen={this.changeIsOpen}
           handleSubmit={handleSubmit(this.submit.bind(this))}
-          selectedType={selectedType}
+          secretType={secretType}
           pristine={pristine}
           submitting={submitting}
           invalid={invalid}
@@ -125,11 +141,14 @@ let AddSecretModal = reduxForm({
   validate,
   warn
 })(AddSecretModalWrapped);
-const selector = formValueSelector("newSecret");
 const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: { secretType: "Hashed Password", hashAlgorithm: "sha-512" },
-    selectedType: selector(state, "secretType"),
+    initialValues: {
+      hashAlgorithm: "sha-512"
+    },
+    secretType:
+      selectCredentialById(state, ownProps.authId) &&
+      selectCredentialById(state, ownProps.authId).get("type"),
     firstInitialization:
       selectCredentialById(state, ownProps.authId) &&
       Boolean(
@@ -156,7 +175,7 @@ AddSecretModalWrapped.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   createNewSecret: PropTypes.func.isRequired,
   createNewCredential: PropTypes.func.isRequired,
-  selectedType: PropTypes.string,
+  secretType: PropTypes.string,
   credentialType: PropTypes.string,
   deviceId: PropTypes.string,
   match: PropTypes.object

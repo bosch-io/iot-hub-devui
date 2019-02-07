@@ -50,21 +50,33 @@ public class HonoReceiverEndpoint implements HttpEndpoint {
 
     @PostConstruct
     protected void init() {
-        LOG.info("Going to start connect to Hono...");
+    	LOG.info("AutoConnect Hono Client on startup is configured: {}", config.isConnectOnStartup());
 
         this.client = new HonoClientImpl(vertx, honoClientConfig);
 
-        Future<HonoClient> connectedResult = client.connect(getClientOptions(), this::onDisconnect);
-
-        connectedResult.setHandler(connected -> {
-            if (connected.succeeded()) {
-                onConnectionEstablished();
-            } else {
-                LOG.error("Can't connect with Hono.", connected.cause());
-            }
-        });
+        if(config.isConnectOnStartup()) {
+        	this.connect();
+        }
     }
 
+    public void connect() {
+    	LOG.info("Going to connect hono client");
+    	Future<HonoClient> connectedResult = client.connect(getClientOptions(), this::onDisconnect);
+    	connectedResult.setHandler(connected -> {
+    		if (connected.succeeded()) {
+    			onConnectionEstablished();
+    		} else {
+    			LOG.error("Can't connect with Hono.", connected.cause());
+    		}
+    	});
+    }
+    
+    public void disconnect() {
+    	LOG.info("Going to disconnect hono client");
+    	client.disconnect();
+    	pushHonoConnectionStateChange();
+    }
+    
     private SockJSHandler eventBusHandler() {
         BridgeOptions options = new BridgeOptions()
                 .addOutboundPermitted(new PermittedOptions().setAddressRegex("device\\..+"))
@@ -121,7 +133,7 @@ public class HonoReceiverEndpoint implements HttpEndpoint {
         Future<Void> isConnected = client.isConnected();
             isConnected.setHandler(connected -> {
                 if (connected.succeeded()) {
-                    vertx.eventBus().publish("status.hubConnection", "connected");
+				vertx.eventBus().publish("status.hubConnection", "connected");
                 } else {
                     vertx.eventBus().publish("status.hubConnection", "disconnected");
                 }

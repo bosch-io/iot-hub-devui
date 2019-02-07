@@ -9,11 +9,8 @@ import BackgroundImage from "images/backgrounds/backgroundHeader.jpg";
 
 const Card = styled.div`
   position: relative;
-  top: calc((100vh - ${props => props.theme.headerHeight} - 2px) / 2);
-  left: 50vw;
   width: 75vw;
   height: 75vh;
-  transform: translate(-37.5vw, -37.5vh);
   background-color: #fff;
   overflow: hidden;
   border-radius: 4px;

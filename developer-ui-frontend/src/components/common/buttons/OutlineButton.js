@@ -93,7 +93,7 @@ export const Icon = styled(({ icon, ...props }) =>
 `;
 
 const OutlineButton = props => {
-  const { children, icon, ...other } = props;
+  const { children, icon } = props;
   return (
     <OutlineBtn {...props}>
       <span>

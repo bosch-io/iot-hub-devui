@@ -1,14 +1,13 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import 'styles/logTable.scss';
+import "styles/logTable.scss";
 /* eslint-enable */
-import React from 'react';
-import PropTypes from 'prop-types';
-import Modal from 'react-modal';
+import React from "react";
+import PropTypes from "prop-types";
 
-import LogTable from './container/LogTable';
-import FilteringSection from './presentation/FilteringSection';
+import LogTable from "./container/LogTable";
+import FilteringSection from "./presentation/FilteringSection";
 
 /**
  * Wrapper component for the filter form (FilteringSection) and the (filtered) table for the loggings (LogTable).
@@ -48,7 +47,7 @@ export default class FilterableLogTable extends React.Component {
           <div className="expandButton" onClick={toggleDevicesPanel}>
             <span
               className={
-                this.props.devicesPanelExpanded ? '' : 'devices-panel-closed'
+                this.props.devicesPanelExpanded ? "" : "devices-panel-closed"
               }>
               &#8249;
             </span>

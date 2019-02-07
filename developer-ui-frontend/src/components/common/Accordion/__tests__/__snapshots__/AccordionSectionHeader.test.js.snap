@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccordionSectionHeader should render correctly 1`] = `
+<div>
+  <styled.div
+    name="AccordionSectionHeader test"
+  >
+    <styled.span />
+    <styled.span />
+    <styled.span>
+      <test-file-stub
+        className="header-icon-right"
+      />
+    </styled.span>
+  </styled.div>
+</div>
+`;

@@ -70,8 +70,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nodeVersion>v6.11.1</nodeVersion>
-                    <yarnVersion>v1.3.2</yarnVersion>
+                    <nodeVersion>v10.15.0</nodeVersion>
+                    <yarnVersion>v1.12.3</yarnVersion>
                     <yarnInheritsProxyConfigFromMaven>false</yarnInheritsProxyConfigFromMaven>
                 </configuration>
             </plugin>

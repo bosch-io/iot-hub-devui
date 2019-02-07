@@ -127,7 +127,7 @@ JsonView.propTypes = {
     // if one of them is of type JsonReadOnlyView.
     if (
       React.Children.count(childs) !== 2 ||
-      !childTypes.find((type, index) => type === JsonReadOnlyView)
+      !childTypes.find(type => type === JsonReadOnlyView)
     ) {
       return new Error(
         `"${componentName}" should have two children of the following types: ${expectedTypes

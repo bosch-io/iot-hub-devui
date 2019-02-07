@@ -20,10 +20,12 @@
             <destName>DISCLOSURE_UI.TXT</destName>
             <outputDirectory>.</outputDirectory>
         </file>
+
         <file>
             <source>${project.build.directory}/tina-maven-plugin//DISCLOSURE_BACKEND.PDF</source>
             <outputDirectory>.</outputDirectory>
         </file>
+
         <file>
             <source>${project.basedir}/src/main/resources/application.properties</source>
             <outputDirectory>.</outputDirectory>

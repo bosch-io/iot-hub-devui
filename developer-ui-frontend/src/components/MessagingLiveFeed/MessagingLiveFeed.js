@@ -14,9 +14,6 @@ import { handleNewSub } from "actions/WebsocketActions";
 import { connect } from "react-redux";
 import { selectSubscribedDevices } from "reducers/selectors";
 import { toJS } from "components/helpers/to-js";
-// Velocity Animations
-import "velocity-animate";
-import "velocity-animate/velocity.ui";
 
 /**
  * The root component for the Messaging Live Feed menu.

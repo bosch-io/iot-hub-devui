@@ -1,21 +1,20 @@
 /*
  * Copyright 2018 Bosch Software Innovations GmbH ("Bosch SI"). All rights reserved.
  */
-import React, { Fragment } from "react";
-import Velocity from "velocity-react/lib/velocity-animate-shim";
+import React, { Fragment, Component } from "react";
 import PropTypes from "prop-types";
-import { TransitionMotion, spring } from "react-motion";
+import { TransitionMotion, Motion, spring } from "react-motion";
 import Measure from "react-measure";
 import { formatDateString } from "utils";
 import ImmutablePropTypes from "react-immutable-proptypes";
-import Spinner from "components/common/Spinner";
 
-export default class TextAreaWithLed extends React.Component {
+export default class TextAreaWithLed extends Component {
   constructor(props) {
     super(props);
     this.state = {
       ledActive: false,
-      newLineInterval: null
+      newLineInterval: null,
+      scrollTopEndPos: 0
     };
     this.formatNewLines = this.formatNewLines.bind(this);
     this.setNewlineInterval = this.setNewlineInterval.bind(this);
@@ -33,17 +32,9 @@ export default class TextAreaWithLed extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.feedLines.size !== prevProps.feedLines.size) {
-      // On Feed Changes, scroll to the bottom
-      const scrollOffset =
-        this.textArea.scrollHeight -
-        (this.textArea.scrollTop + this.textArea.clientHeight);
-      Velocity(this.textArea, "scroll", {
-        duration: this.props.scrollAnimationActive ? 100 : 0,
-        container: this.textArea,
-        offset: scrollOffset + "px",
-        queue: false,
-        mobileHA: false
-      });
+      const { scrollHeight, clientHeight } = this.textArea;
+      /* eslint-disable react/no-did-update-set-state  */
+      this.setState({ scrollTopEndPos: scrollHeight - clientHeight });
     }
   }
 
@@ -109,7 +100,8 @@ export default class TextAreaWithLed extends React.Component {
   }
 
   render() {
-    const { feedLines, showLoadingSpinner } = this.props;
+    const { scrollTopEndPos } = this.state;
+    const { feedLines, showLoadingSpinner, scrollAnimationActive } = this.props;
     const output = this.state.newLineInterval
       ? this.formatOutput(feedLines)
       : feedLines.join("");
@@ -122,23 +114,41 @@ export default class TextAreaWithLed extends React.Component {
               className={this.state.ledActive ? "blink" : ""}
               id="statusLed"
             />
-            <Measure
-              client
-              onResize={contentRect => this.setNewlineInterval(contentRect)}
-              innerRef={ref => {
-                this.textArea = ref;
-              }}>
-              {({ measureRef }) => (
-                <textarea
-                  id="feed"
-                  className={showLoadingSpinner ? "disconnected" : null}
-                  cols="50"
-                  ref={measureRef}
-                  readOnly
-                  value={output}
-                />
+            <Motion
+              style={
+                scrollAnimationActive
+                  ? {
+                      scrollTop: spring(scrollTopEndPos, {
+                        stiffness: 500,
+                        damping: 50
+                      })
+                    }
+                  : { scrollTop: scrollTopEndPos }
+              }
+            >
+              {interpolStyles => (
+                <Measure
+                  client
+                  onResize={contentRect => this.setNewlineInterval(contentRect)}
+                  innerRef={ref => {
+                    this.textArea = ref;
+                  }}
+                >
+                  {({ measureRef }) => (
+                    <TextArea
+                      measureRef={measureRef}
+                      forwardedRef={this.textArea}
+                      id="feed"
+                      className={showLoadingSpinner ? "disconnected" : null}
+                      cols="50"
+                      readOnly
+                      scrollTop={interpolStyles.scrollTop}
+                      value={output}
+                    />
+                  )}
+                </Measure>
               )}
-            </Measure>
+            </Motion>
             {/* Fade the loader in and out with a mount/unmount transition */}
             <TransitionMotion
               willLeave={() => ({ opacity: spring(0) })}
@@ -153,7 +163,8 @@ export default class TextAreaWithLed extends React.Component {
                       }
                     ]
                   : []
-              }>
+              }
+            >
               {interpolatedStyles => (
                 <Fragment>
                   {interpolatedStyles.map(config => (
@@ -162,9 +173,9 @@ export default class TextAreaWithLed extends React.Component {
                       key={config.key}
                       style={{
                         opacity: config.style.opacity
-                      }}>
-                      <Spinner type="bubbles" />
-                      <span>Connecting ...</span>
+                      }}
+                    >
+                      <span>Disconnected</span>
                     </div>
                   ))}
                 </Fragment>
@@ -176,6 +187,35 @@ export default class TextAreaWithLed extends React.Component {
     );
   }
 }
+/* eslint-disable react/no-multi-comp */
+class TextArea extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.scrollTop !== this.props.scrollTop) {
+      this.props.forwardedRef.scrollTop = this.props.scrollTop;
+    }
+  }
+  render() {
+    /* eslint-disable no-unused-vars */
+    const { measureRef, scrollTop, forwardedRef, ...props } = this.props;
+    /* eslint-enable */
+    return <textarea ref={measureRef} {...props} />;
+  }
+}
+
+TextArea.propTypes = {
+  forwardedRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+  ]),
+  measureRef: PropTypes.func,
+  id: PropTypes.string,
+  scrollTop: PropTypes.number,
+  className: PropTypes.string,
+  cols: PropTypes.string,
+  readOnly: PropTypes.bool,
+  value: PropTypes.string,
+  scrollAnimationActive: PropTypes.bool
+};
 
 // feedLines has to be passed as immutable prop type for deep comparison in componentWillReceiveProps
 TextAreaWithLed.propTypes = {

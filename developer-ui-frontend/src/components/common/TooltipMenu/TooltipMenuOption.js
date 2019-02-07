@@ -79,7 +79,8 @@ const TooltipMenuOption = ({
   <MenuListItem
     disabled={disabled}
     data-for={disabled ? disabledHoverTooltipId : null}
-    data-tip={disabled}>
+    data-tip={disabled}
+  >
     <StyledLink to={route} onClick={toggleOpen}>
       <div>
         <ListIcon icon={icon} />
