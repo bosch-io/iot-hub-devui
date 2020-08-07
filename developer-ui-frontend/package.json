@@ -115,7 +115,7 @@
     "normalizr": "^3.2.4",
     "polished": "^1.9.3",
     "pretty-checkbox": "^3.0.3",
-    "prismjs": "^1.15.0",
+    "prismjs": "^1.21.0",
     "react": "^16.3.2",
     "react-click-outside": "^3.0.0",
     "react-copy-to-clipboard": "^5.0.1",
